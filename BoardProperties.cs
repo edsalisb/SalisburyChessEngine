@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace SalisburyChessEngine
 {
-    class AlgebraicNotationParser
+    public class BoardProperties
     {
-        public AlgebraicNotationParser()
-        {
-
-        }
-
-
+        public static int Rows { get; } = 8;
+        public static int Columns { get; } = 8;
     }
 }

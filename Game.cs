@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 namespace SalisburyChessEngine
 {
     public class Game
@@ -7,10 +7,14 @@ namespace SalisburyChessEngine
         private string blackMode;
         private string whiteMode;
         private ChessBoard cb;
+        public List<Move> moveList;
+        private bool gameEnded;
         public Game(string whiteMode, string blackMode)
         {
             this.whiteMode = whiteMode;
             this.blackMode = blackMode;
+            this.gameEnded = false;
+            this.moveList = new List<Move>();
             if (this.whiteMode == "ai" || this.blackMode == "ai")
             {
                 Console.WriteLine("Not Supported Yet");
@@ -21,18 +25,15 @@ namespace SalisburyChessEngine
         public void Begin()
         {
             this.cb = new ChessBoard();
-            while (!this.cb.gameEnded)
+            while (!this.gameEnded)
             {
                 Console.WriteLine("Move:");
                 string algebraicCoord = Console.ReadLine();
-                if (!this.cb.TryMovePiece(algebraicCoord))
+                Move potentialMove;
+                this.cb.TryMovePiece(algebraicCoord, out potentialMove);
+                if (potentialMove != null)
                 {
-                    //
-                }
-                else
-                {
-                    //moveSuccessful
-                    throw new NotImplementedException();
+                    moveList.Add(potentialMove);
                 }
             }
         }

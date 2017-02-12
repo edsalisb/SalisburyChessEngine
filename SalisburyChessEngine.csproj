@@ -43,7 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlgebraicNotationParser.cs" />
+    <Compile Include="BoardProperties.cs" />
+    <Compile Include="CellProperties.cs" />
+    <Compile Include="Move.cs" />
     <Compile Include="Pieces\Pawn.cs" />
     <Compile Include="Pieces\King.cs" />
     <Compile Include="Pieces\Bishop.cs" />

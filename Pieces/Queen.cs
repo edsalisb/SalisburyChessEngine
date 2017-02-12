@@ -6,21 +6,23 @@ namespace SalisburyChessEngine.Pieces
     internal class Queen : PieceBase
     {
         public pieceType piece;
-        public bool isWhite;
+        private Func<string, Cell> getCell;
 
-        public Queen(bool isWhite)
+        public Queen(bool isWhite, Func<string, Cell> getCell) : base(isWhite)
         {
             this.piece = pieceType.Queen;
-            this.isWhite = isWhite;
+            this.getCell = getCell;
         }
 
-        public override List<Cell> getValidMoves()
-        {
-            throw new NotImplementedException();
-        }
+        
         public override string ToString()
         {
             return "Q";
+        }
+
+        public override void determineValidMoves(string coords)
+        {
+            throw new NotImplementedException();
         }
     }
 }
