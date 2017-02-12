@@ -17,6 +17,8 @@ namespace SalisburyChessEngine.Pieces
 
         public override void determineValidMoves(string coords)
         {
+            ValidMoves = new List<string>();
+
             var downCells = getValidCellsDown(coords, getCell);
             var leftCells = getValidCellsLeft(coords, getCell);
             var rightCells = getValidCellsRight(coords, getCell);

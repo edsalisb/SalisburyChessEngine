@@ -16,6 +16,8 @@ namespace SalisburyChessEngine.Pieces
         
         public override void determineValidMoves(string coords)
         {
+            ValidMoves = new List<string>();
+
             if (this.isWhite)
             {
                 this.determineWhiteMoves(coords);
@@ -28,12 +30,115 @@ namespace SalisburyChessEngine.Pieces
 
         private void determineWhiteMoves(string coords)
         {
-            throw new NotImplementedException();
+            var startingCell = getCell(coords);
+            if (startingCell.Row == 2)
+            {
+                var twoRowsForwardCell = getCell(startingCell.columnLetter.ToString() + (startingCell.Row + 2));
+                if (cellIsValidForPawn(startingCell, twoRowsForwardCell))
+                {
+                    this.ValidMoves.Add(twoRowsForwardCell.Coordinates);
+                }
+            }
+
+            //checking one row forward
+            var oneRowForwardCell = getCell(startingCell.columnLetter.ToString() + (startingCell.Row + 1));
+            if (cellIsValidForPawn(startingCell, oneRowForwardCell))
+            {
+                this.ValidMoves.Add(oneRowForwardCell.Coordinates);
+            }
+
+            //checking cells 1U1L and 1U1R for an enemy piece to take
+            var leftColumnLetter = getColumnLetter(startingCell, -1);
+            var rightColumnLetter = getColumnLetter(startingCell, 1);
+
+            if (leftColumnLetter != null)
+            {
+                var oneUoneLCell = getCell(leftColumnLetter.ToString() + (startingCell.Row + 1));
+                if (oneUoneLCell.CurrentPiece != null)
+                {
+                    if (startingCell.CurrentPiece.isWhite != oneUoneLCell.CurrentPiece.isWhite)
+                    {
+                        ValidMoves.Add(oneUoneLCell.Coordinates);
+                    }
+                }
+               
+            }
+            if (rightColumnLetter != null)
+            {
+                var oneUoneRCell = getCell(rightColumnLetter.ToString() + (startingCell.Row + 1));
+                if (oneUoneRCell.CurrentPiece != null)
+                {
+                    if (startingCell.CurrentPiece.isWhite != oneUoneRCell.CurrentPiece.isWhite)
+                    {
+                        ValidMoves.Add(oneUoneRCell.Coordinates);
+                    }
+                }
+            }
         }
 
         private void determineBlackMoves(string coords)
         {
-            throw new NotImplementedException();
+            var startingCell = getCell(coords);
+            if (startingCell.Row == 7)
+            {
+                var twoRowsForwardCell = getCell(startingCell.columnLetter.ToString() + (startingCell.Row - 2));
+                if (cellIsValidForPawn(startingCell, twoRowsForwardCell))
+                {
+                    this.ValidMoves.Add(twoRowsForwardCell.Coordinates);
+                }
+            }
+
+            //checking one row forward
+            var oneRowForwardCell = getCell(startingCell.columnLetter.ToString() + (startingCell.Row - 1));
+            if (cellIsValidForPawn(startingCell, oneRowForwardCell))
+            {
+                this.ValidMoves.Add(oneRowForwardCell.Coordinates);
+            }
+
+            //checking cells 1U1L and 1U1R for an enemy piece to take
+            var leftColumnLetter = getColumnLetter(startingCell, -1);
+            var rightColumnLetter = getColumnLetter(startingCell, 1);
+
+            if (leftColumnLetter != null)
+            {
+                var oneUoneLCell = getCell(leftColumnLetter.ToString() + (startingCell.Row - 1));
+                if (oneUoneLCell.CurrentPiece != null)
+                {
+                    if (startingCell.CurrentPiece.isWhite != oneUoneLCell.CurrentPiece.isWhite)
+                    {
+                        ValidMoves.Add(oneUoneLCell.Coordinates);
+                    }
+                }
+
+            }
+            if (rightColumnLetter != null)
+            {
+                var oneUoneRCell = getCell(rightColumnLetter.ToString() + (startingCell.Row - 1));
+                if (oneUoneRCell.CurrentPiece != null)
+                {
+                    if (startingCell.CurrentPiece.isWhite != oneUoneRCell.CurrentPiece.isWhite)
+                    {
+                        ValidMoves.Add(oneUoneRCell.Coordinates);
+                    }
+                }
+            }
+        }
+
+        private bool cellIsValidForPawn(Cell fromCell, Cell toCell)
+        {
+            if (fromCell == null)
+            {
+                return false;
+            }
+            if (toCell == null)
+            {
+                return false;
+            }
+            if (toCell.CurrentPiece == null)
+            {
+                return true;
+            }
+            return false;
         }
         public override string ToString()
         {

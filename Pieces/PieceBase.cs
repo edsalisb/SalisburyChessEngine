@@ -35,7 +35,7 @@ namespace SalisburyChessEngine.Pieces
                 if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
                 {
                     var cellToLeft = getCell(columnLetter.ToString() + startingCell.Row);
-                    if (this.cellIsValid(startingCell, cellToLeft))
+                    if (this.cellIsValidForPiece(startingCell, cellToLeft))
                     {
                         cellList.Add(cellToLeft.Coordinates);
                     }
@@ -53,7 +53,7 @@ namespace SalisburyChessEngine.Pieces
                 if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
                 {
                     var cellToRight = getCell(columnLetter.ToString() + startingCell.Row);
-                    if (this.cellIsValid(startingCell, cellToRight))
+                    if (this.cellIsValidForPiece(startingCell, cellToRight))
                     {
                         cellList.Add(cellToRight.Coordinates);
                     }
@@ -68,15 +68,13 @@ namespace SalisburyChessEngine.Pieces
             var startingCell = getCell(coords);
             for (var i = startingCell.Row; i < BoardProperties.Rows; i++)
             {
-                char columnLetter;
-                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
+                
+                var cellUp = getCell(startingCell.columnLetter.ToString() + i.ToString());
+                if (this.cellIsValidForPiece(startingCell, cellUp))
                 {
-                    var cellUp = getCell(columnLetter.ToString() + startingCell.Row);
-                    if (this.cellIsValid(startingCell, cellUp))
-                    {
-                        cellList.Add(cellUp.Coordinates);
-                    }
+                    cellList.Add(cellUp.Coordinates);
                 }
+                
             }
             return cellList;
         }
@@ -86,20 +84,105 @@ namespace SalisburyChessEngine.Pieces
             var startingCell = getCell(coords);
             for (var i = startingCell.Row; i > 0; i--)
             {
-                char columnLetter;
-                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
+                
+                var cellDown = getCell(startingCell.columnLetter.ToString() + i.ToString());
+                if (cellIsValidForPiece(startingCell,cellDown))
                 {
-                    var cellDown = getCell(columnLetter.ToString() + startingCell.Row);
-                    if (cellIsValid(startingCell,cellDown))
-                    {
-                        cellList.Add(cellDown.Coordinates);
-                    }
+                    cellList.Add(cellDown.Coordinates);
                 }
+                
             }
             return cellList;
         }
 
-        public bool cellIsValid(Cell fromCell, Cell toCell)
+        public List<string> getValidCellsDownLeft(string coords, Func<string, Cell> getCell)
+        {
+            List<string> cellList = new List<string>();
+            var startingCell = getCell(coords);
+            var row = startingCell.Row;
+            for (var i = startingCell.ColumnNumber; i > 0; i--)
+            {
+                char columnLetter;
+                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
+                {
+                    var cellUpLeft = getCell(columnLetter.ToString() + row.ToString());
+                    if (this.cellIsValidForPiece(startingCell, cellUpLeft))
+                    {
+                        cellList.Add(cellUpLeft.Coordinates);
+                    }
+                }
+
+                row--;
+            }
+            return cellList;
+        }
+
+        
+        public List<string> getValidCellsDownRight(string coords, Func<string, Cell> getCell)
+        {
+            List<string> cellList = new List<string>();
+            var startingCell = getCell(coords);
+            var row = startingCell.Row;
+            for (var i = startingCell.ColumnNumber; i <= BoardProperties.Columns; i++)
+            {
+                char columnLetter;
+                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
+                {
+                    var cellUpLeft = getCell(columnLetter.ToString() + row.ToString());
+                    if (this.cellIsValidForPiece(startingCell, cellUpLeft))
+                    {
+                        cellList.Add(cellUpLeft.Coordinates);
+                    }
+                }
+
+                row--;
+            }
+            return cellList;
+        }
+        public List<string> getValidCellsUpLeft(string coords, Func<string, Cell> getCell)
+        {
+            List<string> cellList = new List<string>();
+            var startingCell = getCell(coords);
+            var row = startingCell.Row;
+            for (var i = startingCell.ColumnNumber; i > 0; i--)
+            {
+                char columnLetter;
+                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
+                {
+                    var cellUpLeft = getCell(columnLetter.ToString() + row.ToString());
+                    if (this.cellIsValidForPiece(startingCell, cellUpLeft))
+                    {
+                        cellList.Add(cellUpLeft.Coordinates);
+                    }
+                }
+
+                row++;
+            }
+            return cellList;
+        }
+        public List<string> getValidCellsUpRight(string coords, Func<string, Cell> getCell)
+        {
+            List<string> cellList = new List<string>();
+            var startingCell = getCell(coords);
+            var row = startingCell.Row;
+            for (var i = startingCell.ColumnNumber; i <= BoardProperties.Columns; i++)
+            {
+                char columnLetter;
+                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
+                {
+                    var cellUpLeft = getCell(columnLetter.ToString() + row.ToString());
+                    if (this.cellIsValidForPiece(startingCell, cellUpLeft))
+                    {
+                        cellList.Add(cellUpLeft.Coordinates);
+                    }
+                }
+
+                row++;
+            }
+            return cellList;
+        }
+
+        public bool cellIsValidForPiece(Cell fromCell, Cell toCell)
         {
             if (fromCell == null)
             {
@@ -119,6 +202,16 @@ namespace SalisburyChessEngine.Pieces
                 return true;
             }
             return false;
+        }
+
+        public char? getColumnLetter(Cell currentCell, int spacesAway)
+        {
+            char columnletter;
+            if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(currentCell.ColumnNumber + spacesAway, out columnletter))
+            {
+                return columnletter;
+            }
+            return null;
         }
     }
 }

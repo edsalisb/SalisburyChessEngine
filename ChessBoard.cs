@@ -8,9 +8,14 @@ namespace SalisburyChessEngine
     public class ChessBoard
     {
         public List<List<Cell>> Board { get; set; }
+        public King WhiteKing { get; set; }
+        public King BlackKing { get; set; }
         public ChessBoard()
         {
             Board = new List<List<Cell>>();
+            this.WhiteKing = new King(true, this.getCell);
+            this.BlackKing = new King(false, this.getCell);
+
             this.initializeBoard();
             this.UpdateBoard();
             this.displayBoard();
@@ -41,7 +46,7 @@ namespace SalisburyChessEngine
             this.getCell("b1").CurrentPiece = new Knight(true, this.getCell);
             this.getCell("c1").CurrentPiece = new Bishop(true, this.getCell);
             this.getCell("d1").CurrentPiece = new Queen(true, this.getCell);
-            this.getCell("e1").CurrentPiece = new King(true, this.getCell);
+            this.getCell("e1").CurrentPiece = this.WhiteKing;
             this.getCell("f1").CurrentPiece = new Bishop(true, this.getCell);
             this.getCell("g1").CurrentPiece = new Knight(true, this.getCell);
             this.getCell("h1").CurrentPiece = new Rook(true, this.getCell);
@@ -60,7 +65,7 @@ namespace SalisburyChessEngine
             this.getCell("b8").CurrentPiece = new Knight(false, this.getCell);
             this.getCell("c8").CurrentPiece = new Bishop(false, this.getCell);
             this.getCell("d8").CurrentPiece = new Queen(false, this.getCell);
-            this.getCell("e8").CurrentPiece = new King(false, this.getCell);
+            this.getCell("e8").CurrentPiece = this.BlackKing;
             this.getCell("f8").CurrentPiece = new Bishop(false, this.getCell);
             this.getCell("g8").CurrentPiece = new Knight(false, this.getCell);
             this.getCell("h8").CurrentPiece = new Rook(false, this.getCell);
@@ -81,7 +86,31 @@ namespace SalisburyChessEngine
             {
                 foreach (var cell in row)
                 {
-                    cell.CurrentPiece.determineValidMoves(cell.Coordinates);
+                    if (cell.CurrentPiece != null)
+                    {
+                        if (cell.CurrentPiece.GetType() == typeof(King))
+                        {
+                            continue;
+                        }
+                        cell.CurrentPiece.determineValidMoves(cell.Coordinates);
+                    }
+                }
+            }
+
+            //update kings after moves have been figured out for other pieces
+            //TODO figure out a better way to do this
+            foreach (var row in Board)
+            {
+                foreach (var cell in row)
+                {
+                    if (cell.CurrentPiece != null)
+                    {
+                        if (cell.CurrentPiece.GetType() != typeof(King))
+                        {
+                            continue;
+                        }
+                        cell.CurrentPiece.determineValidMoves(cell.Coordinates);
+                    }
                 }
             }
         }

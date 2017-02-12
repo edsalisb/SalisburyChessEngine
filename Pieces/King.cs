@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SalisburyChessEngine.Pieces
 {
-    internal class King : PieceBase
+    public class King : PieceBase
     {
         public pieceType piece;
         private Func<string, Cell> getCell;

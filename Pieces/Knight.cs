@@ -14,6 +14,8 @@ namespace SalisburyChessEngine.Pieces
         }
         public override void determineValidMoves(string coords)
         {
+            ValidMoves = new List<string>();
+
             var currentCell = this.getCell(coords);
 
             var twoColumnsLeft = getColumnLetter(currentCell, -2);
@@ -32,49 +34,39 @@ namespace SalisburyChessEngine.Pieces
             var oneUpTwoLeftCell = this.getCell(twoColumnsLeft.ToString() + (currentCell.Row + 1));
             
 
-            if (cellIsValid(currentCell, twoUpOneLeftCell))
+            if (cellIsValidForPiece(currentCell, twoUpOneLeftCell))
             {
                 ValidMoves.Add(twoUpOneLeftCell.Coordinates);
             }
-            if (cellIsValid(currentCell, twoUpOneRightCell))
+            if (cellIsValidForPiece(currentCell, twoUpOneRightCell))
             {
                 ValidMoves.Add(twoUpOneRightCell.Coordinates);
             }
-            if (cellIsValid(currentCell, oneUpTwoRightCell))
+            if (cellIsValidForPiece(currentCell, oneUpTwoRightCell))
             {
                 ValidMoves.Add(oneUpTwoRightCell.Coordinates);
             }
-            if (cellIsValid(currentCell, oneDownTwoRightCell))
+            if (cellIsValidForPiece(currentCell, oneDownTwoRightCell))
             {
                 ValidMoves.Add(oneDownTwoRightCell.Coordinates);
             }
-            if (cellIsValid(currentCell, twoDownOneRightCell))
+            if (cellIsValidForPiece(currentCell, twoDownOneRightCell))
             {
                 ValidMoves.Add(twoDownOneRightCell.Coordinates);
             }
-            if (cellIsValid(currentCell, twoDownOneLeftCell))
+            if (cellIsValidForPiece(currentCell, twoDownOneLeftCell))
             {
                 ValidMoves.Add(twoDownOneLeftCell.Coordinates);
             }
-            if (cellIsValid(currentCell, oneDownTwoLeftCell))
+            if (cellIsValidForPiece(currentCell, oneDownTwoLeftCell))
             {
                 ValidMoves.Add(oneDownTwoLeftCell.Coordinates);
             }
-            if (cellIsValid(currentCell, oneUpTwoLeftCell))
+            if (cellIsValidForPiece(currentCell, oneUpTwoLeftCell))
             {
                 ValidMoves.Add(oneUpTwoLeftCell.Coordinates);
             }
 
-        }
-
-        private char? getColumnLetter(Cell currentCell, int spacesAway)
-        {
-            char columnletter;
-            if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(currentCell.ColumnNumber + spacesAway, out columnletter))
-            {
-                return columnletter;
-            }
-            return null;
         }
 
         public override string ToString()
