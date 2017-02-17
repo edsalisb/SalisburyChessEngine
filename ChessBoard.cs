@@ -10,16 +10,26 @@ namespace SalisburyChessEngine
         public List<List<Cell>> Board { get; set; }
         public King WhiteKing { get; set; }
         public King BlackKing { get; set; }
+
+        public List<string> blackPiecePressure { get; set; }
+        public List<string> whitePiecePressure { get; set; }
         public ChessBoard()
         {
             Board = new List<List<Cell>>();
             this.WhiteKing = new King(true, this.getCell);
             this.BlackKing = new King(false, this.getCell);
+            this.blackPiecePressure = new List<string>();
+            this.whitePiecePressure = new List<string>();
+
 
             this.initializeBoard();
             this.UpdateBoard();
+            this.determineTeamPressure();
+            this.determineKingMoves();
             this.displayBoard();
         }
+
+
 
         public void initializeBoard()
         {
@@ -96,7 +106,49 @@ namespace SalisburyChessEngine
                     }
                 }
             }
+        }
+        private void determineTeamPressure()
+        {
+            foreach (var row in Board)
+            {
+                foreach (var cell in row)
+                {
+                    if (cell.CurrentPiece != null)
+                    {
+                        List<string> listToUse;
+                        if (cell.CurrentPiece.isWhite)
+                        {
+                            listToUse = whitePiecePressure;
+                        }
+                        else
+                        {
+                            listToUse = blackPiecePressure;
+                        }
 
+                        List<string> validMovesList;
+                        if (cell.CurrentPiece.GetType() == typeof(Pawn))
+                        {
+                            var pawn = (Pawn)cell.CurrentPiece;
+                            validMovesList = pawn.piecePressureCoords;
+                        }
+                        else
+                        {
+                            validMovesList = cell.CurrentPiece.ValidMoves;
+                        }
+
+                        foreach (var move in validMovesList)
+                        {
+                            if (listToUse.IndexOf(move) == -1)
+                            {
+                                listToUse.Add(move);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        private void determineKingMoves()
+        {
             //update kings after moves have been figured out for other pieces
             //TODO figure out a better way to do this
             foreach (var row in Board)
@@ -109,12 +161,20 @@ namespace SalisburyChessEngine
                         {
                             continue;
                         }
-                        cell.CurrentPiece.determineValidMoves(cell.Coordinates);
+                        var king = (King)cell.CurrentPiece;
+                        if (king.isWhite)
+                        {
+                            this.whitePiecePressure = king.determineValidMoves(cell.Coordinates, blackPiecePressure, whitePiecePressure);
+                        }
+                        else
+                        {
+                            this.blackPiecePressure = king.determineValidMoves(cell.Coordinates, whitePiecePressure, blackPiecePressure);
+                        }
                     }
                 }
             }
         }
-        
+
         //Utility method to extract a cell from the list based on coordinates
         public Cell getCell(string coords)
         {
@@ -151,7 +211,7 @@ namespace SalisburyChessEngine
             {
                 return -1;
             }
-            if (parsedRow > BoardProperties.Rows || parsedRow  <= 0)
+            if (parsedRow > BoardProperties.Rows || parsedRow <= 0)
             {
                 return -1;
             }
@@ -196,38 +256,19 @@ namespace SalisburyChessEngine
             Console.WriteLine(" ");
             Console.Write("  A B C D E F G H");
         }
-        internal void TryMovePiece(string algebraicCoord, out Move move)
+        internal bool TryMovePiece(string algebraicCoord, out Move move)
         {
-            move = null;
-            if (algebraicCoord == null)
+            move = new Move(this.getCell);
+            move.Parse(algebraicCoord);
+            if (move.IsValid)
             {
-                return;
+                return true;
             }
-
-            var lastTwoLetters = algebraicCoord.Substring(algebraicCoord.Length - 2);
-            var cell = this.getCell(lastTwoLetters);
-            if (cell == null)
-            {
-                return;
+            else
+            { 
+                return false;
             }
-
-            if (cell.CurrentPiece != null)
-            {
-                return;
-            }
-            if (algebraicCoord.Length > 2)
-            {
-                char pieceLetter = algebraicCoord[0];
-                if (pieceLetter != 'B' && pieceLetter != 'K' && 
-                    pieceLetter != 'N' && pieceLetter != 'R' && pieceLetter != 'Q')
-                {
-                    return;
-                }
-
-               
-                
-            }
-            return;
+            
         }
     }
 

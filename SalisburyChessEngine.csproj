@@ -46,6 +46,7 @@
     <Compile Include="BoardProperties.cs" />
     <Compile Include="CellProperties.cs" />
     <Compile Include="Move.cs" />
+    <Compile Include="ValidMoveProperties.cs" />
     <Compile Include="Pieces\Pawn.cs" />
     <Compile Include="Pieces\King.cs" />
     <Compile Include="Pieces\Bishop.cs" />

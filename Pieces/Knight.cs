@@ -34,35 +34,35 @@ namespace SalisburyChessEngine.Pieces
             var oneUpTwoLeftCell = this.getCell(twoColumnsLeft.ToString() + (currentCell.Row + 1));
             
 
-            if (cellIsValidForPiece(currentCell, twoUpOneLeftCell))
+            if (cellIsValidForPiece(currentCell, twoUpOneLeftCell).IsValid)
             {
                 ValidMoves.Add(twoUpOneLeftCell.Coordinates);
             }
-            if (cellIsValidForPiece(currentCell, twoUpOneRightCell))
+            if (cellIsValidForPiece(currentCell, twoUpOneRightCell).IsValid)
             {
                 ValidMoves.Add(twoUpOneRightCell.Coordinates);
             }
-            if (cellIsValidForPiece(currentCell, oneUpTwoRightCell))
+            if (cellIsValidForPiece(currentCell, oneUpTwoRightCell).IsValid)
             {
                 ValidMoves.Add(oneUpTwoRightCell.Coordinates);
             }
-            if (cellIsValidForPiece(currentCell, oneDownTwoRightCell))
+            if (cellIsValidForPiece(currentCell, oneDownTwoRightCell).IsValid)
             {
                 ValidMoves.Add(oneDownTwoRightCell.Coordinates);
             }
-            if (cellIsValidForPiece(currentCell, twoDownOneRightCell))
+            if (cellIsValidForPiece(currentCell, twoDownOneRightCell).IsValid)
             {
                 ValidMoves.Add(twoDownOneRightCell.Coordinates);
             }
-            if (cellIsValidForPiece(currentCell, twoDownOneLeftCell))
+            if (cellIsValidForPiece(currentCell, twoDownOneLeftCell).IsValid)
             {
                 ValidMoves.Add(twoDownOneLeftCell.Coordinates);
             }
-            if (cellIsValidForPiece(currentCell, oneDownTwoLeftCell))
+            if (cellIsValidForPiece(currentCell, oneDownTwoLeftCell).IsValid)
             {
                 ValidMoves.Add(oneDownTwoLeftCell.Coordinates);
             }
-            if (cellIsValidForPiece(currentCell, oneUpTwoLeftCell))
+            if (cellIsValidForPiece(currentCell, oneUpTwoLeftCell).IsValid)
             {
                 ValidMoves.Add(oneUpTwoLeftCell.Coordinates);
             }

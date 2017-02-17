@@ -7,11 +7,13 @@ namespace SalisburyChessEngine.Pieces
     {
         public pieceType piece;
         private Func<string, Cell> getCell { get; set; }
+        public List<string> piecePressureCoords { get; set; }
 
         public Pawn(bool isWhite, Func<string, Cell> getCell) : base(isWhite)
         {
             this.piece = pieceType.Pawn;
             this.getCell = getCell;
+            this.piecePressureCoords = new List<string>();
         }
         
         public override void determineValidMoves(string coords)
@@ -59,7 +61,12 @@ namespace SalisburyChessEngine.Pieces
                     if (startingCell.CurrentPiece.isWhite != oneUoneLCell.CurrentPiece.isWhite)
                     {
                         ValidMoves.Add(oneUoneLCell.Coordinates);
+                        piecePressureCoords.Add(oneUoneLCell.Coordinates);
                     }
+                }
+                else
+                {
+                    piecePressureCoords.Add(oneUoneLCell.Coordinates);
                 }
                
             }
@@ -71,7 +78,12 @@ namespace SalisburyChessEngine.Pieces
                     if (startingCell.CurrentPiece.isWhite != oneUoneRCell.CurrentPiece.isWhite)
                     {
                         ValidMoves.Add(oneUoneRCell.Coordinates);
+                        piecePressureCoords.Add(oneUoneRCell.Coordinates);
                     }
+                }
+                else
+                {
+                    piecePressureCoords.Add(oneUoneRCell.Coordinates);
                 }
             }
         }
@@ -107,7 +119,12 @@ namespace SalisburyChessEngine.Pieces
                     if (startingCell.CurrentPiece.isWhite != oneUoneLCell.CurrentPiece.isWhite)
                     {
                         ValidMoves.Add(oneUoneLCell.Coordinates);
+                        piecePressureCoords.Add(oneUoneLCell.Coordinates);
                     }
+                }
+                else
+                {
+                    piecePressureCoords.Add(oneUoneLCell.Coordinates);
                 }
 
             }
@@ -119,7 +136,12 @@ namespace SalisburyChessEngine.Pieces
                     if (startingCell.CurrentPiece.isWhite != oneUoneRCell.CurrentPiece.isWhite)
                     {
                         ValidMoves.Add(oneUoneRCell.Coordinates);
+                        piecePressureCoords.Add(oneUoneRCell.Coordinates);
                     }
+                }
+                else
+                {
+                    piecePressureCoords.Add(oneUoneRCell.Coordinates);
                 }
             }
         }
