@@ -35,6 +35,14 @@ namespace SalisburyChessEngine.Pieces
                 if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
                 {
                     var cellToLeft = getCell(columnLetter.ToString() + startingCell.Row);
+                    if (cellToLeft == null)
+                    {
+                        break;
+                    }
+                    if (cellToLeft.columnLetter + cellToLeft.Row.ToString() == coords)
+                    {
+                        continue;
+                    }
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellToLeft);
                     if (validMoveProps.IsValid)
                     {
@@ -61,6 +69,14 @@ namespace SalisburyChessEngine.Pieces
                 if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
                 {
                     var cellToRight = getCell(columnLetter.ToString() + startingCell.Row);
+                    if (cellToRight == null)
+                    {
+                        break;
+                    }
+                    if (cellToRight.columnLetter + cellToRight.Row.ToString() == coords)
+                    {
+                        continue;
+                    }
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellToRight);
                     if (validMoveProps.IsValid)
                     {
@@ -86,6 +102,14 @@ namespace SalisburyChessEngine.Pieces
             {
                 
                 var cellUp = getCell(startingCell.columnLetter.ToString() + i.ToString());
+                if (cellUp == null)
+                {
+                    break;
+                }
+                if (cellUp.columnLetter + cellUp.Row.ToString() == coords)
+                {
+                    continue;
+                }
                 var validMoveProps = this.cellIsValidForPiece(startingCell, cellUp);
                 if (validMoveProps.IsValid)
                 {
@@ -110,6 +134,15 @@ namespace SalisburyChessEngine.Pieces
             {
                 
                 var cellDown = getCell(startingCell.columnLetter.ToString() + i.ToString());
+
+                if (cellDown == null)
+                {
+                    break;
+                }
+                if (cellDown.columnLetter + cellDown.Row.ToString() == coords)
+                {
+                    continue;
+                }
                 var validMoveProps = this.cellIsValidForPiece(startingCell, cellDown);
                 if (validMoveProps.IsValid)
                 {
@@ -138,6 +171,15 @@ namespace SalisburyChessEngine.Pieces
                 if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
                 {
                     var cellUpLeft = getCell(columnLetter.ToString() + row.ToString());
+                    if (cellUpLeft == null)
+                    {
+                        break;
+                    }
+                    if (cellUpLeft.columnLetter + cellUpLeft.Row.ToString() == coords)
+                    {
+                        row--;
+                        continue;
+                    }
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellUpLeft);
                     if (validMoveProps.IsValid)
                     {
@@ -169,6 +211,15 @@ namespace SalisburyChessEngine.Pieces
                 if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
                 {
                     var cellDownRight = getCell(columnLetter.ToString() + row.ToString());
+                    if (cellDownRight == null)
+                    {
+                        break;
+                    }
+                    if (cellDownRight.columnLetter + cellDownRight.Row.ToString() == coords)
+                    {
+                        row--;
+                        continue;
+                    }
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellDownRight);
                     if (validMoveProps.IsValid)
                     {
@@ -198,6 +249,15 @@ namespace SalisburyChessEngine.Pieces
                 if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
                 {
                     var cellUpLeft = getCell(columnLetter.ToString() + row.ToString());
+                    if (cellUpLeft == null)
+                    {
+                        break;
+                    }
+                    if (cellUpLeft.columnLetter + cellUpLeft.Row.ToString() == coords)
+                    {
+                        row++;
+                        continue;
+                    }
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellUpLeft);
                     if (validMoveProps.IsValid)
                     {
@@ -227,6 +287,15 @@ namespace SalisburyChessEngine.Pieces
                 if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
                 {
                     var cellUpRight = getCell(columnLetter.ToString() + row.ToString());
+                    if (cellUpRight == null)
+                    {
+                        break;
+                    }
+                    if (cellUpRight.columnLetter + cellUpRight.Row.ToString() == coords)
+                    {
+                        row++;
+                        continue;
+                    }
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellUpRight);
                     if (validMoveProps.IsValid)
                     {

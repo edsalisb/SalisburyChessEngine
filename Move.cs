@@ -5,14 +5,18 @@ namespace SalisburyChessEngine
     public class Move
     {
         private Func<string, Cell> getCell;
-        
+
+        private bool isWhitesTurn;
         public bool IsValid { get; set; }
         public Cell CellFrom { get; set; }
         public Cell CellTo { get; set; }
 
-        public Move(Func<string, Cell> getCell)
+        public Move(Func<string, Cell> getCell, bool isWhitesTurn)
         {
+            this.isWhitesTurn = isWhitesTurn;
             this.getCell = getCell;
+            this.CellFrom = null;
+            this.CellTo = null;
         }
         internal void Parse(string algebraicCoord)
         {
@@ -40,14 +44,26 @@ namespace SalisburyChessEngine
                 return;
             }
 
-            if (algebraicCoord[1] == '4')
+            if (lastTwoLetters[1] == '4')
             {
-                var whiteInitialCell = getCell(algebraicCoord[0] + '2'.ToString());
+                var whiteInitialCell = getCell(lastTwoLetters[0] + '2'.ToString());
                 if (whiteInitialCell == null || whiteInitialCell.CurrentPiece == null)
                 {
                     IsValid = false;
                     return;
                 }
+                var cellTo = getCell(lastTwoLetters);
+
+                if (cellTo.CurrentPiece != null)
+                {
+                    IsValid = false;
+                    return;
+                }
+
+                this.CellFrom = whiteInitialCell;
+                this.CellTo = cellTo;
+                IsValid = true;
+                return;
             }
 
 

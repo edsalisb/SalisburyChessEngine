@@ -23,13 +23,16 @@ namespace SalisburyChessEngine
 
 
             this.initializeBoard();
+            this.UpdateBoardState();
+        }
+
+        public void UpdateBoardState()
+        {
             this.UpdateBoard();
             this.determineTeamPressure();
             this.determineKingMoves();
             this.displayBoard();
         }
-
-
 
         public void initializeBoard()
         {
@@ -47,6 +50,13 @@ namespace SalisburyChessEngine
                 }
                 Board.Add(row);
             }
+        }
+
+        internal void replacePiece(Cell cellFrom, Cell cellTo)
+        {
+            var currentPiece = cellFrom.CurrentPiece;
+            cellTo.CurrentPiece = currentPiece;
+            cellFrom.CurrentPiece = null;
         }
 
         private void placePiecesOnBoard()
@@ -256,9 +266,9 @@ namespace SalisburyChessEngine
             Console.WriteLine(" ");
             Console.Write("  A B C D E F G H");
         }
-        internal bool TryMovePiece(string algebraicCoord, out Move move)
+        internal bool TryMovePiece(string algebraicCoord, bool isWhitesTurn, out Move move)
         {
-            move = new Move(this.getCell);
+            move = new Move(this.getCell, isWhitesTurn);
             move.Parse(algebraicCoord);
             if (move.IsValid)
             {
