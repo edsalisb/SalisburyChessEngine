@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using SalisburyChessEngine.Board;
+
 namespace SalisburyChessEngine
 {
     public class Game

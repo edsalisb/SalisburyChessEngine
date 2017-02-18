@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SalisburyChessEngine
+namespace SalisburyChessEngine.Board
 {
     public class BoardProperties
     {

@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using SalisburyChessEngine.Board;
 
 namespace SalisburyChessEngine.Pieces
 {
     public class King : PieceBase
     {
-        public pieceType piece;
+        public override pieceType TypeOfPiece { get; set; }
         private Func<string, Cell> getCell;
 
         public King(bool isWhite, Func<string, Cell> getCell): base(isWhite)
         {
-            this.piece = pieceType.King;
+            this.TypeOfPiece = pieceType.King;
             this.getCell = getCell;
         }
 
@@ -109,7 +110,7 @@ namespace SalisburyChessEngine.Pieces
 
         public bool cellIsValidForKing(Cell cellFrom, Cell cellTo, List<string> enemyPressure)
         {
-            var moveProps = new ValidMoveProperties();
+            var moveProps = new ValidNotationProperties();
             moveProps = moveProps.determineMoveProperties(cellFrom, cellTo, enemyPressure);
             if (moveProps.IsValid)
             {

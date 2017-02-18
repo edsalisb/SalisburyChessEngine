@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace SalisburyChessEngine.Pieces
 {
-    internal class Queen : PieceBase
+    public class Queen : PieceBase
     {
-        public pieceType piece;
+        public override pieceType TypeOfPiece { get; set; }
         private Func<string, Cell> getCell;
 
         public Queen(bool isWhite, Func<string, Cell> getCell) : base(isWhite)
         {
-            this.piece = pieceType.Queen;
+            this.TypeOfPiece = pieceType.Queen;
             this.getCell = getCell;
         }
 

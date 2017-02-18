@@ -43,15 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BoardProperties.cs" />
+    <Compile Include="Board\BoardProperties.cs" />
+    <Compile Include="Board\ChessBoardHelpers.cs" />
+    <Compile Include="Board\Move.cs" />
     <Compile Include="CellProperties.cs" />
-    <Compile Include="Move.cs" />
-    <Compile Include="ValidMoveProperties.cs" />
+    <Compile Include="Board\AlgebraicNotationParser.cs" />
+    <Compile Include="Board\ValidNotationProperties.cs" />
     <Compile Include="Pieces\Pawn.cs" />
     <Compile Include="Pieces\King.cs" />
     <Compile Include="Pieces\Bishop.cs" />
     <Compile Include="Cell.cs" />
-    <Compile Include="ChessBoard.cs" />
+    <Compile Include="Board\ChessBoard.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Pieces\Knight.cs" />
     <Compile Include="Pieces\PieceBase.cs" />

@@ -5,11 +5,11 @@ namespace SalisburyChessEngine.Pieces
 {
     public class Knight : PieceBase
     {
-        public pieceType piece;
+        public override pieceType TypeOfPiece { get; set; }
         private Func<string, Cell> getCell;
         public Knight(bool isWhite, Func<string, Cell> getCell): base(isWhite)
         {
-            this.piece = pieceType.Knight;
+            this.TypeOfPiece = pieceType.Knight;
             this.getCell = getCell;
         }
         public override void determineValidMoves(string coords)

@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SalisburyChessEngine.Pieces
+namespace SalisburyChessEngine.Board
 {
-    public class ValidMoveProperties
+    public class ValidNotationProperties
     {
         public bool IsValid { get; set; }
         public bool IsTerminatable { get; set; }
-        public ValidMoveProperties()
+    
+        public ValidNotationProperties()
         {
             IsValid = false;
             IsTerminatable = false;
         }
-        public ValidMoveProperties determineMoveProperties(Cell fromCell, Cell toCell)
+        public ValidNotationProperties determineMoveProperties(Cell fromCell, Cell toCell)
         {
             if (fromCell == null || toCell == null)
             {
@@ -52,7 +53,7 @@ namespace SalisburyChessEngine.Pieces
             return this;
         }
 
-        internal ValidMoveProperties determineMoveProperties(Cell cellFrom, Cell cellTo, List<string> enemyPressure)
+        public ValidNotationProperties determineMoveProperties(Cell cellFrom, Cell cellTo, List<string> enemyPressure)
         {
             var instance = determineMoveProperties(cellFrom, cellTo);
             if (instance.IsValid)

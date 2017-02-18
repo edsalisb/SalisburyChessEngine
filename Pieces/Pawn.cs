@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace SalisburyChessEngine.Pieces
 {
-    internal class Pawn: PieceBase
+    public class Pawn: PieceBase
     {
-        public pieceType piece;
+        public override pieceType TypeOfPiece { get; set; }
         private Func<string, Cell> getCell { get; set; }
         public List<string> piecePressureCoords { get; set; }
 
         public Pawn(bool isWhite, Func<string, Cell> getCell) : base(isWhite)
         {
-            this.piece = pieceType.Pawn;
+            this.TypeOfPiece = pieceType.Pawn;
             this.getCell = getCell;
             this.piecePressureCoords = new List<string>();
         }

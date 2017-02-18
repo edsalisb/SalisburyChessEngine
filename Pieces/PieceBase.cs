@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using SalisburyChessEngine;
+using SalisburyChessEngine.Board;
 
 namespace SalisburyChessEngine.Pieces
 {
@@ -16,7 +16,8 @@ namespace SalisburyChessEngine.Pieces
             Pawn = 1,
             King = 0
         }
-        
+
+        public abstract pieceType TypeOfPiece { get; set; }
         public bool isWhite;
         public abstract void determineValidMoves(string coords);
 
@@ -315,9 +316,9 @@ namespace SalisburyChessEngine.Pieces
             return cellList;
         }
 
-        public ValidMoveProperties cellIsValidForPiece(Cell fromCell, Cell toCell)
+        public ValidNotationProperties cellIsValidForPiece(Cell fromCell, Cell toCell)
         {
-            var validMoveProps = new ValidMoveProperties();
+            var validMoveProps = new ValidNotationProperties();
             return validMoveProps.determineMoveProperties(fromCell, toCell);
         }
 
