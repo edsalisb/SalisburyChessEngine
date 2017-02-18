@@ -11,6 +11,10 @@ namespace SalisburyChessEngine
         private bool gameEnded;
         private bool isWhitesTurn;
         private byte turnNumber;
+
+        //TODO: add to destroyed pieces List
+        public List<object>DestroyedBlackPieces { get; set; }
+        public List<object> DestroyedWhitePieces { get; set; }
         public Game(string whiteMode, string blackMode)
         {
             this.whiteMode = whiteMode;
@@ -20,6 +24,8 @@ namespace SalisburyChessEngine
 
             this.gameEnded = false;
             this.moveList = new List<Move>();
+            this.DestroyedBlackPieces = new List<object>();
+            this.DestroyedWhitePieces = new List<object>();
             if (this.whiteMode == "ai" || this.blackMode == "ai")
             {
                 Console.WriteLine("Not Supported Yet");
@@ -32,6 +38,8 @@ namespace SalisburyChessEngine
             this.cb = new ChessBoard();
             while (!this.gameEnded)
             {
+                this.displayTurnStatus();
+
                 Console.WriteLine("Move:");
                 string algebraicCoord = Console.ReadLine();
                 Move potentialMove;
@@ -43,7 +51,27 @@ namespace SalisburyChessEngine
 
                     this.UpdateGameStatus();
                 }
+                else
+                {
+                    Console.WriteLine("Invalid Move entered");
+                }
             }
+        }
+
+        private void displayTurnStatus()
+        {
+            string output = "";
+            if (this.isWhitesTurn)
+            {
+                output += "White's turn: ";
+            }
+            else
+            {
+                output += "Black's turn: ";
+            }
+
+            output += "Turn Number: " + this.turnNumber.ToString();
+            Console.WriteLine(output);
         }
 
         private void UpdateGameStatus()
