@@ -7,6 +7,7 @@ namespace SalisburyChessEngine.Pieces
     {
         private Func<string, Cell> getCell;
         public override pieceType TypeOfPiece { get; set; }
+        public override string CurrentCoordinates { get; set; }
 
         public Bishop(bool isWhite, Func<string, Cell> getCell): base(isWhite)
         {

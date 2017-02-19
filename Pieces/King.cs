@@ -8,6 +8,7 @@ namespace SalisburyChessEngine.Pieces
     {
         public override pieceType TypeOfPiece { get; set; }
         private Func<string, Cell> getCell;
+        public override string CurrentCoordinates { get; set; }
 
         public King(bool isWhite, Func<string, Cell> getCell): base(isWhite)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using SalisburyChessEngine.Pieces;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace SalisburyChessEngine.Board
 {
@@ -8,10 +9,9 @@ namespace SalisburyChessEngine.Board
         public class AlgebraicNotationParser
         {
             private ChessBoard board;
-            private Func<string, Cell> getCell;
             private string lastTwoLetters;
             private int captureIndex;
-            private string algebraicCoord;
+            private string leftToParse;
             private ValidNotationProperties validMoveProperties;
             private Move potentialMove;
             public AlgebraicNotationParser(ChessBoard b)
@@ -21,72 +21,84 @@ namespace SalisburyChessEngine.Board
             }
             internal Move Parse(string algebraicCoord, bool isWhitesTurn)
             {
-                this.potentialMove = new Move(isWhitesTurn);
-                this.algebraicCoord = algebraicCoord;
-                if (algebraicCoord == null)
-                {
-                    this.potentialMove.IsValid = false;
-                    return this.potentialMove;
-                }
-                if (algebraicCoord.Length < 2)
-                {
-                    return null;
-                }
+                this.potentialMove = new Move(algebraicCoord, isWhitesTurn);
+                this.leftToParse = algebraicCoord;
 
                 this.lastTwoLetters = algebraicCoord.Substring(algebraicCoord.Length - 2);
-                potentialMove.CellTo = this.getCell(lastTwoLetters);
+                if (!this.determineCellTo())
+                {
+                    return potentialMove;
+                }
+                this.determineCellFrom();
+
+
+                return potentialMove;
+            }
+            public bool determineCellTo()
+            {
+                this.potentialMove.CellTo = this.board.getCell(lastTwoLetters);
                 if (potentialMove.CellTo == null)
                 {
                     this.potentialMove.IsValid = false;
-                    return this.potentialMove;
+                    return false;
                 }
 
                 if (potentialMove.CellTo.CurrentPiece != null)
                 {
-                    if (algebraicCoord.IndexOf('x') == -1)
+                    if (this.potentialMove.AlgebraicCoord.IndexOf('x') == -1)
                     {
                         this.potentialMove.IsValid = false;
-                        return this.potentialMove;
+                        return false;
                     }
                     else
                     {
-                        captureIndex = algebraicCoord.IndexOf('x');
+                        captureIndex = this.potentialMove.AlgebraicCoord.IndexOf('x');
                         if (captureIndex == 0)
                         {
                             this.potentialMove.IsValid = false;
-                            return this.potentialMove;
+                            return false;
                         }
                         potentialMove.IsCapturable = true;
                     }
                 }
+                else
+                {
+                    if (this.potentialMove.AlgebraicCoord.IndexOf('x') > -1)
+                    {
+                        this.potentialMove.IsValid = false;
+                        return false;
+                    }
+                }
 
-                this.determineCellFrom();
-                return potentialMove;
+                int index = this.potentialMove.AlgebraicCoord.IndexOf(lastTwoLetters);
+                this.leftToParse = this.leftToParse.Substring(0, index);
+                return true;
             }
-
             public void determineCellFrom()
             {
-                var pieceLetter = algebraicCoord[0];
+                var pieceLetter = this.potentialMove.AlgebraicCoord[0];
+                var filterLetter = this.potentialMove.AlgebraicCoord[1];
+
 
                 if (pieceLetter == 'N')
                 {
-                    CheckForKnightMoves();
+                    CheckPieceMovesBase<Knight>(filterLetter, this.board.FindWhiteKnights, this.board.FindBlackKnights);
                 }
                 else if (pieceLetter == 'B')
                 {
-                    CheckForBishopMoves();
+                    CheckPieceMovesBase<Bishop>(filterLetter, this.board.FindWhiteBishops, this.board.FindBlackBishops);
                 }
                 else if (pieceLetter == 'R')
                 {
-                    CheckForRookMoves();
+                    CheckPieceMovesBase<Rook>(filterLetter, this.board.FindWhiteRooks, this.board.FindBlackRooks);
                 }
                 else if (pieceLetter == 'Q')
                 {
-                    CheckForQueenMoves();
+                    CheckPieceMovesBase<Queen>(filterLetter, this.board.FindWhiteQueens, this.board.FindBlackQueens);
                 }
                 else if (pieceLetter == 'K')
                 {
-                    CheckForKingMoves();
+                    CheckPieceMovesBase<King>(filterLetter, this.board.FindWhiteKings, this.board.FindBlackKings);
                 }
                 else
                 {
@@ -94,31 +106,90 @@ namespace SalisburyChessEngine.Board
                 }
 
             }
-            private void CheckForKnightMoves()
+            private void CheckPieceMovesBase<T>(char filter, Func<List<T>> getWhitePieceList, Func<List<T>> getBlackPieceList) where T: PieceBase
             {
+                List<T> friendlyPieceList, enemyPieceList;
+                if (this.potentialMove.isWhitesTurn)
+                {
+                    friendlyPieceList = getWhitePieceList();
+                    enemyPieceList = getBlackPieceList();
+                }
+                else
+                {
+                    friendlyPieceList = getBlackPieceList();
+                    enemyPieceList = getWhitePieceList();
+                }
 
+                foreach (var piece in friendlyPieceList)
+                {
+                    var friendlyPiece = (PieceBase)piece;
+                    int index = friendlyPiece.ValidMoves.IndexOf(this.lastTwoLetters);
+                    if (index > -1)
+                    {
+                        if (this.potentialMove.IsCapturable)
+                        {
+                            bool valid = false;
+                            foreach (var piece2 in enemyPieceList)
+                            {
+                                var enemyPiece = (PieceBase)piece2;
+                                if (friendlyPiece.ValidMoves.IndexOf(enemyPiece.CurrentCoordinates) > -1)
+                                {
+                                    valid = true;
+                                    break;
+                                }
+                            }
+                            if (!valid)
+                            {
+                                return;
+                            }
+                        }
+                        this.potentialMove.IsValid = true;
+                        this.potentialMove.CellFrom = this.board.getCell(friendlyPiece.CurrentCoordinates);
+                        break;
+                    }
+                }
             }
-
-            private void CheckForBishopMoves()
+            private void CheckForKnightMoves(char filter)
             {
-                throw new NotImplementedException();
-            }
+                List<Knight> friendlyKnightList, enemyKnightList;
+                if (this.potentialMove.isWhitesTurn)
+                {
+                    friendlyKnightList = this.board.FindWhiteKnights();
+                    enemyKnightList = this.board.FindBlackKnights();
+                }
+                else
+                {
+                    friendlyKnightList = this.board.FindBlackKnights();
+                    enemyKnightList = this.board.FindWhiteKnights();
+                }
 
-            private void CheckForRookMoves()
-            {
-                throw new NotImplementedException();
+                foreach (var knight in friendlyKnightList)
+                {
+                    int index = knight.ValidMoves.IndexOf(this.lastTwoLetters);
+                    if (index > -1)
+                    {
+                        if (this.potentialMove.IsCapturable)
+                        {
+                            bool valid = false;
+                            foreach (var enemyKnight in enemyKnightList)
+                            {
+                                if (knight.ValidMoves.IndexOf(knight.CurrentCoordinates) > -1)
+                                {
+                                    valid = true;
+                                    break;
+                                }
+                            }
+                            if (!valid)
+                            {
+                                return;
+                            }
+                        }
+                        this.potentialMove.IsValid = true;
+                        this.potentialMove.CellFrom = this.board.getCell(knight.CurrentCoordinates);
+                        break;
+                    }
+                }
             }
-
-            private void CheckForQueenMoves()
-            {
-                throw new NotImplementedException();
-            }
-
-            private void CheckForKingMoves()
-            {
-                throw new NotImplementedException();
-            }
-
             public void CheckForPawnMoves()
             {
                 if (this.potentialMove.IsCapturable)
@@ -134,7 +205,7 @@ namespace SalisburyChessEngine.Board
 
             public void CheckPawnCaptureMoves()
             {
-                var columnFrom = this.algebraicCoord[captureIndex - 1];
+                var columnFrom = this.potentialMove.AlgebraicCoord[captureIndex - 1];
                 var columnDifference = Math.Abs(lastTwoLetters[0] - columnFrom);
 
                 if (columnDifference != 1)
@@ -148,11 +219,11 @@ namespace SalisburyChessEngine.Board
                     Cell potentialCellFrom;
                     if (this.potentialMove.isWhitesTurn)
                     {
-                        potentialCellFrom = getCell(columnFrom.ToString() + (rowTo - 1).ToString());
+                        potentialCellFrom = this.board.getCell(columnFrom.ToString() + (rowTo - 1).ToString());
                     }
                     else
                     {
-                        potentialCellFrom = getCell(columnFrom.ToString() + (rowTo + 1).ToString());
+                        potentialCellFrom = this.board.getCell(columnFrom.ToString() + (rowTo + 1).ToString());
                     }
 
                     this.validMoveProperties = this.validMoveProperties.determineMoveProperties(potentialCellFrom, this.potentialMove.CellTo);
@@ -174,7 +245,7 @@ namespace SalisburyChessEngine.Board
                 {
                     if (lastTwoLetters[1] == '4')
                     {
-                        var whiteInitialCell = getCell(lastTwoLetters[0] + '2'.ToString());
+                        var whiteInitialCell = this.board.getCell(lastTwoLetters[0] + '2'.ToString());
                         this.validMoveProperties = this.validMoveProperties.determineMoveProperties(whiteInitialCell, this.potentialMove.CellTo);
                         if (this.validMoveProperties.IsValid)
                         {
@@ -183,7 +254,7 @@ namespace SalisburyChessEngine.Board
                             return;
                         }
 
-                        var whiteOneRow = getCell(lastTwoLetters[0] + '3'.ToString());
+                        var whiteOneRow = this.board.getCell(lastTwoLetters[0] + '3'.ToString());
                         this.validMoveProperties = this.validMoveProperties.determineMoveProperties(whiteOneRow, this.potentialMove.CellTo);
                         if (this.validMoveProperties.IsValid)
                         {
@@ -197,7 +268,7 @@ namespace SalisburyChessEngine.Board
                         int rowNum;
                         if (int.TryParse(lastTwoLetters[1].ToString(), out rowNum))
                         {
-                            var potentialCellFrom = getCell(lastTwoLetters[0] + (rowNum - 1).ToString());
+                            var potentialCellFrom = this.board.getCell(lastTwoLetters[0] + (rowNum - 1).ToString());
                             this.validMoveProperties = this.validMoveProperties.determineMoveProperties(potentialCellFrom, this.potentialMove.CellTo);
                             if (this.validMoveProperties.IsValid)
                             {
@@ -218,7 +289,7 @@ namespace SalisburyChessEngine.Board
                 {
                     if (lastTwoLetters[1] == '5')
                     {
-                        var blackInitialCell = getCell(lastTwoLetters[0] + '7'.ToString());
+                        var blackInitialCell = this.board.getCell(lastTwoLetters[0] + '7'.ToString());
                         this.validMoveProperties = this.validMoveProperties.determineMoveProperties(blackInitialCell, this.potentialMove.CellTo);
                         if (this.validMoveProperties.IsValid)
                         {
@@ -227,7 +298,7 @@ namespace SalisburyChessEngine.Board
                             return;
                         }
 
-                        var whiteOneRow = getCell(lastTwoLetters[0] + '6'.ToString());
+                        var whiteOneRow = this.board.getCell(lastTwoLetters[0] + '6'.ToString());
                         this.validMoveProperties = this.validMoveProperties.determineMoveProperties(whiteOneRow, this.potentialMove.CellTo);
                         if (this.validMoveProperties.IsValid)
                         {
@@ -241,7 +312,7 @@ namespace SalisburyChessEngine.Board
                         int rowNum;
                         if (int.TryParse(lastTwoLetters[1].ToString(), out rowNum))
                         {
-                            var potentialCellFrom = getCell(lastTwoLetters[0] + (rowNum + 1).ToString());
+                            var potentialCellFrom = this.board.getCell(lastTwoLetters[0] + (rowNum + 1).ToString());
                             this.validMoveProperties = this.validMoveProperties.determineMoveProperties(potentialCellFrom, this.potentialMove.CellTo);
                             if (this.validMoveProperties.IsValid)
                             {

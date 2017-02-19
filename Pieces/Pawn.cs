@@ -7,6 +7,7 @@ namespace SalisburyChessEngine.Pieces
     {
         public override pieceType TypeOfPiece { get; set; }
         private Func<string, Cell> getCell { get; set; }
+        public override string CurrentCoordinates { get; set; }
         public List<string> piecePressureCoords { get; set; }
 
         public Pawn(bool isWhite, Func<string, Cell> getCell) : base(isWhite)

@@ -48,7 +48,7 @@ namespace SalisburyChessEngine.Board
         }
         public List<Knight> FindBlackKnights()
         {
-            return executeCellLevelFunction(FindKnights).Where(piecesAreWhiteAndNotNull).ToList();
+            return executeCellLevelFunction(FindKnights).Where(piecesAreBlackAndNotNull).ToList();
         }
         public List<Bishop> FindWhiteBishops()
         {
@@ -56,7 +56,7 @@ namespace SalisburyChessEngine.Board
         }
         public List<Bishop> FindBlackBishops()
         {
-            return executeCellLevelFunction(FindBishops).Where(piecesAreWhiteAndNotNull).ToList();
+            return executeCellLevelFunction(FindBishops).Where(piecesAreBlackAndNotNull).ToList();
         }
         public List<Rook> FindWhiteRooks()
         {
@@ -64,7 +64,7 @@ namespace SalisburyChessEngine.Board
         }
         public List<Rook> FindBlackRooks()
         {
-            return executeCellLevelFunction(FindRooks).Where(piecesAreWhiteAndNotNull).ToList();
+            return executeCellLevelFunction(FindRooks).Where(piecesAreBlackAndNotNull).ToList();
         }
         public List<Queen> FindWhiteQueens()
         {
@@ -72,7 +72,7 @@ namespace SalisburyChessEngine.Board
         }
         public List<Queen> FindBlackQueens()
         {
-            return executeCellLevelFunction(FindQueens).Where(piecesAreWhiteAndNotNull).ToList();
+            return executeCellLevelFunction(FindQueens).Where(piecesAreBlackAndNotNull).ToList();
         }
         public List<King> FindWhiteKings()
         {
@@ -80,7 +80,7 @@ namespace SalisburyChessEngine.Board
         }
         public List<King> FindBlackKings()
         {
-            return executeCellLevelFunction(FindKings).Where(piecesAreWhiteAndNotNull).ToList();
+            return executeCellLevelFunction(FindKings).Where(piecesAreBlackAndNotNull).ToList();
         }
 
         private bool piecesAreWhiteAndNotNull<T>(T arg) where T : PieceBase

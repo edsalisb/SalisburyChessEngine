@@ -113,6 +113,7 @@ namespace SalisburyChessEngine.Board
                 {
                     return;
                 }
+                cell.CurrentPiece.CurrentCoordinates = cell.Coordinates;
                 cell.CurrentPiece.determineValidMoves(cell.Coordinates);
             }
         }
@@ -268,6 +269,7 @@ namespace SalisburyChessEngine.Board
         internal bool TryMovePiece(string algebraicCoord, bool isWhitesTurn, out Move move)
         {
             move = parser.Parse(algebraicCoord, isWhitesTurn);
+
             if (move.IsValid)
             {
                 return true;

@@ -17,6 +17,7 @@ namespace SalisburyChessEngine.Pieces
             King = 0
         }
 
+        public abstract string CurrentCoordinates { get; set; }
         public abstract pieceType TypeOfPiece { get; set; }
         public bool isWhite;
         public abstract void determineValidMoves(string coords);
