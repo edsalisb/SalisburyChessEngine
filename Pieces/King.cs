@@ -9,6 +9,7 @@ namespace SalisburyChessEngine.Pieces
         public override pieceType TypeOfPiece { get; set; }
         private Func<string, Cell> getCell;
         public override string CurrentCoordinates { get; set; }
+        public bool IsChecked { get; internal set; }
 
         public King(bool isWhite, Func<string, Cell> getCell): base(isWhite)
         {
@@ -22,7 +23,7 @@ namespace SalisburyChessEngine.Pieces
             return "K";
         }
 
-        public override void determineValidMoves(string coords)
+        public override void determineValidMoves(string coords, bool isChecked)
         {
             throw new NotImplementedException();
         }

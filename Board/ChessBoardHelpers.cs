@@ -18,7 +18,6 @@ namespace SalisburyChessEngine.Board
                 }
             }
         }
-
         public List<T> executeCellLevelFunction<T>(Func<Cell, T> func)
         {
             var listOfStuff = new List<T>();

@@ -11,7 +11,6 @@ namespace SalisburyChessEngine
         private ChessBoard cb;
         public List<Move> moveList;
         private bool gameEnded;
-        private bool isWhitesTurn;
         private byte turnNumber;
 
         //TODO: add to destroyed pieces List
@@ -21,7 +20,6 @@ namespace SalisburyChessEngine
         {
             this.whiteMode = whiteMode;
             this.blackMode = blackMode;
-            this.isWhitesTurn = true;
             this.turnNumber = 1;
 
             this.gameEnded = false;
@@ -45,7 +43,7 @@ namespace SalisburyChessEngine
                 Console.WriteLine("Move:");
                 string algebraicCoord = Console.ReadLine();
                 Move potentialMove;
-                if (this.cb.TryMovePiece(algebraicCoord, this.isWhitesTurn,out potentialMove))
+                if (this.cb.TryMovePiece(algebraicCoord, out potentialMove))
                 {
                     moveList.Add(potentialMove);
                     this.cb.replacePiece(potentialMove.CellFrom, potentialMove.CellTo);
@@ -63,7 +61,7 @@ namespace SalisburyChessEngine
         private void displayTurnStatus()
         {
             string output = "";
-            if (this.isWhitesTurn)
+            if (this.cb.isWhitesTurn)
             {
                 output += "White's turn: ";
             }
@@ -78,13 +76,13 @@ namespace SalisburyChessEngine
 
         private void UpdateGameStatus()
         {
-            if (this.isWhitesTurn)
+            if (this.cb.isWhitesTurn)
             {
-                this.isWhitesTurn = false;
+                this.cb.isWhitesTurn = false;
             }
             else
             {
-                this.isWhitesTurn = true;
+                this.cb.isWhitesTurn = true;
                 this.turnNumber++;
             }
         }

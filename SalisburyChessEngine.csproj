@@ -45,7 +45,7 @@
   <ItemGroup>
     <Compile Include="Board\BoardProperties.cs" />
     <Compile Include="Board\ChessBoardHelpers.cs" />
-    <Compile Include="Board\Move.cs" />
+    <Compile Include="Moves\Move.cs" />
     <Compile Include="CellProperties.cs" />
     <Compile Include="Board\AlgebraicNotationParser.cs" />
     <Compile Include="Board\ValidNotationProperties.cs" />

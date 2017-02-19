@@ -17,7 +17,7 @@ namespace SalisburyChessEngine.Pieces
             this.piecePressureCoords = new List<string>();
         }
         
-        public override void determineValidMoves(string coords)
+        public override void determineValidMoves(string coords, bool isChecked)
         {
             ValidMoves = new List<string>();
 

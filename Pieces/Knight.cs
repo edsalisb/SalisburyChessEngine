@@ -13,7 +13,7 @@ namespace SalisburyChessEngine.Pieces
             this.TypeOfPiece = pieceType.Knight;
             this.getCell = getCell;
         }
-        public override void determineValidMoves(string coords)
+        public override void determineValidMoves(string coords, bool isChecked)
         {
             ValidMoves = new List<string>();
 

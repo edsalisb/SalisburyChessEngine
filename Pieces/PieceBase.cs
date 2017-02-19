@@ -20,7 +20,7 @@ namespace SalisburyChessEngine.Pieces
         public abstract string CurrentCoordinates { get; set; }
         public abstract pieceType TypeOfPiece { get; set; }
         public bool isWhite;
-        public abstract void determineValidMoves(string coords);
+        public abstract void determineValidMoves(string coords, bool isChecked);
 
         public PieceBase(bool isWhite)
         {

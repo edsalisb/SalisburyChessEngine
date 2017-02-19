@@ -12,9 +12,12 @@ namespace SalisburyChessEngine.Board
 
         public List<string> blackPiecePressure { get; set; }
         public List<string> whitePiecePressure { get; set; }
+        public bool isWhitesTurn { get;  set; }
+
         private AlgebraicNotationParser parser;
         public ChessBoard()
         {
+            this.isWhitesTurn = true;
             this.parser = new AlgebraicNotationParser(this);
 
             this.WhiteKing = new King(true, this.getCell);
@@ -103,8 +106,21 @@ namespace SalisburyChessEngine.Board
         public void UpdateBoard()
         {
             executeCellLevelFunction(DetermineValidMovesIfNotKing);
-        }
+            if (this.whitePiecePressure.IndexOf(this.BlackKing.CurrentCoordinates) > -1)
+            {
+                //black king checked
+                this.WhiteKing.IsChecked = true;
+                executeCellLevelFunction(DetermineValidMovesIfNotKing);
+            }
 
+            else if (this.blackPiecePressure.IndexOf(this.WhiteKing.CurrentCoordinates) > -1)
+            {
+                //white king checked
+                this.BlackKing.IsChecked = true;
+                executeCellLevelFunction(DetermineValidMovesIfNotKing);
+            }
+            
+        }
         public void DetermineValidMovesIfNotKing(Cell cell)
         {
             if (cell.CurrentPiece != null)
@@ -114,9 +130,22 @@ namespace SalisburyChessEngine.Board
                     return;
                 }
                 cell.CurrentPiece.CurrentCoordinates = cell.Coordinates;
-                cell.CurrentPiece.determineValidMoves(cell.Coordinates);
+                bool isChecked = false;
+
+                if (cell.CurrentPiece.isWhite && this.WhiteKing.IsChecked)
+                {
+                    isChecked = true;
+                }
+                else if (!cell.CurrentPiece.isWhite && this.BlackKing.IsChecked)
+                {
+                    isChecked = true;
+                }
+                
+                cell.CurrentPiece.determineValidMoves(cell.Coordinates, isChecked);
             }
         }
+
+      
         private void determineTeamPressure()
         {
             executeCellLevelFunction(determineCellPressure);
@@ -266,9 +295,9 @@ namespace SalisburyChessEngine.Board
             Console.WriteLine(" ");
             Console.Write("  A B C D E F G H");
         }
-        internal bool TryMovePiece(string algebraicCoord, bool isWhitesTurn, out Move move)
+        internal bool TryMovePiece(string algebraicCoord, out Move move)
         {
-            move = parser.Parse(algebraicCoord, isWhitesTurn);
+            move = parser.Parse(algebraicCoord, this.isWhitesTurn);
 
             if (move.IsValid)
             {

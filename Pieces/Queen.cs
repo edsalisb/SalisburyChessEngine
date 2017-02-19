@@ -21,7 +21,7 @@ namespace SalisburyChessEngine.Pieces
             return "Q";
         }
 
-        public override void determineValidMoves(string coords)
+        public override void determineValidMoves(string coords, bool isChecked)
         {
             ValidMoves = new List<string>();
             var downCells = getValidCellsDown(coords, getCell);
