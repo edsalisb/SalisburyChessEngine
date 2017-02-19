@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using SalisburyChessEngine.Board;
+using SalisburyChessEngine.Moves;
 
 namespace SalisburyChessEngine
 {

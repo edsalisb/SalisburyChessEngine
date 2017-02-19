@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
-
+using SalisburyChessEngine.Moves;
+using SalisburyChessEngine.Utilities;
 namespace SalisburyChessEngine.Board
 {
     public class ValidNotationProperties
@@ -53,12 +55,12 @@ namespace SalisburyChessEngine.Board
             return this;
         }
 
-        public ValidNotationProperties determineMoveProperties(Cell cellFrom, Cell cellTo, List<string> enemyPressure)
+        public ValidNotationProperties determineMoveProperties(Cell cellFrom, Cell cellTo, List<PotentialMoves> enemyPressure)
         {
             var instance = determineMoveProperties(cellFrom, cellTo);
             if (instance.IsValid)
             {
-                if (enemyPressure.IndexOf(cellTo.Coordinates) != -1)
+                if (enemyPressure.Select(ListUtilities.SelectCoordinates).ToList().IndexOf(cellTo.Coordinates) != -1)
                 {
                     instance.IsValid = false;
                 }

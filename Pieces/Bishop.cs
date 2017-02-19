@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using SalisburyChessEngine.Moves;
 namespace SalisburyChessEngine.Pieces
 {
     public class Bishop : PieceBase
@@ -18,7 +18,7 @@ namespace SalisburyChessEngine.Pieces
 
         public override void determineValidMoves(string coords, bool isChecked)
         {
-            ValidMoves = new List<string>();
+            ValidMoves = new List<PotentialMoves>();
             var downLeftCells = getValidCellsDownLeft(coords, getCell);
             var downRightCells = getValidCellsDownRight(coords, getCell);
             var upLeftCells = getValidCellsUpLeft(coords, getCell);

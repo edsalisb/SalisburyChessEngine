@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Linq;
 using SalisburyChessEngine.Pieces;
+using SalisburyChessEngine.Moves;
+using SalisburyChessEngine.Utilities;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+
 
 namespace SalisburyChessEngine.Board
 {
@@ -119,11 +122,10 @@ namespace SalisburyChessEngine.Board
                     friendlyPieceList = getBlackPieceList();
                     enemyPieceList = getWhitePieceList();
                 }
-
                 foreach (var piece in friendlyPieceList)
                 {
                     var friendlyPiece = (PieceBase)piece;
-                    int index = friendlyPiece.ValidMoves.IndexOf(this.lastTwoLetters);
+                    int index = friendlyPiece.ValidMoves.Select(ListUtilities.SelectCoordinates).ToList().IndexOf(this.lastTwoLetters);
                     if (index > -1)
                     {
                         if (this.potentialMove.IsCapturable)
@@ -132,7 +134,7 @@ namespace SalisburyChessEngine.Board
                             foreach (var piece2 in enemyPieceList)
                             {
                                 var enemyPiece = (PieceBase)piece2;
-                                if (friendlyPiece.ValidMoves.IndexOf(enemyPiece.CurrentCoordinates) > -1)
+                                if (friendlyPiece.ValidMoves.Select(ListUtilities.SelectCoordinates).ToList().IndexOf(enemyPiece.CurrentCoordinates) > -1)
                                 {
                                     valid = true;
                                     break;
@@ -149,47 +151,7 @@ namespace SalisburyChessEngine.Board
                     }
                 }
             }
-            private void CheckForKnightMoves(char filter)
-            {
-                List<Knight> friendlyKnightList, enemyKnightList;
-                if (this.potentialMove.isWhitesTurn)
-                {
-                    friendlyKnightList = this.board.FindWhiteKnights();
-                    enemyKnightList = this.board.FindBlackKnights();
-                }
-                else
-                {
-                    friendlyKnightList = this.board.FindBlackKnights();
-                    enemyKnightList = this.board.FindWhiteKnights();
-                }
 
-                foreach (var knight in friendlyKnightList)
-                {
-                    int index = knight.ValidMoves.IndexOf(this.lastTwoLetters);
-                    if (index > -1)
-                    {
-                        if (this.potentialMove.IsCapturable)
-                        {
-                            bool valid = false;
-                            foreach (var enemyKnight in enemyKnightList)
-                            {
-                                if (knight.ValidMoves.IndexOf(knight.CurrentCoordinates) > -1)
-                                {
-                                    valid = true;
-                                    break;
-                                }
-                            }
-                            if (!valid)
-                            {
-                                return;
-                            }
-                        }
-                        this.potentialMove.IsValid = true;
-                        this.potentialMove.CellFrom = this.board.getCell(knight.CurrentCoordinates);
-                        break;
-                    }
-                }
-            }
             public void CheckForPawnMoves()
             {
                 if (this.potentialMove.IsCapturable)

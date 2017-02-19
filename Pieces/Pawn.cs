@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SalisburyChessEngine.Moves;
 
 namespace SalisburyChessEngine.Pieces
 {
@@ -8,18 +9,18 @@ namespace SalisburyChessEngine.Pieces
         public override pieceType TypeOfPiece { get; set; }
         private Func<string, Cell> getCell { get; set; }
         public override string CurrentCoordinates { get; set; }
-        public List<string> piecePressureCoords { get; set; }
+        public List<PotentialMoves> piecePressureCoords { get; set; }
 
         public Pawn(bool isWhite, Func<string, Cell> getCell) : base(isWhite)
         {
             this.TypeOfPiece = pieceType.Pawn;
             this.getCell = getCell;
-            this.piecePressureCoords = new List<string>();
+            this.piecePressureCoords = new List<PotentialMoves>();
         }
         
         public override void determineValidMoves(string coords, bool isChecked)
         {
-            ValidMoves = new List<string>();
+            ValidMoves = new List<PotentialMoves>();
 
             if (this.isWhite)
             {
@@ -39,7 +40,8 @@ namespace SalisburyChessEngine.Pieces
                 var twoRowsForwardCell = getCell(startingCell.columnLetter.ToString() + (startingCell.Row + 2));
                 if (cellIsValidForPawn(startingCell, twoRowsForwardCell))
                 {
-                    this.ValidMoves.Add(twoRowsForwardCell.Coordinates);
+                    var moveProperty = new PotentialMoves(twoRowsForwardCell.Coordinates, PotentialMoves.movePath.Up);
+                    this.ValidMoves.Add(moveProperty);
                 }
             }
 
@@ -47,7 +49,8 @@ namespace SalisburyChessEngine.Pieces
             var oneRowForwardCell = getCell(startingCell.columnLetter.ToString() + (startingCell.Row + 1));
             if (cellIsValidForPawn(startingCell, oneRowForwardCell))
             {
-                this.ValidMoves.Add(oneRowForwardCell.Coordinates);
+                var moveProperty = new PotentialMoves(oneRowForwardCell.Coordinates, PotentialMoves.movePath.Up);
+                this.ValidMoves.Add(moveProperty);
             }
 
             //checking cells 1U1L and 1U1R for an enemy piece to take
@@ -57,34 +60,38 @@ namespace SalisburyChessEngine.Pieces
             if (leftColumnLetter != null)
             {
                 var oneUoneLCell = getCell(leftColumnLetter.ToString() + (startingCell.Row + 1));
+                var moveProperty = new PotentialMoves(oneUoneLCell.Coordinates, PotentialMoves.movePath.UpLeft);
+
                 if (oneUoneLCell.CurrentPiece != null)
                 {
                     if (startingCell.CurrentPiece.isWhite != oneUoneLCell.CurrentPiece.isWhite)
-                    {
-                        ValidMoves.Add(oneUoneLCell.Coordinates);
-                        piecePressureCoords.Add(oneUoneLCell.Coordinates);
+                    { 
+                        this.ValidMoves.Add(moveProperty);
+                        piecePressureCoords.Add(moveProperty);
                     }
                 }
                 else
                 {
-                    piecePressureCoords.Add(oneUoneLCell.Coordinates);
+                    piecePressureCoords.Add(moveProperty);
                 }
                
             }
             if (rightColumnLetter != null)
             {
                 var oneUoneRCell = getCell(rightColumnLetter.ToString() + (startingCell.Row + 1));
+                var moveProperty = new PotentialMoves(oneUoneRCell.Coordinates, PotentialMoves.movePath.UpRight);
+
                 if (oneUoneRCell.CurrentPiece != null)
                 {
                     if (startingCell.CurrentPiece.isWhite != oneUoneRCell.CurrentPiece.isWhite)
                     {
-                        ValidMoves.Add(oneUoneRCell.Coordinates);
-                        piecePressureCoords.Add(oneUoneRCell.Coordinates);
+                        this.ValidMoves.Add(moveProperty);
+                        piecePressureCoords.Add(moveProperty);
                     }
                 }
                 else
                 {
-                    piecePressureCoords.Add(oneUoneRCell.Coordinates);
+                    piecePressureCoords.Add(moveProperty);
                 }
             }
         }
@@ -97,7 +104,8 @@ namespace SalisburyChessEngine.Pieces
                 var twoRowsForwardCell = getCell(startingCell.columnLetter.ToString() + (startingCell.Row - 2));
                 if (cellIsValidForPawn(startingCell, twoRowsForwardCell))
                 {
-                    this.ValidMoves.Add(twoRowsForwardCell.Coordinates);
+                    var moveProperty = new PotentialMoves(twoRowsForwardCell.Coordinates, PotentialMoves.movePath.Down);
+                    this.ValidMoves.Add(moveProperty);
                 }
             }
 
@@ -105,7 +113,8 @@ namespace SalisburyChessEngine.Pieces
             var oneRowForwardCell = getCell(startingCell.columnLetter.ToString() + (startingCell.Row - 1));
             if (cellIsValidForPawn(startingCell, oneRowForwardCell))
             {
-                this.ValidMoves.Add(oneRowForwardCell.Coordinates);
+                var moveProperty = new PotentialMoves(oneRowForwardCell.Coordinates, PotentialMoves.movePath.Down);
+                this.ValidMoves.Add(moveProperty);
             }
 
             //checking cells 1U1L and 1U1R for an enemy piece to take
@@ -115,34 +124,37 @@ namespace SalisburyChessEngine.Pieces
             if (leftColumnLetter != null)
             {
                 var oneUoneLCell = getCell(leftColumnLetter.ToString() + (startingCell.Row - 1));
+                var moveProperty = new PotentialMoves(oneUoneLCell.Coordinates, PotentialMoves.movePath.DownLeft);
+
                 if (oneUoneLCell.CurrentPiece != null)
                 {
                     if (startingCell.CurrentPiece.isWhite != oneUoneLCell.CurrentPiece.isWhite)
                     {
-                        ValidMoves.Add(oneUoneLCell.Coordinates);
-                        piecePressureCoords.Add(oneUoneLCell.Coordinates);
+                        this.ValidMoves.Add(moveProperty);
+                        piecePressureCoords.Add(moveProperty);
                     }
                 }
                 else
                 {
-                    piecePressureCoords.Add(oneUoneLCell.Coordinates);
+                    piecePressureCoords.Add(moveProperty);
                 }
 
             }
             if (rightColumnLetter != null)
             {
                 var oneUoneRCell = getCell(rightColumnLetter.ToString() + (startingCell.Row - 1));
+                var moveProperty = new PotentialMoves(oneUoneRCell.Coordinates, PotentialMoves.movePath.DownRight);
                 if (oneUoneRCell.CurrentPiece != null)
                 {
                     if (startingCell.CurrentPiece.isWhite != oneUoneRCell.CurrentPiece.isWhite)
                     {
-                        ValidMoves.Add(oneUoneRCell.Coordinates);
-                        piecePressureCoords.Add(oneUoneRCell.Coordinates);
+                        this.ValidMoves.Add(moveProperty);
+                        piecePressureCoords.Add(moveProperty);
                     }
                 }
                 else
                 {
-                    piecePressureCoords.Add(oneUoneRCell.Coordinates);
+                    piecePressureCoords.Add(moveProperty);
                 }
             }
         }

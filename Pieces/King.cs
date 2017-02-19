@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SalisburyChessEngine.Board;
+using SalisburyChessEngine.Moves;
+using SalisburyChessEngine.Utilities;
 
 namespace SalisburyChessEngine.Pieces
 {
@@ -28,7 +31,7 @@ namespace SalisburyChessEngine.Pieces
             throw new NotImplementedException();
         }
 
-        public List<string> determineValidMoves(string coords, List<string> enemyPressure, List<string> samePressure)
+        public List<PotentialMoves> determineValidMoves(string coords, List<PotentialMoves> enemyPressure, List<PotentialMoves> samePressure)
         {
             var kingCell = getCell(coords);
 
@@ -44,73 +47,81 @@ namespace SalisburyChessEngine.Pieces
 
             if (cellIsValidForKing(kingCell, oneLeftCell, enemyPressure))
             {
-                this.ValidMoves.Add(oneLeftCell.Coordinates);
-                if (samePressure.IndexOf(oneLeftCell.Coordinates) == -1)
+                var moveProperty = new PotentialMoves(oneLeftCell.Coordinates, PotentialMoves.movePath.Left);
+                this.ValidMoves.Add(moveProperty);
+                if (samePressure.Select(ListUtilities.SelectCoordinates).ToList().IndexOf(oneLeftCell.Coordinates) == -1)
                 {
-                    samePressure.Add(oneLeftCell.Coordinates);
+                    samePressure.Add(moveProperty);
                 }
             }
             if (cellIsValidForKing(kingCell, oneRightCell, enemyPressure))
             {
-                this.ValidMoves.Add(oneRightCell.Coordinates);
-                if (samePressure.IndexOf(oneRightCell.Coordinates) == -1)
+                var moveProperty = new PotentialMoves(oneRightCell.Coordinates, PotentialMoves.movePath.Right);
+                this.ValidMoves.Add(moveProperty);
+                if (samePressure.Select(ListUtilities.SelectCoordinates).ToList().IndexOf(oneRightCell.Coordinates) == -1)
                 {
-                    samePressure.Add(oneRightCell.Coordinates);
+                    samePressure.Add(moveProperty);
                 }
             }
             if (cellIsValidForKing(kingCell, oneUpCell, enemyPressure))
             {
-                this.ValidMoves.Add(oneUpCell.Coordinates);
-                if (samePressure.IndexOf(oneUpCell.Coordinates) == -1)
+                var moveProperty = new PotentialMoves(oneUpCell.Coordinates, PotentialMoves.movePath.Up);
+                this.ValidMoves.Add(moveProperty);
+                if (samePressure.Select(ListUtilities.SelectCoordinates).ToList().IndexOf(oneUpCell.Coordinates) == -1)
                 {
-                    samePressure.Add(oneUpCell.Coordinates);
+                    samePressure.Add(moveProperty);
                 }
             }
             if (cellIsValidForKing(kingCell, oneDownCell, enemyPressure))
             {
-                this.ValidMoves.Add(oneDownCell.Coordinates);
-                if (samePressure.IndexOf(oneDownCell.Coordinates) == -1)
+                var moveProperty = new PotentialMoves(oneDownCell.Coordinates, PotentialMoves.movePath.Down);
+                this.ValidMoves.Add(moveProperty);
+                if (samePressure.Select(ListUtilities.SelectCoordinates).ToList().IndexOf(oneDownCell.Coordinates) == -1)
                 {
-                    samePressure.Add(oneDownCell.Coordinates);
+                    samePressure.Add(moveProperty);
                 }
             }
             if (cellIsValidForKing(kingCell, oneUoneLCell, enemyPressure))
             {
-                this.ValidMoves.Add(oneUoneLCell.Coordinates);
-                if (samePressure.IndexOf(oneUoneLCell.Coordinates) == -1)
+                var moveProperty = new PotentialMoves(oneUoneLCell.Coordinates, PotentialMoves.movePath.UpLeft);
+                this.ValidMoves.Add(moveProperty);
+                if (samePressure.Select(ListUtilities.SelectCoordinates).ToList().IndexOf(oneUoneLCell.Coordinates) == -1)
                 {
-                    samePressure.Add(oneUoneLCell.Coordinates);
+                    samePressure.Add(moveProperty);
                 }
             }
             if (cellIsValidForKing(kingCell, oneUoneRCell, enemyPressure))
             {
-                this.ValidMoves.Add(oneUoneRCell.Coordinates);
-                if (samePressure.IndexOf(oneUoneRCell.Coordinates) == -1)
+                var moveProperty = new PotentialMoves(oneUoneRCell.Coordinates, PotentialMoves.movePath.UpRight);
+                this.ValidMoves.Add(moveProperty);
+                if (samePressure.Select(ListUtilities.SelectCoordinates).ToList().IndexOf(oneUoneRCell.Coordinates) == -1)
                 {
-                    samePressure.Add(oneUoneRCell.Coordinates);
+                    samePressure.Add(moveProperty);
                 }
             }
             if (cellIsValidForKing(kingCell, oneDoneLCell, enemyPressure))
             {
-                this.ValidMoves.Add(oneDoneLCell.Coordinates);
-                if (samePressure.IndexOf(oneDoneLCell.Coordinates) == -1)
+                var moveProperty = new PotentialMoves(oneDoneLCell.Coordinates, PotentialMoves.movePath.DownLeft);
+                this.ValidMoves.Add(moveProperty);
+                if (samePressure.Select(ListUtilities.SelectCoordinates).ToList().IndexOf(oneDoneLCell.Coordinates) == -1)
                 {
-                    samePressure.Add(oneDoneLCell.Coordinates);
+                    samePressure.Add(moveProperty);
                 }
 
             }
             if (cellIsValidForKing(kingCell, oneDoneRCell, enemyPressure))
             {
-                this.ValidMoves.Add(oneDoneRCell.Coordinates);
-                if (samePressure.IndexOf(oneDoneRCell.Coordinates) == -1)
+                var moveProperty = new PotentialMoves(oneDoneRCell.Coordinates, PotentialMoves.movePath.DownRight);
+                this.ValidMoves.Add(moveProperty);
+                if (samePressure.Select(ListUtilities.SelectCoordinates).ToList().IndexOf(oneDoneRCell.Coordinates) == -1)
                 {
-                    samePressure.Add(oneDoneRCell.Coordinates);
+                    samePressure.Add(moveProperty);
                 }
             }
             return samePressure;
         }
 
-        public bool cellIsValidForKing(Cell cellFrom, Cell cellTo, List<string> enemyPressure)
+        public bool cellIsValidForKing(Cell cellFrom, Cell cellTo, List<PotentialMoves> enemyPressure)
         {
             var moveProps = new ValidNotationProperties();
             moveProps = moveProps.determineMoveProperties(cellFrom, cellTo, enemyPressure);

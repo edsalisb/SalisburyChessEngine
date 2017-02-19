@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SalisburyChessEngine.Moves;
 
 namespace SalisburyChessEngine.Pieces
 {
@@ -19,7 +20,7 @@ namespace SalisburyChessEngine.Pieces
 
         public override void determineValidMoves(string coords, bool isChecked)
         {
-            ValidMoves = new List<string>();
+            ValidMoves = new List<PotentialMoves>();
 
             var downCells = getValidCellsDown(coords, getCell);
             var leftCells = getValidCellsLeft(coords, getCell);

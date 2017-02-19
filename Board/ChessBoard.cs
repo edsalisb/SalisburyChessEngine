@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using SalisburyChessEngine.Pieces;
-
+using SalisburyChessEngine.Moves;
+using SalisburyChessEngine.Utilities;
 namespace SalisburyChessEngine.Board
 {
     public partial class ChessBoard : List<List<Cell>>
@@ -10,8 +11,8 @@ namespace SalisburyChessEngine.Board
         public King WhiteKing { get; set; }
         public King BlackKing { get; set; }
 
-        public List<string> blackPiecePressure { get; set; }
-        public List<string> whitePiecePressure { get; set; }
+        public List<PotentialMoves> blackPiecePressure { get; set; }
+        public List<PotentialMoves> whitePiecePressure { get; set; }
         public bool isWhitesTurn { get;  set; }
 
         private AlgebraicNotationParser parser;
@@ -22,8 +23,8 @@ namespace SalisburyChessEngine.Board
 
             this.WhiteKing = new King(true, this.getCell);
             this.BlackKing = new King(false, this.getCell);
-            this.blackPiecePressure = new List<string>();
-            this.whitePiecePressure = new List<string>();
+            this.blackPiecePressure = new List<PotentialMoves>();
+            this.whitePiecePressure = new List<PotentialMoves>();
 
 
             this.initializeBoard();
@@ -106,14 +107,14 @@ namespace SalisburyChessEngine.Board
         public void UpdateBoard()
         {
             executeCellLevelFunction(DetermineValidMovesIfNotKing);
-            if (this.whitePiecePressure.IndexOf(this.BlackKing.CurrentCoordinates) > -1)
+            if (this.whitePiecePressure.Select(ListUtilities.SelectCoordinates).ToList().IndexOf(this.BlackKing.CurrentCoordinates) > -1)
             {
                 //black king checked
                 this.WhiteKing.IsChecked = true;
                 executeCellLevelFunction(DetermineValidMovesIfNotKing);
             }
 
-            else if (this.blackPiecePressure.IndexOf(this.WhiteKing.CurrentCoordinates) > -1)
+            else if (this.blackPiecePressure.Select(ListUtilities.SelectCoordinates).ToList().IndexOf(this.WhiteKing.CurrentCoordinates) > -1)
             {
                 //white king checked
                 this.BlackKing.IsChecked = true;
@@ -155,17 +156,17 @@ namespace SalisburyChessEngine.Board
         {
             if (cell.CurrentPiece != null)
             {
-                List<string> listToUse;
+                List<PotentialMoves> piecePressureList;
                 if (cell.CurrentPiece.isWhite)
                 {
-                    listToUse = whitePiecePressure;
+                    piecePressureList = whitePiecePressure;
                 }
                 else
                 {
-                    listToUse = blackPiecePressure;
+                    piecePressureList = blackPiecePressure;
                 }
 
-                List<string> validMovesList;
+                List<PotentialMoves> validMovesList;
                 if (cell.CurrentPiece.GetType() == typeof(Pawn))
                 {
                     var pawn = (Pawn)cell.CurrentPiece;
@@ -178,9 +179,9 @@ namespace SalisburyChessEngine.Board
 
                 foreach (var move in validMovesList)
                 {
-                    if (listToUse.IndexOf(move) == -1)
+                    if (piecePressureList.IndexOf(move) == -1)
                     {
-                        listToUse.Add(move);
+                        piecePressureList.Add(move);
                     }
                 }
 
@@ -188,8 +189,8 @@ namespace SalisburyChessEngine.Board
         }
         private void determineKingMoves()
         {
-            this.whitePiecePressure = new List<string>();
-            this.blackPiecePressure = new List<string>();
+            this.whitePiecePressure = new List<PotentialMoves>();
+            this.blackPiecePressure = new List<PotentialMoves>();
 
             executeCellLevelFunction(DetermineValidMoveForKing);
         }

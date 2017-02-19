@@ -1,4 +1,4 @@
-﻿namespace SalisburyChessEngine.Board
+﻿namespace SalisburyChessEngine.Moves
 {
     public  class Move
     {
