@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using SalisburyChessEngine.Moves;
+using SalisburyChessEngine.Board;
 
 namespace SalisburyChessEngine.Pieces
 {
@@ -8,9 +8,8 @@ namespace SalisburyChessEngine.Pieces
     {
         public override pieceType TypeOfPiece { get; set; }
         private Func<string, Cell> getCell;
-        public override string CurrentCoordinates { get; set; }
 
-        public Queen(bool isWhite, Func<string, Cell> getCell) : base(isWhite)
+        public Queen(bool isWhite, Func<string, Cell> getCell, string coordinates) : base(isWhite, coordinates)
         {
             this.TypeOfPiece = pieceType.Queen;
             this.getCell = getCell;
@@ -24,7 +23,7 @@ namespace SalisburyChessEngine.Pieces
 
         public override void determineValidMoves(string coords, bool isChecked)
         {
-            ValidMoves = new List<PotentialMoves>();
+            ValidMoves = new List<ValidBoardMove>();
             var downCells = getValidCellsDown(coords, getCell);
             var leftCells = getValidCellsLeft(coords, getCell);
             var rightCells = getValidCellsRight(coords, getCell);

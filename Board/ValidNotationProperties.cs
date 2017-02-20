@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using SalisburyChessEngine.Moves;
+using SalisburyChessEngine.Board;
 using SalisburyChessEngine.Utilities;
 namespace SalisburyChessEngine.Board
 {
@@ -55,7 +55,7 @@ namespace SalisburyChessEngine.Board
             return this;
         }
 
-        public ValidNotationProperties determineMoveProperties(Cell cellFrom, Cell cellTo, List<PotentialMoves> enemyPressure)
+        public ValidNotationProperties determineMoveProperties(Cell cellFrom, Cell cellTo, List<ValidBoardMove> enemyPressure)
         {
             var instance = determineMoveProperties(cellFrom, cellTo);
             if (instance.IsValid)

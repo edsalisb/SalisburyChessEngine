@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using SalisburyChessEngine.Moves;
+using SalisburyChessEngine.Board;
 
 namespace SalisburyChessEngine.Pieces
 {
     public class Knight : PieceBase
     {
         public override pieceType TypeOfPiece { get; set; }
-        public override string CurrentCoordinates { get; set; }
         private Func<string, Cell> getCell;
-        public Knight(bool isWhite, Func<string, Cell> getCell): base(isWhite)
+        public Knight(bool isWhite, Func<string, Cell> getCell, string coordinates): base(isWhite, coordinates)
         {
             this.TypeOfPiece = pieceType.Knight;
             this.getCell = getCell;
         }
         public override void determineValidMoves(string coords, bool isChecked)
         {
-            ValidMoves = new List<PotentialMoves>();
+            ValidMoves = new List<ValidBoardMove>();
 
             var currentCell = this.getCell(coords);
 
@@ -38,42 +37,42 @@ namespace SalisburyChessEngine.Pieces
 
             if (cellIsValidForPiece(currentCell, twoUpOneLeftCell).IsValid)
             {
-                var moveProperty = new PotentialMoves(twoUpOneLeftCell.Coordinates, null);
+                var moveProperty = new ValidBoardMove(coords, twoUpOneLeftCell.Coordinates, null);
                 this.ValidMoves.Add(moveProperty);
             }
             if (cellIsValidForPiece(currentCell, twoUpOneRightCell).IsValid)
             {
-                var moveProperty = new PotentialMoves(twoUpOneRightCell.Coordinates, null);
+                var moveProperty = new ValidBoardMove(coords, twoUpOneRightCell.Coordinates, null);
                 this.ValidMoves.Add(moveProperty);
             }
             if (cellIsValidForPiece(currentCell, oneUpTwoRightCell).IsValid)
             {
-                var moveProperty = new PotentialMoves(oneUpTwoRightCell.Coordinates, null);
+                var moveProperty = new ValidBoardMove(coords, oneUpTwoRightCell.Coordinates, null);
                 this.ValidMoves.Add(moveProperty);
             }
             if (cellIsValidForPiece(currentCell, oneDownTwoRightCell).IsValid)
             {
-                var moveProperty = new PotentialMoves(oneDownTwoRightCell.Coordinates, null);
+                var moveProperty = new ValidBoardMove(coords, oneDownTwoRightCell.Coordinates, null);
                 this.ValidMoves.Add(moveProperty);
             }
             if (cellIsValidForPiece(currentCell, twoDownOneRightCell).IsValid)
             {
-                var moveProperty = new PotentialMoves(twoDownOneRightCell.Coordinates, null);
+                var moveProperty = new ValidBoardMove(coords, twoDownOneRightCell.Coordinates, null);
                 this.ValidMoves.Add(moveProperty);
             }
             if (cellIsValidForPiece(currentCell, twoDownOneLeftCell).IsValid)
             {
-                var moveProperty = new PotentialMoves(twoDownOneLeftCell.Coordinates, null);
+                var moveProperty = new ValidBoardMove(coords, twoDownOneLeftCell.Coordinates, null);
                 this.ValidMoves.Add(moveProperty);
             }
             if (cellIsValidForPiece(currentCell, oneDownTwoLeftCell).IsValid)
             {
-                var moveProperty = new PotentialMoves(oneDownTwoLeftCell.Coordinates, null);
+                var moveProperty = new ValidBoardMove(coords, oneDownTwoLeftCell.Coordinates, null);
                 this.ValidMoves.Add(moveProperty);
             }
             if (cellIsValidForPiece(currentCell, oneUpTwoLeftCell).IsValid)
             {
-                var moveProperty = new PotentialMoves(oneUpTwoLeftCell.Coordinates, null);
+                var moveProperty = new ValidBoardMove(coords, oneUpTwoLeftCell.Coordinates, null);
                 this.ValidMoves.Add(moveProperty);
             }
 

@@ -7,7 +7,7 @@ namespace SalisburyChessEngine.Pieces
 {
     public abstract class PieceBase
     {
-        public List<PotentialMoves> ValidMoves{ set; get; }
+        public List<ValidBoardMove> ValidMoves{ set; get; }
         public enum pieceType
         {
             Queen = 9,
@@ -18,19 +18,20 @@ namespace SalisburyChessEngine.Pieces
             King = 0
         }
 
-        public abstract string CurrentCoordinates { get; set; }
+        public string CurrentCoordinates { get; set; }
         public abstract pieceType TypeOfPiece { get; set; }
         public bool isWhite;
         public abstract void determineValidMoves(string coords, bool isChecked);
 
-        public PieceBase(bool isWhite)
+        public PieceBase(bool isWhite, string coordinates)
         {
             this.isWhite = isWhite;
-            this.ValidMoves = new List<PotentialMoves>();
+            this.CurrentCoordinates = coordinates;
+            this.ValidMoves = new List<ValidBoardMove>();
         }
-        public List<PotentialMoves> getValidCellsLeft(string coords, Func<string,Cell> getCell)
+        public List<ValidBoardMove> getValidCellsLeft(string coords, Func<string,Cell> getCell)
         {
-            List<PotentialMoves> moveList = new List<PotentialMoves>();
+            List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             var startingCell = getCell(coords);
             for (var i = startingCell.ColumnNumber; i > 0; i--)
             {
@@ -49,7 +50,7 @@ namespace SalisburyChessEngine.Pieces
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellToLeft);
                     if (validMoveProps.IsValid)
                     {
-                        var moveProperties = new PotentialMoves(cellToLeft.Coordinates, PotentialMoves.movePath.Left);
+                        var moveProperties = new ValidBoardMove(coords, cellToLeft.Coordinates, ValidBoardMove.movePath.Left);
                         moveList.Add(moveProperties);
                     }
                     else
@@ -63,9 +64,9 @@ namespace SalisburyChessEngine.Pieces
             }
             return moveList;
         }
-        public List<PotentialMoves> getValidCellsRight(string coords, Func<string, Cell> getCell)
+        public List<ValidBoardMove> getValidCellsRight(string coords, Func<string, Cell> getCell)
         {
-            List<PotentialMoves> moveList = new List<PotentialMoves>();
+            List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             var startingCell = getCell(coords);
             for (var i = startingCell.ColumnNumber; i <= BoardProperties.Columns; i++)
             {
@@ -84,7 +85,7 @@ namespace SalisburyChessEngine.Pieces
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellToRight);
                     if (validMoveProps.IsValid)
                     {
-                        var moveProperties = new PotentialMoves(cellToRight.Coordinates, PotentialMoves.movePath.Right);
+                        var moveProperties = new ValidBoardMove(coords, cellToRight.Coordinates, ValidBoardMove.movePath.Right);
                         moveList.Add(moveProperties);
                     }
                     else
@@ -99,9 +100,9 @@ namespace SalisburyChessEngine.Pieces
             return moveList;
         }
 
-        public List<PotentialMoves> getValidCellsUp(string coords, Func<string, Cell> getCell)
+        public List<ValidBoardMove> getValidCellsUp(string coords, Func<string, Cell> getCell)
         {
-            List<PotentialMoves> moveList = new List<PotentialMoves>();
+            List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             var startingCell = getCell(coords);
             for (var i = startingCell.Row; i < BoardProperties.Rows; i++)
             {
@@ -118,7 +119,7 @@ namespace SalisburyChessEngine.Pieces
                 var validMoveProps = this.cellIsValidForPiece(startingCell, cellUp);
                 if (validMoveProps.IsValid)
                 {
-                    var moveProperties = new PotentialMoves(cellUp.Coordinates, PotentialMoves.movePath.Up);
+                    var moveProperties = new ValidBoardMove(coords, cellUp.Coordinates, ValidBoardMove.movePath.Up);
                     moveList.Add(moveProperties);
                 }
                 else
@@ -132,9 +133,9 @@ namespace SalisburyChessEngine.Pieces
             }
             return moveList;
         }
-        public List<PotentialMoves> getValidCellsDown(string coords, Func<string, Cell> getCell)
+        public List<ValidBoardMove> getValidCellsDown(string coords, Func<string, Cell> getCell)
         {
-            List<PotentialMoves> moveList = new List<PotentialMoves>();
+            List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             var startingCell = getCell(coords);
             for (var i = startingCell.Row; i > 0; i--)
             {
@@ -152,7 +153,7 @@ namespace SalisburyChessEngine.Pieces
                 var validMoveProps = this.cellIsValidForPiece(startingCell, cellDown);
                 if (validMoveProps.IsValid)
                 {
-                    var moveProperties = new PotentialMoves(cellDown.Coordinates, PotentialMoves.movePath.Down);
+                    var moveProperties = new ValidBoardMove(coords, cellDown.Coordinates, ValidBoardMove.movePath.Down);
                     moveList.Add(moveProperties);
                 }
                 else
@@ -167,9 +168,9 @@ namespace SalisburyChessEngine.Pieces
             return moveList;
         }
 
-        public List<PotentialMoves> getValidCellsDownLeft(string coords, Func<string, Cell> getCell)
+        public List<ValidBoardMove> getValidCellsDownLeft(string coords, Func<string, Cell> getCell)
         {
-            List<PotentialMoves> moveList = new List<PotentialMoves>();
+            List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             var startingCell = getCell(coords);
             var row = startingCell.Row;
             for (var i = startingCell.ColumnNumber; i > 0; i--)
@@ -190,7 +191,7 @@ namespace SalisburyChessEngine.Pieces
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellUpLeft);
                     if (validMoveProps.IsValid)
                     {
-                        var moveProperties = new PotentialMoves(cellUpLeft.Coordinates, PotentialMoves.movePath.UpLeft);
+                        var moveProperties = new ValidBoardMove(coords, cellUpLeft.Coordinates, ValidBoardMove.movePath.UpLeft);
                         moveList.Add(moveProperties);
                     }
                     else
@@ -208,9 +209,9 @@ namespace SalisburyChessEngine.Pieces
         }
 
         
-        public List<PotentialMoves> getValidCellsDownRight(string coords, Func<string, Cell> getCell)
+        public List<ValidBoardMove> getValidCellsDownRight(string coords, Func<string, Cell> getCell)
         {
-            List<PotentialMoves> moveList = new List<PotentialMoves>();
+            List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             var startingCell = getCell(coords);
             var row = startingCell.Row;
             for (var i = startingCell.ColumnNumber; i <= BoardProperties.Columns; i++)
@@ -231,7 +232,7 @@ namespace SalisburyChessEngine.Pieces
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellDownRight);
                     if (validMoveProps.IsValid)
                     {
-                        var moveProperties = new PotentialMoves(cellDownRight.Coordinates, PotentialMoves.movePath.DownRight);
+                        var moveProperties = new ValidBoardMove(coords, cellDownRight.Coordinates, ValidBoardMove.movePath.DownRight);
                         moveList.Add(moveProperties);
                     }
                     else
@@ -247,9 +248,9 @@ namespace SalisburyChessEngine.Pieces
             }
             return moveList;
         }
-        public List<PotentialMoves> getValidCellsUpLeft(string coords, Func<string, Cell> getCell)
+        public List<ValidBoardMove> getValidCellsUpLeft(string coords, Func<string, Cell> getCell)
         {
-            List<PotentialMoves> moveList = new List<PotentialMoves>();
+            List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             var startingCell = getCell(coords);
             var row = startingCell.Row;
             for (var i = startingCell.ColumnNumber; i > 0; i--)
@@ -270,7 +271,7 @@ namespace SalisburyChessEngine.Pieces
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellUpLeft);
                     if (validMoveProps.IsValid)
                     {
-                        var moveProperties = new PotentialMoves(cellUpLeft.Coordinates, PotentialMoves.movePath.UpLeft);
+                        var moveProperties = new ValidBoardMove(coords, cellUpLeft.Coordinates, ValidBoardMove.movePath.UpLeft);
                         moveList.Add(moveProperties);
                     }
                     else
@@ -286,9 +287,9 @@ namespace SalisburyChessEngine.Pieces
             }
             return moveList;
         }
-        public List<PotentialMoves> getValidCellsUpRight(string coords, Func<string, Cell> getCell)
+        public List<ValidBoardMove> getValidCellsUpRight(string coords, Func<string, Cell> getCell)
         {
-            List<PotentialMoves> moveList = new List<PotentialMoves>();
+            List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             var startingCell = getCell(coords);
             var row = startingCell.Row;
             for (var i = startingCell.ColumnNumber; i <= BoardProperties.Columns; i++)
@@ -309,7 +310,7 @@ namespace SalisburyChessEngine.Pieces
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellUpRight);
                     if (validMoveProps.IsValid)
                     {
-                        var moveProperties = new PotentialMoves(cellUpRight.Coordinates, PotentialMoves.movePath.UpRight);
+                        var moveProperties = new ValidBoardMove(coords, cellUpRight.Coordinates, ValidBoardMove.movePath.UpRight);
                         moveList.Add(moveProperties);
                     }
                     else

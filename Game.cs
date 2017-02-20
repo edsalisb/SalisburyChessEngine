@@ -43,11 +43,11 @@ namespace SalisburyChessEngine
 
                 Console.WriteLine("Move:");
                 string algebraicCoord = Console.ReadLine();
-                Move potentialMove;
-                if (this.cb.TryMovePiece(algebraicCoord, out potentialMove))
+                Move move;
+                if (this.cb.TryMovePiece(algebraicCoord, out move))
                 {
-                    moveList.Add(potentialMove);
-                    this.cb.replacePiece(potentialMove.CellFrom, potentialMove.CellTo);
+                    moveList.Add(move);
+                    this.cb.replacePiece(move.CellFrom, move.CellTo);
                     this.cb.UpdateBoardState();
 
                     this.UpdateGameStatus();

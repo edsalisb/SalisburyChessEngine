@@ -45,11 +45,11 @@
   <ItemGroup>
     <Compile Include="Board\BoardProperties.cs" />
     <Compile Include="Board\ChessBoardHelpers.cs" />
-    <Compile Include="Moves\Move.cs" />
     <Compile Include="CellProperties.cs" />
     <Compile Include="Board\AlgebraicNotationParser.cs" />
     <Compile Include="Board\ValidNotationProperties.cs" />
-    <Compile Include="Moves\PotentialMoves.cs" />
+    <Compile Include="Moves\Move.cs" />
+    <Compile Include="Board\ValidBoardMove.cs" />
     <Compile Include="Pieces\Pawn.cs" />
     <Compile Include="Pieces\King.cs" />
     <Compile Include="Pieces\Bishop.cs" />
