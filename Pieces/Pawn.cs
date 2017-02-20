@@ -6,19 +6,22 @@ namespace SalisburyChessEngine.Pieces
 {
     public class Pawn: PieceBase
     {
-        public override pieceType TypeOfPiece { get; set; }
         private Func<string, Cell> getCell { get; set; }
         public List<ValidBoardMove> piecePressureCoords { get; set; }
-
         public Pawn(bool isWhite, Func<string, Cell> getCell, string coordinates) : base(isWhite, coordinates)
         {
+
             this.TypeOfPiece = pieceType.Pawn;
             this.getCell = getCell;
             this.piecePressureCoords = new List<ValidBoardMove>();
         }
-        
-        public override void determineValidMoves(string coords, bool isChecked)
+
+        public override void determineValidMoves(string coords, ValidBoardMove checkingMove)
         {
+            if (checkingMove != null)
+            {
+                var allowedMoves = FindAttackPath(checkingMove, getCell);
+            }
             ValidMoves = new List<ValidBoardMove>();
 
             if (this.isWhite)
@@ -39,7 +42,7 @@ namespace SalisburyChessEngine.Pieces
                 var twoRowsForwardCell = getCell(startingCell.columnLetter.ToString() + (startingCell.Row + 2));
                 if (cellIsValidForPawn(startingCell, twoRowsForwardCell))
                 {
-                    var moveProperty = new ValidBoardMove(coords, twoRowsForwardCell.Coordinates, ValidBoardMove.movePath.Up);
+                    var moveProperty = new ValidBoardMove(coords, twoRowsForwardCell.Coordinates, ValidBoardMove.movePath.Up, this.isWhite);
                     this.ValidMoves.Add(moveProperty);
                 }
             }
@@ -48,7 +51,7 @@ namespace SalisburyChessEngine.Pieces
             var oneRowForwardCell = getCell(startingCell.columnLetter.ToString() + (startingCell.Row + 1));
             if (cellIsValidForPawn(startingCell, oneRowForwardCell))
             {
-                var moveProperty = new ValidBoardMove(coords, oneRowForwardCell.Coordinates, ValidBoardMove.movePath.Up);
+                var moveProperty = new ValidBoardMove(coords, oneRowForwardCell.Coordinates, ValidBoardMove.movePath.Up, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
 
@@ -59,7 +62,7 @@ namespace SalisburyChessEngine.Pieces
             if (leftColumnLetter != null)
             {
                 var oneUoneLCell = getCell(leftColumnLetter.ToString() + (startingCell.Row + 1));
-                var moveProperty = new ValidBoardMove(coords, oneUoneLCell.Coordinates, ValidBoardMove.movePath.UpLeft);
+                var moveProperty = new ValidBoardMove(coords, oneUoneLCell.Coordinates, ValidBoardMove.movePath.UpLeft, this.isWhite);
 
                 if (oneUoneLCell.CurrentPiece != null)
                 {
@@ -78,7 +81,7 @@ namespace SalisburyChessEngine.Pieces
             if (rightColumnLetter != null)
             {
                 var oneUoneRCell = getCell(rightColumnLetter.ToString() + (startingCell.Row + 1));
-                var moveProperty = new ValidBoardMove(coords, oneUoneRCell.Coordinates, ValidBoardMove.movePath.UpRight);
+                var moveProperty = new ValidBoardMove(coords, oneUoneRCell.Coordinates, ValidBoardMove.movePath.UpRight, this.isWhite);
 
                 if (oneUoneRCell.CurrentPiece != null)
                 {
@@ -103,7 +106,7 @@ namespace SalisburyChessEngine.Pieces
                 var twoRowsForwardCell = getCell(startingCell.columnLetter.ToString() + (startingCell.Row - 2));
                 if (cellIsValidForPawn(startingCell, twoRowsForwardCell))
                 {
-                    var moveProperty = new ValidBoardMove(coords, twoRowsForwardCell.Coordinates, ValidBoardMove.movePath.Down);
+                    var moveProperty = new ValidBoardMove(coords, twoRowsForwardCell.Coordinates, ValidBoardMove.movePath.Down, this.isWhite);
                     this.ValidMoves.Add(moveProperty);
                 }
             }
@@ -112,7 +115,7 @@ namespace SalisburyChessEngine.Pieces
             var oneRowForwardCell = getCell(startingCell.columnLetter.ToString() + (startingCell.Row - 1));
             if (cellIsValidForPawn(startingCell, oneRowForwardCell))
             {
-                var moveProperty = new ValidBoardMove(coords, oneRowForwardCell.Coordinates, ValidBoardMove.movePath.Down);
+                var moveProperty = new ValidBoardMove(coords, oneRowForwardCell.Coordinates, ValidBoardMove.movePath.Down, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
 
@@ -123,7 +126,7 @@ namespace SalisburyChessEngine.Pieces
             if (leftColumnLetter != null)
             {
                 var oneUoneLCell = getCell(leftColumnLetter.ToString() + (startingCell.Row - 1));
-                var moveProperty = new ValidBoardMove(coords, oneUoneLCell.Coordinates, ValidBoardMove.movePath.DownLeft);
+                var moveProperty = new ValidBoardMove(coords, oneUoneLCell.Coordinates, ValidBoardMove.movePath.DownLeft, this.isWhite);
 
                 if (oneUoneLCell.CurrentPiece != null)
                 {
@@ -142,7 +145,7 @@ namespace SalisburyChessEngine.Pieces
             if (rightColumnLetter != null)
             {
                 var oneUoneRCell = getCell(rightColumnLetter.ToString() + (startingCell.Row - 1));
-                var moveProperty = new ValidBoardMove(coords, oneUoneRCell.Coordinates, ValidBoardMove.movePath.DownRight);
+                var moveProperty = new ValidBoardMove(coords, oneUoneRCell.Coordinates, ValidBoardMove.movePath.DownRight, this.isWhite);
                 if (oneUoneRCell.CurrentPiece != null)
                 {
                     if (startingCell.CurrentPiece.isWhite != oneUoneRCell.CurrentPiece.isWhite)

@@ -6,9 +6,8 @@ namespace SalisburyChessEngine.Pieces
 {
     public class Queen : PieceBase
     {
-        public override pieceType TypeOfPiece { get; set; }
         private Func<string, Cell> getCell;
-
+         
         public Queen(bool isWhite, Func<string, Cell> getCell, string coordinates) : base(isWhite, coordinates)
         {
             this.TypeOfPiece = pieceType.Queen;
@@ -21,7 +20,7 @@ namespace SalisburyChessEngine.Pieces
             return "Q";
         }
 
-        public override void determineValidMoves(string coords, bool isChecked)
+        public override void determineValidMoves(string coords, ValidBoardMove checkingMove)
         {
             ValidMoves = new List<ValidBoardMove>();
             var downCells = getValidCellsDown(coords, getCell);

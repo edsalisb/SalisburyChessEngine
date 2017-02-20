@@ -6,8 +6,6 @@ namespace SalisburyChessEngine.Pieces
 {
     public class Rook : PieceBase
     {
-        public override pieceType TypeOfPiece { get; set; }
-
         private Func<string, Cell> getCell;
 
         public Rook(bool isWhite, Func<string, Cell> getCell, string coordinates) : base(isWhite, coordinates)
@@ -17,7 +15,7 @@ namespace SalisburyChessEngine.Pieces
         }
         
 
-        public override void determineValidMoves(string coords, bool isChecked)
+        public override void determineValidMoves(string coords, ValidBoardMove checkingMove)
         {
             ValidMoves = new List<ValidBoardMove>();
 

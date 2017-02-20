@@ -2,13 +2,10 @@
 {
     public class ValidBoardMove
     {
-        public bool IsValid { get; set; }
-
-        public bool IsCapturable { get; set; }
         public string CoordinatesFrom { get; set; }
         public string CoordinatesTo { get; set; }
         public movePath? MovePath { get; set; }
-
+        public bool IsWhite { get; set; }
         public enum movePath
         {
             Up = 1,
@@ -21,8 +18,9 @@
             DownRight = 8
         }
 
-        public ValidBoardMove(string coordinatesFrom, string coordinatesTo, movePath? movepath)
+        public ValidBoardMove(string coordinatesFrom, string coordinatesTo, movePath? movepath, bool isWhite)
         {
+            this.IsWhite = isWhite;
             this.CoordinatesTo = coordinatesTo;
             this.CoordinatesFrom = coordinatesFrom;
             this.MovePath = movepath;

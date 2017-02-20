@@ -125,7 +125,7 @@ namespace SalisburyChessEngine.Board
                 foreach (var piece in friendlyPieceList)
                 {
                     var friendlyPiece = (PieceBase)piece;
-                    int index = friendlyPiece.ValidMoves.Select(ListUtilities.SelectCoordinates).ToList().IndexOf(this.lastTwoLetters);
+                    int index = friendlyPiece.ValidMoves.Select(GeneralUtilities.SelectCoordinates).ToList().IndexOf(this.lastTwoLetters);
                     if (index > -1)
                     {
                         if (this.potentialMove.IsCapturable)
@@ -134,7 +134,7 @@ namespace SalisburyChessEngine.Board
                             foreach (var piece2 in enemyPieceList)
                             {
                                 var enemyPiece = (PieceBase)piece2;
-                                if (friendlyPiece.ValidMoves.Select(ListUtilities.SelectCoordinates).ToList().IndexOf(enemyPiece.CurrentCoordinates) > -1)
+                                if (friendlyPiece.ValidMoves.Select(GeneralUtilities.SelectCoordinates).ToList().IndexOf(enemyPiece.CurrentCoordinates) > -1)
                                 {
                                     valid = true;
                                     break;

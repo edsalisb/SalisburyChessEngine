@@ -6,15 +6,14 @@ namespace SalisburyChessEngine.Pieces
     public class Bishop : PieceBase
     {
         private Func<string, Cell> getCell;
-        public override pieceType TypeOfPiece { get; set; }
-        public Bishop(bool isWhite, Func<string, Cell> getCell, string coordinates): base(isWhite, coordinates)
+        public Bishop(bool isWhite, Func<string, Cell> getCell, string coordinates) : base(isWhite, coordinates)
         {
             this.TypeOfPiece = pieceType.Bishop;
             this.getCell = getCell;
         }
-        
 
-        public override void determineValidMoves(string coords, bool isChecked)
+
+        public override void determineValidMoves(string coords, ValidBoardMove checkedMove)
         {
             ValidMoves = new List<ValidBoardMove>();
             var downLeftCells = getValidCellsDownLeft(coords, getCell);
