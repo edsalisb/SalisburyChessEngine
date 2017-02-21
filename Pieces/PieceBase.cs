@@ -394,9 +394,12 @@ namespace SalisburyChessEngine.Pieces
             var moveColumnLetter = moveCoordsTo.getColumnLetter();
             var moveRowNumber = moveCoordsTo.getRowNumber();
 
-            
-
-            return true;
+            if (moveColumnLetter.isBetween<char?>(checkCoordsFromColumnLetter, checkCoordsToColumnLetter) &&
+                moveRowNumber.isBetween<char?>(checkCoordsFromRowNumber, checkCoordsToRowNumber))
+            {
+                return true;
+            }
+            return false;
 
 
         }

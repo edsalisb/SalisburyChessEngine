@@ -37,11 +37,20 @@ namespace SalisburyChessEngine.Utilities
 
         public static bool isBetween<T>(this T item, T constraint1, T constraint2)
         {
-            T upper, lower;
-
-            if (constraint1 < constraint2)
+            int compare = Comparer<T>.Default.Compare(constraint1, constraint2);
+            if (compare < 0)
             {
-
+                return Comparer<T>.Default.Compare(item, constraint1) >= 0
+                    && Comparer<T>.Default.Compare(item, constraint2) <= 0;
+            }
+            else if (compare > 0)
+            {
+                return Comparer<T>.Default.Compare(item, constraint2) >= 0
+                   && Comparer<T>.Default.Compare(item, constraint1) <= 0;
+            }
+            else
+            {
+                return true;
             }
         }
     }
