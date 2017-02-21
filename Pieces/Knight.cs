@@ -76,6 +76,9 @@ namespace SalisburyChessEngine.Pieces
                 this.ValidMoves.Add(moveProperty);
             }
 
+           
+            this.FilterMovesIfChecked(checkingMove, getCell);
+            
         }
 
         public override string ToString()

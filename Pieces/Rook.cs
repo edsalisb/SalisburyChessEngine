@@ -29,6 +29,9 @@ namespace SalisburyChessEngine.Pieces
             this.ValidMoves.AddRange(rightCells);
             this.ValidMoves.AddRange(upCells);
 
+           
+            this.FilterMovesIfChecked(checkingMove, getCell);
+            
         }
 
         public override string ToString()

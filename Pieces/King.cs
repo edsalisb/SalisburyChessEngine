@@ -136,6 +136,9 @@ namespace SalisburyChessEngine.Pieces
                     samePressure.Add(moveProperty);
                 }
             }
+          
+            this.FilterMovesIfChecked(checkingMove, getCell);
+            
             return samePressure;
         }
 

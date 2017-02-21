@@ -42,6 +42,10 @@ namespace SalisburyChessEngine.Pieces
             this.ValidMoves.AddRange(downRightCells);
             this.ValidMoves.AddRange(upLeftCells);
             this.ValidMoves.AddRange(upRightCells);
+
+          
+            this.FilterMovesIfChecked(checkingMove, getCell);
+            
         }
     }
 }

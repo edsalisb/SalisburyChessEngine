@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using SalisburyChessEngine.Board;
 
@@ -6,8 +7,10 @@ namespace SalisburyChessEngine.Pieces
 {
     public class Pawn: PieceBase
     {
+
         private Func<string, Cell> getCell { get; set; }
         public List<ValidBoardMove> piecePressureCoords { get; set; }
+        
         public Pawn(bool isWhite, Func<string, Cell> getCell, string coordinates) : base(isWhite, coordinates)
         {
 
@@ -18,12 +21,7 @@ namespace SalisburyChessEngine.Pieces
 
         public override void determineValidMoves(string coords, ValidBoardMove checkingMove)
         {
-            if (checkingMove != null)
-            {
-                var allowedMoves = FindAttackPath(checkingMove, getCell);
-            }
             ValidMoves = new List<ValidBoardMove>();
-
             if (this.isWhite)
             {
                 this.determineWhiteMoves(coords);
@@ -32,6 +30,8 @@ namespace SalisburyChessEngine.Pieces
             {
                 this.determineBlackMoves(coords);
             }
+            this.FilterMovesIfChecked(checkingMove, getCell);
+
         }
 
         private void determineWhiteMoves(string coords)

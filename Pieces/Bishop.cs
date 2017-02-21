@@ -13,7 +13,7 @@ namespace SalisburyChessEngine.Pieces
         }
 
 
-        public override void determineValidMoves(string coords, ValidBoardMove checkedMove)
+        public override void determineValidMoves(string coords, ValidBoardMove checkingMove)
         {
             ValidMoves = new List<ValidBoardMove>();
             var downLeftCells = getValidCellsDownLeft(coords, getCell);
@@ -25,6 +25,10 @@ namespace SalisburyChessEngine.Pieces
             this.ValidMoves.AddRange(downRightCells);
             this.ValidMoves.AddRange(upLeftCells);
             this.ValidMoves.AddRange(upRightCells);
+
+            
+            this.FilterMovesIfChecked(checkingMove, getCell);
+            
         }
 
         public override string ToString()

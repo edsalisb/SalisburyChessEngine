@@ -9,6 +9,7 @@ namespace SalisburyChessEngine.Pieces
     public abstract class PieceBase
     {
         public List<ValidBoardMove> ValidMoves{ set; get; }
+        public List<ValidBoardMove> allowedCellsAfterCheck { get; set; }
         public enum pieceType
         {
             Queen = 9,
@@ -29,6 +30,7 @@ namespace SalisburyChessEngine.Pieces
             this.CurrentCoordinates = coordinates;
             this.isWhite = isWhite;
             this.ValidMoves = new List<ValidBoardMove>();
+            this.allowedCellsAfterCheck = new List<ValidBoardMove>();
         }
         public List<ValidBoardMove> getValidCellsLeft(string coords, Func<string,Cell> getCell)
         {
@@ -402,6 +404,24 @@ namespace SalisburyChessEngine.Pieces
             return false;
 
 
+        }
+        public void FilterMovesIfChecked(ValidBoardMove checkingMove, Func<string, Cell> getCell)
+        {
+            if (checkingMove != null)
+            {
+                this.allowedCellsAfterCheck = FindAttackPath(checkingMove, getCell);
+
+            }
+            else
+            {
+                this.allowedCellsAfterCheck = new List<ValidBoardMove>();
+            }
+            
+            if (this.allowedCellsAfterCheck.Count > 0 &&
+                checkingMove.IsWhite != this.isWhite)
+            {
+                this.ValidMoves = this.ValidMoves.Intersect(this.allowedCellsAfterCheck).ToList();
+            }
         }
     }
 }
