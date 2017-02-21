@@ -9,7 +9,7 @@ namespace SalisburyChessEngine.Board
 {
     public partial class ChessBoard : List<List<Cell>>
     {
-        private ValidBoardMove checkingBoardMove;
+        public ValidBoardMove CheckingBoardMove { get; set; }
 
         public King WhiteKing { get; set; }
         public King BlackKing { get; set; }
@@ -66,12 +66,20 @@ namespace SalisburyChessEngine.Board
             }
         }
 
-        internal void replacePiece(Cell cellFrom, Cell cellTo)
+        internal void replacePiece(Move move)
         {
-            var currentPiece = cellFrom.CurrentPiece;
-            cellTo.CurrentPiece = currentPiece;
-            cellTo.CurrentPiece.CurrentCoordinates = cellTo.Coordinates;
-            cellFrom.CurrentPiece = null;
+            var currentPiece = move.CellFrom.CurrentPiece;
+            move.CellTo.CurrentPiece = currentPiece;
+            move.CellTo.CurrentPiece.CurrentCoordinates = move.CellTo.Coordinates;
+            move.CellFrom.CurrentPiece = null;
+        }
+
+        internal void rollback(Move move)
+        {
+            var currentPiece = move.CellTo.CurrentPiece;
+            move.CellFrom.CurrentPiece = currentPiece;
+            move.CellFrom.CurrentPiece.CurrentCoordinates = move.CellFrom.Coordinates;
+            move.CellTo.CurrentPiece = null;
         }
 
         internal void CheckIfKingChecked()
@@ -81,15 +89,20 @@ namespace SalisburyChessEngine.Board
             if (whitePiecePressureIndex > -1)
             {
                 //black king checked
-                this.checkingBoardMove = this.whitePiecePressure[whitePiecePressureIndex];
+                this.CheckingBoardMove = this.whitePiecePressure[whitePiecePressureIndex];
                 this.BlackKing.IsChecked = true;
             }
 
             else if (blackPiecePressureIndex > -1)
             {
                 //white king checked
-                this.checkingBoardMove = this.blackPiecePressure[blackPiecePressureIndex];
+                this.CheckingBoardMove = this.blackPiecePressure[blackPiecePressureIndex];
                 this.WhiteKing.IsChecked = true;
+            }
+            else
+            {
+                this.BlackKing.IsChecked = false;
+                this.WhiteKing.IsChecked = false;
             }
         }
 
@@ -137,9 +150,9 @@ namespace SalisburyChessEngine.Board
         public void UpdateBoard()
         {
             executeCellLevelFunction(DetermineValidMovesIfNotKing);
-            if (this.checkingBoardMove != null)
+            if (this.CheckingBoardMove != null)
             {
-                this.checkingBoardMove = null;
+                this.CheckingBoardMove = null;
             }
             
         }
@@ -153,7 +166,7 @@ namespace SalisburyChessEngine.Board
                 }
                 cell.CurrentPiece.CurrentCoordinates = cell.Coordinates;
                 
-                cell.CurrentPiece.determineValidMoves(cell.Coordinates, this.checkingBoardMove);
+                cell.CurrentPiece.determineValidMoves(cell.Coordinates, this.CheckingBoardMove);
             }
         }
 
@@ -161,7 +174,6 @@ namespace SalisburyChessEngine.Board
         private void determineTeamPressure()
         {
             executeCellLevelFunction(determineCellPressure);
-            
         }
 
         private void determineCellPressure(Cell cell)
@@ -215,11 +227,11 @@ namespace SalisburyChessEngine.Board
                 var king = (King)cell.CurrentPiece;
                 if (king.isWhite)
                 {
-                    this.whitePiecePressure = king.determineValidMoves(cell.Coordinates, blackPiecePressure, whitePiecePressure, this.checkingBoardMove);
+                    this.whitePiecePressure = king.determineValidMoves(cell.Coordinates, blackPiecePressure, whitePiecePressure, this.CheckingBoardMove);
                 }
                 else
                 {
-                    this.blackPiecePressure = king.determineValidMoves(cell.Coordinates, whitePiecePressure, blackPiecePressure, this.checkingBoardMove);
+                    this.blackPiecePressure = king.determineValidMoves(cell.Coordinates, whitePiecePressure, blackPiecePressure, this.CheckingBoardMove);
                 }
             }
 

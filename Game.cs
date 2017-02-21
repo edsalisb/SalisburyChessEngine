@@ -17,6 +17,8 @@ namespace SalisburyChessEngine
         //TODO: add to destroyed pieces List
         public List<object>DestroyedBlackPieces { get; set; }
         public List<object> DestroyedWhitePieces { get; set; }
+
+        public Move MostRecentMove { get; set; }
         public Game(string whiteMode, string blackMode)
         {
             this.whiteMode = whiteMode;
@@ -37,6 +39,11 @@ namespace SalisburyChessEngine
         public void Begin()
         {
             this.cb = new ChessBoard();
+            this.cb.BlackKing.registerOnCheckCallback(UpdateMoveNotation);
+            this.cb.WhiteKing.registerOnCheckCallback(UpdateMoveNotation);
+            this.cb.BlackKing.registerOnCheckCallback(WriteCheckedInConsole);
+            this.cb.WhiteKing.registerOnCheckCallback(WriteCheckedInConsole);
+
             while (!this.gameEnded)
             {
                 this.displayTurnStatus();
@@ -46,17 +53,33 @@ namespace SalisburyChessEngine
                 Move move;
                 if (this.cb.TryMovePiece(algebraicCoord, out move))
                 {
-                    moveList.Add(move);
-                    this.cb.replacePiece(move.CellFrom, move.CellTo);
-                    this.cb.UpdateBoardState();
+                    this.MostRecentMove = move;
 
+                    this.cb.replacePiece(move);
+                    this.cb.UpdateBoardState();
                     this.UpdateGameStatus();
+
+                    moveList.Add(this.MostRecentMove);
                 }
                 else
                 {
                     Console.WriteLine("Invalid Move entered");
                 }
             }
+        }
+
+        private void WriteCheckedInConsole()
+        {
+            Console.WriteLine("King is checked!!");
+        }
+
+        public void UpdateMoveNotation()
+        {
+            if (this.MostRecentMove == null)
+            {
+                return;
+            }
+            this.MostRecentMove.AlgebraicCoord += '+';
         }
 
         private void displayTurnStatus()

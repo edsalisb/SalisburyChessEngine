@@ -19,9 +19,11 @@ namespace SalisburyChessEngine.Pieces
             set
             {
                 this.isChecked = value;
-                foreach (var callback in onCheckCallbacks)
-                {
-                    callback();
+                if (value) { 
+                    foreach (var callback in onCheckCallbacks)
+                    {
+                        callback();
+                    }
                 }
             }
         }

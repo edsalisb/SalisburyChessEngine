@@ -29,20 +29,15 @@ namespace SalisburyChessEngine.Board
             }
             if (toCell.CurrentPiece == null)
             {
-                if (fromCell.CurrentPiece == null)
-                {
-                    IsValid = false;
-                }
-                else
-                {
-                    IsValid = true;
-                }
+                IsValid = true;
                 return this;
             }
 
             if (fromCell.CurrentPiece.isWhite != toCell.CurrentPiece.isWhite)
             {
                 IsValid = true;
+                IsTerminatable = true;
+                return this;
             }
 
             else
@@ -51,8 +46,6 @@ namespace SalisburyChessEngine.Board
                 IsTerminatable = true;
                 return this;
             }
-            IsValid = true;
-            return this;
         }
 
         public ValidNotationProperties determineMoveProperties(Cell cellFrom, Cell cellTo, List<ValidBoardMove> enemyPressure)

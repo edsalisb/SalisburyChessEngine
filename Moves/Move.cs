@@ -6,7 +6,7 @@
         public Cell CellFrom { get; set; }
 
         public Cell CellTo { get; set; }
-
+        public bool MustBeChecked { get; set; }
 
         public bool isWhitesTurn { get; set; }
 

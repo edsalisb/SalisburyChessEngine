@@ -26,17 +26,43 @@ namespace SalisburyChessEngine.Board
             {
                 this.potentialMove = new Move(algebraicCoord, isWhitesTurn);
                 this.leftToParse = algebraicCoord;
+                if (algebraicCoord[algebraicCoord.Length - 1] == '+')
+                {
+                    this.potentialMove.MustBeChecked = true;
+                    this.leftToParse = this.leftToParse.Substring(0,this.leftToParse.Length - 1);
+                }
 
-                this.lastTwoLetters = algebraicCoord.Substring(algebraicCoord.Length - 2);
+                this.lastTwoLetters = this.leftToParse.Substring(this.leftToParse.Length - 2);
                 if (!this.determineCellTo())
                 {
                     return potentialMove;
                 }
                 this.determineCellFrom();
-
-
+                if (this.potentialMove.MustBeChecked && potentialMove.IsValid)
+                {
+                    this.ensureChecked();
+                }
                 return potentialMove;
             }
+
+            private void ensureChecked()
+            {
+                this.board.replacePiece(potentialMove);
+                var piece = this.board.getCell(potentialMove.CellTo.Coordinates).CurrentPiece;
+                piece.determineValidMoves(potentialMove.CellTo.Coordinates, null);
+
+                var validMoveCoords = piece.ValidMoves.Select(GeneralUtilities.SelectCoordinates).ToList();
+                if ((this.board.isWhitesTurn && validMoveCoords.IndexOf(this.board.BlackKing.CurrentCoordinates) == -1) ||
+                    !this.board.isWhitesTurn && validMoveCoords.IndexOf(this.board.WhiteKing.CurrentCoordinates) == -1)
+                {
+                    this.potentialMove.IsValid = false;
+                }
+                this.board.rollback(potentialMove);
+                piece = this.board.getCell(potentialMove.CellFrom.Coordinates).CurrentPiece;
+                piece.determineValidMoves(potentialMove.CellFrom.Coordinates, null);
+
+            }
+           
             public bool determineCellTo()
             {
                 this.potentialMove.CellTo = this.board.getCell(lastTwoLetters);
