@@ -62,38 +62,42 @@ namespace SalisburyChessEngine.Pieces
             if (leftColumnLetter != null)
             {
                 var oneUoneLCell = getCell(leftColumnLetter.ToString() + (startingCell.Row + 1));
-                var moveProperty = new ValidBoardMove(coords, oneUoneLCell.Coordinates, ValidBoardMove.movePath.UpLeft, this.isWhite);
-
-                if (oneUoneLCell.CurrentPiece != null)
+                if (Cell.IsNotNull(oneUoneLCell))
                 {
-                    if (startingCell.CurrentPiece.isWhite != oneUoneLCell.CurrentPiece.isWhite)
-                    { 
-                        this.ValidMoves.Add(moveProperty);
+                    var moveProperty = new ValidBoardMove(coords, oneUoneLCell.Coordinates, ValidBoardMove.movePath.UpLeft, this.isWhite);
+                    if (Cell.HasPiece(oneUoneLCell))
+                    {
+                        if (startingCell.CurrentPiece.isWhite != oneUoneLCell.CurrentPiece.isWhite)
+                        {
+                            this.ValidMoves.Add(moveProperty);
+                            piecePressureCoords.Add(moveProperty);
+                        }
+                    }
+                    else
+                    {
                         piecePressureCoords.Add(moveProperty);
                     }
-                }
-                else
-                {
-                    piecePressureCoords.Add(moveProperty);
                 }
                
             }
             if (rightColumnLetter != null)
             {
                 var oneUoneRCell = getCell(rightColumnLetter.ToString() + (startingCell.Row + 1));
-                var moveProperty = new ValidBoardMove(coords, oneUoneRCell.Coordinates, ValidBoardMove.movePath.UpRight, this.isWhite);
-
-                if (oneUoneRCell.CurrentPiece != null)
+                if (Cell.IsNotNull(oneUoneRCell))
                 {
-                    if (startingCell.CurrentPiece.isWhite != oneUoneRCell.CurrentPiece.isWhite)
+                    var moveProperty = new ValidBoardMove(coords, oneUoneRCell.Coordinates, ValidBoardMove.movePath.UpLeft, this.isWhite);
+                    if (Cell.HasPiece(oneUoneRCell))
                     {
-                        this.ValidMoves.Add(moveProperty);
+                        if (startingCell.CurrentPiece.isWhite != oneUoneRCell.CurrentPiece.isWhite)
+                        {
+                            this.ValidMoves.Add(moveProperty);
+                            piecePressureCoords.Add(moveProperty);
+                        }
+                    }
+                    else
+                    {
                         piecePressureCoords.Add(moveProperty);
                     }
-                }
-                else
-                {
-                    piecePressureCoords.Add(moveProperty);
                 }
             }
         }
@@ -126,37 +130,42 @@ namespace SalisburyChessEngine.Pieces
             if (leftColumnLetter != null)
             {
                 var oneUoneLCell = getCell(leftColumnLetter.ToString() + (startingCell.Row - 1));
-                var moveProperty = new ValidBoardMove(coords, oneUoneLCell.Coordinates, ValidBoardMove.movePath.DownLeft, this.isWhite);
-
-                if (oneUoneLCell.CurrentPiece != null)
+                if (Cell.IsNotNull(oneUoneLCell))
                 {
-                    if (startingCell.CurrentPiece.isWhite != oneUoneLCell.CurrentPiece.isWhite)
+                    var moveProperty = new ValidBoardMove(coords, oneUoneLCell.Coordinates, ValidBoardMove.movePath.UpLeft, this.isWhite);
+                    if (Cell.HasPiece(oneUoneLCell))
                     {
-                        this.ValidMoves.Add(moveProperty);
+                        if (startingCell.CurrentPiece.isWhite != oneUoneLCell.CurrentPiece.isWhite)
+                        {
+                            this.ValidMoves.Add(moveProperty);
+                            piecePressureCoords.Add(moveProperty);
+                        }
+                    }
+                    else
+                    {
                         piecePressureCoords.Add(moveProperty);
                     }
-                }
-                else
-                {
-                    piecePressureCoords.Add(moveProperty);
                 }
 
             }
             if (rightColumnLetter != null)
             {
                 var oneUoneRCell = getCell(rightColumnLetter.ToString() + (startingCell.Row - 1));
-                var moveProperty = new ValidBoardMove(coords, oneUoneRCell.Coordinates, ValidBoardMove.movePath.DownRight, this.isWhite);
-                if (oneUoneRCell.CurrentPiece != null)
+                if (Cell.IsNotNull(oneUoneRCell))
                 {
-                    if (startingCell.CurrentPiece.isWhite != oneUoneRCell.CurrentPiece.isWhite)
+                    var moveProperty = new ValidBoardMove(coords, oneUoneRCell.Coordinates, ValidBoardMove.movePath.UpLeft, this.isWhite);
+                    if (Cell.HasPiece(oneUoneRCell))
                     {
-                        this.ValidMoves.Add(moveProperty);
+                        if (startingCell.CurrentPiece.isWhite != oneUoneRCell.CurrentPiece.isWhite)
+                        {
+                            this.ValidMoves.Add(moveProperty);
+                            piecePressureCoords.Add(moveProperty);
+                        }
+                    }
+                    else
+                    {
                         piecePressureCoords.Add(moveProperty);
                     }
-                }
-                else
-                {
-                    piecePressureCoords.Add(moveProperty);
                 }
             }
         }

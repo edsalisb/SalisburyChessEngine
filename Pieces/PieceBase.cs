@@ -398,7 +398,10 @@ namespace SalisburyChessEngine.Pieces
             if (this.allowedCellsAfterCheck.Count > 0 &&
                 checkingMove.IsWhite != this.isWhite)
             {
-                this.ValidMoves = this.ValidMoves.Intersect(this.allowedCellsAfterCheck).ToList();
+                var filteredCoordinateList = this.ValidMoves.Select(GeneralUtilities.SelectCoordinates)
+                    .Intersect(this.allowedCellsAfterCheck.Select(GeneralUtilities.SelectCoordinates)).ToList();
+
+                this.ValidMoves = this.ValidMoves.Where(x => filteredCoordinateList.IndexOf(x.CoordinatesTo) > -1).ToList();
             }
         }
     }

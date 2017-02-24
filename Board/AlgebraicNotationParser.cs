@@ -31,7 +31,6 @@ namespace SalisburyChessEngine.Board
                     this.potentialMove.MustBeChecked = true;
                     this.leftToParse = this.leftToParse.Substring(0,this.leftToParse.Length - 1);
                 }
-
                 this.lastTwoLetters = this.leftToParse.Substring(this.leftToParse.Length - 2);
                 if (!this.determineCellTo())
                 {
@@ -135,7 +134,7 @@ namespace SalisburyChessEngine.Board
                 }
 
             }
-            private void CheckPieceMovesBase<T>(char filter, Func<List<T>> getWhitePieceList, Func<List<T>> getBlackPieceList) where T: PieceBase
+            private void CheckPieceMovesBase<T>(char filter, Func<List<T>> getWhitePieceList, Func<List<T>> getBlackPieceList) where T : PieceBase
             {
                 List<T> friendlyPieceList, enemyPieceList;
                 if (this.potentialMove.isWhitesTurn)
@@ -156,24 +155,22 @@ namespace SalisburyChessEngine.Board
                     {
                         if (this.potentialMove.IsCapturable)
                         {
-                            bool valid = false;
-                            foreach (var piece2 in enemyPieceList)
+                            var friendlyMoveCoordinates = friendlyPiece.ValidMoves.Select(GeneralUtilities.SelectCoordinates).ToList();
+                            int captureIndex = friendlyMoveCoordinates.IndexOf(lastTwoLetters);
+                            if (captureIndex > -1)
                             {
-                                var enemyPiece = (PieceBase)piece2;
-                                if (friendlyPiece.ValidMoves.Select(GeneralUtilities.SelectCoordinates).ToList().IndexOf(enemyPiece.CurrentCoordinates) > -1)
-                                {
-                                    valid = true;
-                                    break;
-                                }
+                                this.potentialMove.IsValid = true;
                             }
-                            if (!valid)
+
+                            else
                             {
                                 return;
                             }
+
+                            this.potentialMove.IsValid = true;
+                            this.potentialMove.CellFrom = this.board.getCell(friendlyPiece.CurrentCoordinates);
+                            break;
                         }
-                        this.potentialMove.IsValid = true;
-                        this.potentialMove.CellFrom = this.board.getCell(friendlyPiece.CurrentCoordinates);
-                        break;
                     }
                 }
             }
@@ -218,6 +215,7 @@ namespace SalisburyChessEngine.Board
                     if (this.validMoveProperties.IsValid)
                     {
                         this.potentialMove.CellFrom = potentialCellFrom;
+                        this.potentialMove.IsValid = true;
                         return;
                     }
                 }
