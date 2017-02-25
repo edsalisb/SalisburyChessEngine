@@ -182,7 +182,7 @@ namespace SalisburyChessEngine.Pieces
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellUpLeft);
                     if (validMoveProps.IsValid)
                     {
-                        var moveProperties = new ValidBoardMove(coords, cellUpLeft.Coordinates, ValidBoardMove.movePath.UpLeft, this.isWhite);
+                        var moveProperties = new ValidBoardMove(coords, cellUpLeft.Coordinates, ValidBoardMove.movePath.DownLeft, this.isWhite);
                         moveList.Add(moveProperties);
                     }
                     if (validMoveProps.IsTerminatable)

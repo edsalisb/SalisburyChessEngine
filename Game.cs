@@ -39,10 +39,11 @@ namespace SalisburyChessEngine
         public void Begin()
         {
             this.cb = new ChessBoard();
-            this.cb.BlackKing.registerOnCheckCallback(UpdateMoveNotation);
-            this.cb.WhiteKing.registerOnCheckCallback(UpdateMoveNotation);
-            this.cb.BlackKing.registerOnCheckCallback(WriteCheckedInConsole);
-            this.cb.WhiteKing.registerOnCheckCallback(WriteCheckedInConsole);
+            this.cb.BlackKing.onCheckCallbacks += UpdateMoveNotation;
+            this.cb.WhiteKing.onCheckCallbacks += UpdateMoveNotation;
+
+            this.cb.BlackKing.onCheckForCheckMateCallbacks += CheckIfCheckMateOccurred;
+            this.cb.WhiteKing.onCheckForCheckMateCallbacks += CheckIfCheckMateOccurred;
 
             while (!this.gameEnded)
             {
@@ -68,11 +69,17 @@ namespace SalisburyChessEngine
             }
         }
 
-        private void WriteCheckedInConsole()
+        public void CheckIfCheckMateOccurred(Pieces.King k, EventArgs e)
         {
-            Console.WriteLine("King is checked!!");
+            if (k.ValidMoves.Count == 0)
+            {
+                var moves = this.cb.GetAllMovesForTeam(k.isWhite);
+                if (moves.Count == 0)
+                {
+                    this.gameEnded = true;
+                }
+            }
         }
-
         public void UpdateMoveNotation()
         {
             if (this.MostRecentMove == null)

@@ -71,7 +71,7 @@ namespace SalisburyChessEngine.Board
                     return false;
                 }
 
-                if (potentialMove.CellTo.CurrentPiece != null)
+                if (Cell.HasPiece(potentialMove.CellTo))
                 {
                     if (this.potentialMove.AlgebraicCoord.IndexOf('x') == -1)
                     {
@@ -136,16 +136,14 @@ namespace SalisburyChessEngine.Board
             }
             private void CheckPieceMovesBase<T>(char filter, Func<List<T>> getWhitePieceList, Func<List<T>> getBlackPieceList) where T : PieceBase
             {
-                List<T> friendlyPieceList, enemyPieceList;
+                List<T> friendlyPieceList;
                 if (this.potentialMove.isWhitesTurn)
                 {
                     friendlyPieceList = getWhitePieceList();
-                    enemyPieceList = getBlackPieceList();
                 }
                 else
                 {
                     friendlyPieceList = getBlackPieceList();
-                    enemyPieceList = getWhitePieceList();
                 }
                 foreach (var piece in friendlyPieceList)
                 {
@@ -166,11 +164,12 @@ namespace SalisburyChessEngine.Board
                             {
                                 return;
                             }
-
-                            this.potentialMove.IsValid = true;
-                            this.potentialMove.CellFrom = this.board.getCell(friendlyPiece.CurrentCoordinates);
-                            break;
+                            
                         }
+                        this.potentialMove.IsValid = true;
+                        this.potentialMove.CellFrom = this.board.getCell(friendlyPiece.CurrentCoordinates);
+                        break;
+
                     }
                 }
             }

@@ -53,7 +53,9 @@ namespace SalisburyChessEngine.Board
             var instance = determineMoveProperties(cellFrom, cellTo);
             if (instance.IsValid)
             {
-                if (enemyPressure.Select(GeneralUtilities.SelectCoordinates).ToList().IndexOf(cellTo.Coordinates) != -1)
+                var enemyCoordinatePressure = enemyPressure.Select(GeneralUtilities.SelectCoordinates).ToList();
+                int index = enemyCoordinatePressure.IndexOf(cellTo.Coordinates);
+                if (index != -1)
                 {
                     instance.IsValid = false;
                 }

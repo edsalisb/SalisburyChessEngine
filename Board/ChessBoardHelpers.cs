@@ -110,7 +110,7 @@ namespace SalisburyChessEngine.Board
 
         public Pawn FindPawns(Cell cell)
         {
-            if (cell.CurrentPiece != null)
+            if (Cell.HasPiece(cell))
             {
                 var piece = cell.CurrentPiece;
                 if (piece.TypeOfPiece == PieceBase.pieceType.Pawn)
@@ -130,7 +130,7 @@ namespace SalisburyChessEngine.Board
         }
         public Knight FindKnights(Cell cell)
         {
-            if (cell.CurrentPiece != null)
+            if (Cell.HasPiece(cell))
             {
                 var piece = cell.CurrentPiece;
                 if (piece.TypeOfPiece == PieceBase.pieceType.Knight)
@@ -149,7 +149,7 @@ namespace SalisburyChessEngine.Board
         }
         public Bishop FindBishops(Cell cell)
         {
-            if (cell.CurrentPiece != null)
+            if (Cell.HasPiece(cell))
             {
                 var piece = cell.CurrentPiece;
                 if (piece.TypeOfPiece == PieceBase.pieceType.Bishop)
@@ -168,7 +168,7 @@ namespace SalisburyChessEngine.Board
         }
         public Rook FindRooks(Cell cell)
         {
-            if (cell.CurrentPiece != null)
+            if (Cell.HasPiece(cell))
             {
                 var piece = cell.CurrentPiece;
                 if (piece.TypeOfPiece == PieceBase.pieceType.Rook)
@@ -187,7 +187,7 @@ namespace SalisburyChessEngine.Board
         }
         public Queen FindQueens(Cell cell)
         {
-            if (cell.CurrentPiece != null)
+            if (Cell.HasPiece(cell))
             {
                 var piece = cell.CurrentPiece;
                 if (piece.TypeOfPiece == PieceBase.pieceType.Queen)
@@ -206,7 +206,7 @@ namespace SalisburyChessEngine.Board
         }
         public King FindKings(Cell cell)
         {
-            if (cell.CurrentPiece != null)
+            if (Cell.HasPiece(cell))
             {
                 var piece = cell.CurrentPiece;
                 if (piece.TypeOfPiece == PieceBase.pieceType.King)
@@ -223,5 +223,26 @@ namespace SalisburyChessEngine.Board
                 return null;
             }
         }
+        public List<ValidBoardMove> GetAllMovesForTeam(bool isWhite)
+        {
+            IEnumerable<PieceBase> pieces;
+            List<ValidBoardMove> moves = new List<ValidBoardMove>();
+            if (isWhite)
+            {
+                pieces = executeCellLevelFunction<PieceBase>(Cell.GetPiece).Where(piecesAreWhiteAndNotNull);
+            }
+            else
+            {
+                pieces = executeCellLevelFunction<PieceBase>(Cell.GetPiece).Where(piecesAreBlackAndNotNull);
+            }
+            foreach(var piece in pieces)
+            {
+                moves.AddRange(piece.ValidMoves);
+            }
+
+            return moves;
+        }
+
+        
     }
 }

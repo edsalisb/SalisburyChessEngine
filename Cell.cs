@@ -23,7 +23,14 @@ namespace SalisburyChessEngine
             Coordinates = columnLetter + row.ToString();
             
         }
-
+        public static PieceBase GetPiece(Cell cell)
+        {
+            if (HasPiece(cell))
+            {
+                return cell.CurrentPiece;
+            }
+            return null;
+        }
         public static bool IsNotNull(Cell cell)
         {
             if (cell != null)
@@ -47,7 +54,7 @@ namespace SalisburyChessEngine
 
         public override string ToString()
         {
-            if (this.CurrentPiece != null)
+            if (HasPiece(this))
             { 
                 return this.CurrentPiece.ToString();
             }

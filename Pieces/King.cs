@@ -8,9 +8,13 @@ namespace SalisburyChessEngine.Pieces
 {
     public class King : PieceBase
     {
-        private List<Action> onCheckCallbacks;
+        public delegate void OnCheckCallback();
+        public delegate void OnCheckForCheckMateCallback(King k, EventArgs e);
         private bool isChecked;
         private Func<string, Cell> getCell;
+
+        public event OnCheckCallback onCheckCallbacks;
+        public event OnCheckForCheckMateCallback onCheckForCheckMateCallbacks;
         public bool IsChecked {
             get
             {
@@ -20,27 +24,22 @@ namespace SalisburyChessEngine.Pieces
             {
                 this.isChecked = value;
                 if (value) { 
-                    foreach (var callback in onCheckCallbacks)
+                    if (onCheckCallbacks != null)
                     {
-                        callback();
+                        onCheckCallbacks();
+                        onCheckForCheckMateCallbacks(this, EventArgs.Empty);
+
                     }
                 }
             }
         }
         public King(bool isWhite, Func<string, Cell> getCell, string coordinates): base(isWhite, coordinates)
         {
-            this.onCheckCallbacks = new List<Action>();
             this.TypeOfPiece = pieceType.King;
             this.getCell = getCell;
             this.CurrentCoordinates = coordinates;
             
         }
-
-        public void registerOnCheckCallback(Action func)
-        {
-            onCheckCallbacks.Add(func);
-        }
-       
         public override string ToString()
         {
             return "K";
@@ -53,6 +52,7 @@ namespace SalisburyChessEngine.Pieces
 
         public List<ValidBoardMove> determineValidMoves(string coords, List<ValidBoardMove> enemyPressure, List<ValidBoardMove> samePressure, ValidBoardMove checkingMove)
         {
+            this.ValidMoves = new List<ValidBoardMove>();
             var kingCell = getCell(coords);
 
             var oneLeftCell = getCell(getColumnLetter(kingCell, -1) + kingCell.Row.ToString());

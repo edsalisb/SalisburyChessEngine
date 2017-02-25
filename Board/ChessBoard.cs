@@ -28,8 +28,8 @@ namespace SalisburyChessEngine.Board
             this.WhiteKing = new King(true, this.getCell, "e1");
             this.BlackKing = new King(false, this.getCell, "e8");
 
-            this.WhiteKing.registerOnCheckCallback(UpdateBoard);
-            this.BlackKing.registerOnCheckCallback(UpdateBoard);
+            this.WhiteKing.onCheckCallbacks += UpdateBoard;
+            this.BlackKing.onCheckCallbacks += UpdateBoard;
             this.blackPiecePressure = new List<ValidBoardMove>();
             this.whitePiecePressure = new List<ValidBoardMove>();
 
@@ -158,7 +158,7 @@ namespace SalisburyChessEngine.Board
         }
         public void DetermineValidMovesIfNotKing(Cell cell)
         {
-            if (cell.CurrentPiece != null)
+            if (Cell.HasPiece(cell))
             {
                 if (cell.CurrentPiece.GetType() == typeof(King))
                 {
@@ -178,7 +178,7 @@ namespace SalisburyChessEngine.Board
 
         private void determineCellPressure(Cell cell)
         {
-            if (cell.CurrentPiece != null)
+            if (Cell.HasPiece(cell))
             {
                 List<ValidBoardMove> piecePressureList;
                 if (cell.CurrentPiece.isWhite)
@@ -218,7 +218,7 @@ namespace SalisburyChessEngine.Board
 
         public void DetermineValidMoveForKing(Cell cell)
         {
-            if (cell.CurrentPiece != null)
+            if (Cell.HasPiece(cell))
             {
                 if (cell.CurrentPiece.GetType() != typeof(King))
                 {
