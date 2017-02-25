@@ -191,15 +191,7 @@ namespace SalisburyChessEngine.Board
                 }
 
                 List<ValidBoardMove> validMovesList;
-                if (cell.CurrentPiece.GetType() == typeof(Pawn))
-                {
-                    var pawn = (Pawn)cell.CurrentPiece;
-                    validMovesList = pawn.piecePressureCoords;
-                }
-                else
-                {
-                    validMovesList = cell.CurrentPiece.ValidMoves;
-                }
+                validMovesList = cell.CurrentPiece.PiecePressure;
 
                 foreach (var move in validMovesList)
                 {

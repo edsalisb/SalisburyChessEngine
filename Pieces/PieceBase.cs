@@ -9,6 +9,7 @@ namespace SalisburyChessEngine.Pieces
     public abstract class PieceBase
     {
         public List<ValidBoardMove> ValidMoves{ set; get; }
+        public List<ValidBoardMove> PiecePressure { get; set; }
         public List<ValidBoardMove> allowedCellsAfterCheck { get; set; }
         public enum pieceType
         {
@@ -30,6 +31,7 @@ namespace SalisburyChessEngine.Pieces
             this.CurrentCoordinates = coordinates;
             this.isWhite = isWhite;
             this.ValidMoves = new List<ValidBoardMove>();
+            this.PiecePressure = new List<ValidBoardMove>();
             this.allowedCellsAfterCheck = new List<ValidBoardMove>();
         }
         public List<ValidBoardMove> getValidCellsLeft(string coords, Func<string,Cell> getCell)
@@ -51,10 +53,15 @@ namespace SalisburyChessEngine.Pieces
                         continue;
                     }
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellToLeft);
+                    var moveProperties = new ValidBoardMove(coords, cellToLeft.Coordinates, ValidBoardMove.movePath.Left, this.isWhite);
+
                     if (validMoveProps.IsValid)
                     {
-                        var moveProperties = new ValidBoardMove(coords, cellToLeft.Coordinates, ValidBoardMove.movePath.Left, this.isWhite);
                         moveList.Add(moveProperties);
+                    }
+                    if (validMoveProps.IsValid || validMoveProps.IsProtected)
+                    {
+                        this.PiecePressure.Add(moveProperties);
                     }
                     if (validMoveProps.IsTerminatable)
                     {
@@ -83,10 +90,14 @@ namespace SalisburyChessEngine.Pieces
                         continue;
                     }
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellToRight);
+                    var moveProperties = new ValidBoardMove(coords, cellToRight.Coordinates, ValidBoardMove.movePath.Right, this.isWhite);
                     if (validMoveProps.IsValid)
                     {
-                        var moveProperties = new ValidBoardMove(coords, cellToRight.Coordinates, ValidBoardMove.movePath.Right, this.isWhite);
                         moveList.Add(moveProperties);
+                    }
+                    if (validMoveProps.IsValid || validMoveProps.IsProtected)
+                    {
+                        this.PiecePressure.Add(moveProperties);
                     }
                     if (validMoveProps.IsTerminatable)
                     {
@@ -114,10 +125,15 @@ namespace SalisburyChessEngine.Pieces
                     continue;
                 }
                 var validMoveProps = this.cellIsValidForPiece(startingCell, cellUp);
+                var moveProperties = new ValidBoardMove(coords, cellUp.Coordinates, ValidBoardMove.movePath.Up, this.isWhite);
+
                 if (validMoveProps.IsValid)
                 {
-                    var moveProperties = new ValidBoardMove(coords, cellUp.Coordinates, ValidBoardMove.movePath.Up, this.isWhite);
                     moveList.Add(moveProperties);
+                }
+                if (validMoveProps.IsValid || validMoveProps.IsProtected)
+                {
+                    this.PiecePressure.Add(moveProperties);
                 }
                 if (validMoveProps.IsTerminatable)
                 {
@@ -145,10 +161,15 @@ namespace SalisburyChessEngine.Pieces
                     continue;
                 }
                 var validMoveProps = this.cellIsValidForPiece(startingCell, cellDown);
+                var moveProperties = new ValidBoardMove(coords, cellDown.Coordinates, ValidBoardMove.movePath.Down, this.isWhite);
+
                 if (validMoveProps.IsValid)
                 {
-                    var moveProperties = new ValidBoardMove(coords, cellDown.Coordinates, ValidBoardMove.movePath.Down, this.isWhite);
                     moveList.Add(moveProperties);
+                }
+                if (validMoveProps.IsValid || validMoveProps.IsProtected)
+                {
+                    this.PiecePressure.Add(moveProperties);
                 }
                 if (validMoveProps.IsTerminatable)
                 {
@@ -180,10 +201,15 @@ namespace SalisburyChessEngine.Pieces
                         continue;
                     }
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellUpLeft);
+                    var moveProperties = new ValidBoardMove(coords, cellUpLeft.Coordinates, ValidBoardMove.movePath.DownLeft, this.isWhite);
+
                     if (validMoveProps.IsValid)
                     {
-                        var moveProperties = new ValidBoardMove(coords, cellUpLeft.Coordinates, ValidBoardMove.movePath.DownLeft, this.isWhite);
                         moveList.Add(moveProperties);
+                    }
+                    if (validMoveProps.IsValid || validMoveProps.IsProtected)
+                    {
+                        this.PiecePressure.Add(moveProperties);
                     }
                     if (validMoveProps.IsTerminatable)
                     {
@@ -218,10 +244,15 @@ namespace SalisburyChessEngine.Pieces
                         continue;
                     }
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellDownRight);
+                    var moveProperties = new ValidBoardMove(coords, cellDownRight.Coordinates, ValidBoardMove.movePath.DownRight, this.isWhite);
+
                     if (validMoveProps.IsValid)
                     {
-                        var moveProperties = new ValidBoardMove(coords, cellDownRight.Coordinates, ValidBoardMove.movePath.DownRight, this.isWhite);
                         moveList.Add(moveProperties);
+                    }
+                    if (validMoveProps.IsValid || validMoveProps.IsProtected)
+                    {
+                        this.PiecePressure.Add(moveProperties);
                     }
                     if (validMoveProps.IsTerminatable)
                     {
@@ -254,10 +285,15 @@ namespace SalisburyChessEngine.Pieces
                         continue;
                     }
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellUpLeft);
+                    var moveProperties = new ValidBoardMove(coords, cellUpLeft.Coordinates, ValidBoardMove.movePath.UpLeft, this.isWhite);
+
                     if (validMoveProps.IsValid)
                     {
-                        var moveProperties = new ValidBoardMove(coords, cellUpLeft.Coordinates, ValidBoardMove.movePath.UpLeft, this.isWhite);
                         moveList.Add(moveProperties);
+                    }
+                    if (validMoveProps.IsValid || validMoveProps.IsProtected)
+                    {
+                        this.PiecePressure.Add(moveProperties);
                     }
                     if (validMoveProps.IsTerminatable)
                     {
@@ -290,11 +326,15 @@ namespace SalisburyChessEngine.Pieces
                         continue;
                     }
                     var validMoveProps = this.cellIsValidForPiece(startingCell, cellUpRight);
+                    var moveProperties = new ValidBoardMove(coords, cellUpRight.Coordinates, ValidBoardMove.movePath.UpRight, this.isWhite);
+
                     if (validMoveProps.IsValid)
                     {
-                        var moveProperties = new ValidBoardMove(coords, cellUpRight.Coordinates, ValidBoardMove.movePath.UpRight, this.isWhite);
                         moveList.Add(moveProperties);
-                        
+                    }
+                    if (validMoveProps.IsValid || validMoveProps.IsProtected)
+                    {
+                        this.PiecePressure.Add(moveProperties);
                     }
                     if (validMoveProps.IsTerminatable)
                     {

@@ -53,6 +53,8 @@ namespace SalisburyChessEngine.Pieces
         public List<ValidBoardMove> determineValidMoves(string coords, List<ValidBoardMove> enemyPressure, List<ValidBoardMove> samePressure, ValidBoardMove checkingMove)
         {
             this.ValidMoves = new List<ValidBoardMove>();
+            PiecePressure = new List<ValidBoardMove>();
+
             var kingCell = getCell(coords);
 
             var oneLeftCell = getCell(getColumnLetter(kingCell, -1) + kingCell.Row.ToString());
@@ -148,7 +150,7 @@ namespace SalisburyChessEngine.Pieces
         {
             var moveProps = new ValidNotationProperties();
             moveProps = moveProps.determineMoveProperties(cellFrom, cellTo, enemyPressure);
-            if (moveProps.IsValid)
+            if (moveProps.IsValid && !moveProps.IsProtected)
             {
                 return true;
             }

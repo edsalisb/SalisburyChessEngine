@@ -9,31 +9,35 @@ namespace SalisburyChessEngine.Board
     {
         public bool IsValid { get; set; }
         public bool IsTerminatable { get; set; }
-    
+        public bool IsProtected { get; set; }
         public ValidNotationProperties()
         {
+            IsProtected = false;
             IsValid = false;
             IsTerminatable = false;
         }
         public ValidNotationProperties determineMoveProperties(Cell fromCell, Cell toCell)
         {
-            if (fromCell == null || toCell == null)
+            if (!Cell.IsNotNull(fromCell) || !Cell.IsNotNull(toCell))
             {
                 IsValid = false;
                 return this;
             }
-            if (fromCell.CurrentPiece == null)
+            if (!Cell.HasPiece(fromCell))
             {
                 IsValid = false;
                 return this;
             }
-            if (toCell.CurrentPiece == null)
+            if (!Cell.HasPiece(toCell))
             {
                 IsValid = true;
                 return this;
             }
 
-            if (fromCell.CurrentPiece.isWhite != toCell.CurrentPiece.isWhite)
+            var fromCellPiece = Cell.GetPiece(fromCell);
+            var toCellPiece = Cell.GetPiece(toCell);
+
+            if (fromCellPiece.isWhite != toCellPiece.isWhite)
             {
                 IsValid = true;
                 IsTerminatable = true;
@@ -42,6 +46,7 @@ namespace SalisburyChessEngine.Board
 
             else
             {
+                IsProtected = true;
                 IsValid = false;
                 IsTerminatable = true;
                 return this;

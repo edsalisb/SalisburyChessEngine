@@ -9,19 +9,18 @@ namespace SalisburyChessEngine.Pieces
     {
 
         private Func<string, Cell> getCell { get; set; }
-        public List<ValidBoardMove> piecePressureCoords { get; set; }
         
         public Pawn(bool isWhite, Func<string, Cell> getCell, string coordinates) : base(isWhite, coordinates)
         {
 
             this.TypeOfPiece = pieceType.Pawn;
             this.getCell = getCell;
-            this.piecePressureCoords = new List<ValidBoardMove>();
         }
 
         public override void determineValidMoves(string coords, ValidBoardMove checkingMove)
         {
             ValidMoves = new List<ValidBoardMove>();
+            PiecePressure = new List<ValidBoardMove>();
             if (this.isWhite)
             {
                 this.determineWhiteMoves(coords);
@@ -70,12 +69,12 @@ namespace SalisburyChessEngine.Pieces
                         if (startingCell.CurrentPiece.isWhite != oneUoneLCell.CurrentPiece.isWhite)
                         {
                             this.ValidMoves.Add(moveProperty);
-                            piecePressureCoords.Add(moveProperty);
+                            this.PiecePressure.Add(moveProperty);
                         }
                     }
                     else
                     {
-                        piecePressureCoords.Add(moveProperty);
+                        this.PiecePressure.Add(moveProperty);
                     }
                 }
                
@@ -91,12 +90,12 @@ namespace SalisburyChessEngine.Pieces
                         if (startingCell.CurrentPiece.isWhite != oneUoneRCell.CurrentPiece.isWhite)
                         {
                             this.ValidMoves.Add(moveProperty);
-                            piecePressureCoords.Add(moveProperty);
+                            this.PiecePressure.Add(moveProperty);
                         }
                     }
                     else
                     {
-                        piecePressureCoords.Add(moveProperty);
+                        this.PiecePressure.Add(moveProperty);
                     }
                 }
             }
@@ -138,12 +137,12 @@ namespace SalisburyChessEngine.Pieces
                         if (startingCell.CurrentPiece.isWhite != oneUoneLCell.CurrentPiece.isWhite)
                         {
                             this.ValidMoves.Add(moveProperty);
-                            piecePressureCoords.Add(moveProperty);
+                            this.PiecePressure.Add(moveProperty);
                         }
                     }
                     else
                     {
-                        piecePressureCoords.Add(moveProperty);
+                        this.PiecePressure.Add(moveProperty);
                     }
                 }
 
@@ -159,12 +158,12 @@ namespace SalisburyChessEngine.Pieces
                         if (startingCell.CurrentPiece.isWhite != oneUoneRCell.CurrentPiece.isWhite)
                         {
                             this.ValidMoves.Add(moveProperty);
-                            piecePressureCoords.Add(moveProperty);
+                            this.PiecePressure.Add(moveProperty);
                         }
                     }
                     else
                     {
-                        piecePressureCoords.Add(moveProperty);
+                        this.PiecePressure.Add(moveProperty);
                     }
                 }
             }
