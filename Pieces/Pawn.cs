@@ -18,6 +18,24 @@ namespace SalisburyChessEngine.Pieces
         {
             ValidMoves = new List<ValidBoardMove>();
             PiecePressure = new List<ValidBoardMove>();
+
+            this.addToValidMoves(coords);
+
+            this.FilterMovesIfChecked(checkingMove);
+
+        }
+
+        public void determineValidMoves(string coords, List<ValidBoardMove> filterMoves)
+        {
+            ValidMoves = new List<ValidBoardMove>();
+            PiecePressure = new List<ValidBoardMove>();
+
+            this.addToValidMoves(coords);
+            this.FilterMovesIfPinned(filterMoves);
+        }
+
+        public override void addToValidMoves(string coords)
+        {
             if (this.isWhite)
             {
                 this.determineWhiteMoves(coords);
@@ -26,8 +44,7 @@ namespace SalisburyChessEngine.Pieces
             {
                 this.determineBlackMoves(coords);
             }
-            this.FilterMovesIfChecked(checkingMove);
-
+            this.ValidMovesSet = true;
         }
 
         private void determineWhiteMoves(string coords)

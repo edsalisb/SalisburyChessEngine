@@ -47,8 +47,8 @@ namespace SalisburyChessEngine.Board
             if (fromCellPiece.isWhite != toCellPiece.isWhite)
             {
                 IsValid = true;
-                IsTerminatable = true;
                 IsPotentiallyPinned = true;
+                IsTerminatable = true;
                 return this;
             }
 

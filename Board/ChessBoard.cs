@@ -41,6 +41,7 @@ namespace SalisburyChessEngine.Board
         {
             this.blackPiecePressure = new List<ValidBoardMove>();
             this.whitePiecePressure = new List<ValidBoardMove>();
+            this.resetPieces();
             this.UpdateBoard();
             this.determineTeamPressure();
             this.determineKingMoves();
@@ -82,6 +83,19 @@ namespace SalisburyChessEngine.Board
             move.CellTo.CurrentPiece = null;
         }
 
+        public void resetPieces()
+        {
+            executeCellLevelFunction(resetPiece);
+        }
+
+        public void resetPiece(Cell cell)
+        {
+            if (Cell.HasPiece(cell))
+            {
+                var piece = Cell.GetPiece(cell);
+                piece.ValidMovesSet = false;
+            }
+        }
         internal void CheckIfKingChecked()
         {
             int whitePiecePressureIndex = this.whitePiecePressure.Select(GeneralUtilities.SelectCoordinates).ToList().IndexOf(this.BlackKing.CurrentCoordinates);
@@ -165,9 +179,11 @@ namespace SalisburyChessEngine.Board
                 {
                     return;
                 }
-                cell.CurrentPiece.CurrentCoordinates = cell.Coordinates;
-
-                cell.CurrentPiece.determineValidMoves(cell.Coordinates, this.CheckingBoardMove);
+                if (!cell.CurrentPiece.ValidMovesSet)
+                {
+                    cell.CurrentPiece.CurrentCoordinates = cell.Coordinates;
+                    cell.CurrentPiece.determineValidMoves(cell.Coordinates, this.CheckingBoardMove);
+                }
             }
         }
 

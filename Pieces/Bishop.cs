@@ -20,6 +20,22 @@ namespace SalisburyChessEngine.Pieces
             ValidMoves = new List<ValidBoardMove>();
             PiecePressure = new List<ValidBoardMove>();
 
+            this.addToValidMoves(coords);
+            this.FilterMovesIfChecked(checkingMove);
+            
+        }
+
+        public void determineValidMoves(string coords, List<ValidBoardMove> filterMoves)
+        {
+            ValidMoves = new List<ValidBoardMove>();
+            PiecePressure = new List<ValidBoardMove>();
+
+            this.addToValidMoves(coords);
+            this.FilterMovesIfPinned(filterMoves);
+        }
+
+        public override void addToValidMoves(string coords)
+        {
             var downLeftCells = getValidCellsDownLeft(coords);
             var downRightCells = getValidCellsDownRight(coords);
             var upLeftCells = getValidCellsUpLeft(coords);
@@ -30,9 +46,7 @@ namespace SalisburyChessEngine.Pieces
             this.ValidMoves.AddRange(upLeftCells);
             this.ValidMoves.AddRange(upRightCells);
 
-            
-            this.FilterMovesIfChecked(checkingMove);
-            
+            this.ValidMovesSet = true;
         }
 
         public override string ToString()

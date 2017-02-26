@@ -24,6 +24,7 @@ namespace SalisburyChessEngine.Board
             }
             internal Move Parse(string algebraicCoord, bool isWhitesTurn)
             {
+                algebraicCoord = algebraicCoord.Trim();
                 this.potentialMove = new Move(algebraicCoord, isWhitesTurn);
                 this.leftToParse = algebraicCoord;
                 if (algebraicCoord[algebraicCoord.Length - 1] == '+')
@@ -232,7 +233,7 @@ namespace SalisburyChessEngine.Board
                     {
                         var whiteInitialCell = this.board.getCell(lastTwoLetters[0] + '2'.ToString());
                         this.validMoveProperties = this.validMoveProperties.determineMoveProperties(whiteInitialCell, this.potentialMove.CellTo);
-                        if (this.validMoveProperties.IsValid)
+                        if (this.validMoveProperties.IsValid && whiteInitialCell.CurrentPiece.ValidMoves.Count > 0)
                         {
                             this.potentialMove.CellFrom = whiteInitialCell;
                             this.potentialMove.IsValid = true;
@@ -241,7 +242,7 @@ namespace SalisburyChessEngine.Board
 
                         var whiteOneRow = this.board.getCell(lastTwoLetters[0] + '3'.ToString());
                         this.validMoveProperties = this.validMoveProperties.determineMoveProperties(whiteOneRow, this.potentialMove.CellTo);
-                        if (this.validMoveProperties.IsValid)
+                        if (this.validMoveProperties.IsValid && whiteOneRow.CurrentPiece.ValidMoves.Count > 0)
                         {
                             this.potentialMove.CellFrom = whiteOneRow;
                             this.potentialMove.IsValid = true;
@@ -255,7 +256,7 @@ namespace SalisburyChessEngine.Board
                         {
                             var potentialCellFrom = this.board.getCell(lastTwoLetters[0] + (rowNum - 1).ToString());
                             this.validMoveProperties = this.validMoveProperties.determineMoveProperties(potentialCellFrom, this.potentialMove.CellTo);
-                            if (this.validMoveProperties.IsValid)
+                            if (this.validMoveProperties.IsValid && potentialCellFrom.CurrentPiece.ValidMoves.Count > 0)
                             {
                                 this.potentialMove.CellFrom = potentialCellFrom;
                                 this.potentialMove.IsValid = true;
@@ -276,7 +277,7 @@ namespace SalisburyChessEngine.Board
                     {
                         var blackInitialCell = this.board.getCell(lastTwoLetters[0] + '7'.ToString());
                         this.validMoveProperties = this.validMoveProperties.determineMoveProperties(blackInitialCell, this.potentialMove.CellTo);
-                        if (this.validMoveProperties.IsValid)
+                        if (this.validMoveProperties.IsValid && blackInitialCell.CurrentPiece.ValidMoves.Count > 0)
                         {
                             this.potentialMove.CellFrom = blackInitialCell;
                             this.potentialMove.IsValid = true;
@@ -285,7 +286,7 @@ namespace SalisburyChessEngine.Board
 
                         var whiteOneRow = this.board.getCell(lastTwoLetters[0] + '6'.ToString());
                         this.validMoveProperties = this.validMoveProperties.determineMoveProperties(whiteOneRow, this.potentialMove.CellTo);
-                        if (this.validMoveProperties.IsValid)
+                        if (this.validMoveProperties.IsValid && whiteOneRow.CurrentPiece.ValidMoves.Count > 0)
                         {
                             this.potentialMove.CellFrom = whiteOneRow;
                             this.potentialMove.IsValid = true;
@@ -299,7 +300,7 @@ namespace SalisburyChessEngine.Board
                         {
                             var potentialCellFrom = this.board.getCell(lastTwoLetters[0] + (rowNum + 1).ToString());
                             this.validMoveProperties = this.validMoveProperties.determineMoveProperties(potentialCellFrom, this.potentialMove.CellTo);
-                            if (this.validMoveProperties.IsValid)
+                            if (this.validMoveProperties.IsValid && potentialCellFrom.CurrentPiece.ValidMoves.Count > 0)
                             {
                                 this.potentialMove.CellFrom = potentialCellFrom;
                                 this.potentialMove.IsValid = true;
