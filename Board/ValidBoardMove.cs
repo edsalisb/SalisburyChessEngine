@@ -1,4 +1,6 @@
-﻿namespace SalisburyChessEngine.Board
+﻿using SalisburyChessEngine.Pieces;
+
+namespace SalisburyChessEngine.Board
 {
     public class ValidBoardMove
     {
@@ -30,5 +32,6 @@
         {
             return CoordinatesTo;
         }
+        
     }
 }

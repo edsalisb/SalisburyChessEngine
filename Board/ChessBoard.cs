@@ -109,14 +109,14 @@ namespace SalisburyChessEngine.Board
         private void placePiecesOnBoard()
         {
             //white back rank
-            this.getCell("a1").CurrentPiece = new Rook(true, this.getCell, "a1");
+            this.getCell("a1").CurrentPiece = new Rook(true, this.getCell, "a1", this.BlackKing);
             this.getCell("b1").CurrentPiece = new Knight(true, this.getCell, "b1");
-            this.getCell("c1").CurrentPiece = new Bishop(true, this.getCell, "c1");
-            this.getCell("d1").CurrentPiece = new Queen(true, this.getCell, "d1");
+            this.getCell("c1").CurrentPiece = new Bishop(true, this.getCell, "c1", this.BlackKing);
+            this.getCell("d1").CurrentPiece = new Queen(true, this.getCell, "d1", this.BlackKing);
             this.getCell("e1").CurrentPiece = this.WhiteKing;
-            this.getCell("f1").CurrentPiece = new Bishop(true, this.getCell, "f1");
+            this.getCell("f1").CurrentPiece = new Bishop(true, this.getCell, "f1", this.BlackKing);
             this.getCell("g1").CurrentPiece = new Knight(true, this.getCell, "g1");
-            this.getCell("h1").CurrentPiece = new Rook(true, this.getCell, "h1");
+            this.getCell("h1").CurrentPiece = new Rook(true, this.getCell, "h1", this.BlackKing);
             //white pawn rank
             this.getCell("a2").CurrentPiece = new Pawn(true, this.getCell, "a2");
             this.getCell("b2").CurrentPiece = new Pawn(true, this.getCell, "b2");
@@ -128,14 +128,14 @@ namespace SalisburyChessEngine.Board
             this.getCell("h2").CurrentPiece = new Pawn(true, this.getCell, "h2");
 
             //black back rank
-            this.getCell("a8").CurrentPiece = new Rook(false, this.getCell, "a8");
+            this.getCell("a8").CurrentPiece = new Rook(false, this.getCell, "a8", this.WhiteKing);
             this.getCell("b8").CurrentPiece = new Knight(false, this.getCell, "b8");
-            this.getCell("c8").CurrentPiece = new Bishop(false, this.getCell, "c8");
-            this.getCell("d8").CurrentPiece = new Queen(false, this.getCell, "d8");
+            this.getCell("c8").CurrentPiece = new Bishop(false, this.getCell, "c8", this.WhiteKing);
+            this.getCell("d8").CurrentPiece = new Queen(false, this.getCell, "d8", this.WhiteKing);
             this.getCell("e8").CurrentPiece = this.BlackKing;
-            this.getCell("f8").CurrentPiece = new Bishop(false, this.getCell, "f8");
+            this.getCell("f8").CurrentPiece = new Bishop(false, this.getCell, "f8", this.WhiteKing);
             this.getCell("g8").CurrentPiece = new Knight(false, this.getCell, "g8");
-            this.getCell("h8").CurrentPiece = new Rook(false, this.getCell, "h8");
+            this.getCell("h8").CurrentPiece = new Rook(false, this.getCell, "h8", this.WhiteKing);
 
             this.getCell("a7").CurrentPiece = new Pawn(false, this.getCell, "a7");
             this.getCell("b7").CurrentPiece = new Pawn(false, this.getCell, "b7");
@@ -156,6 +156,7 @@ namespace SalisburyChessEngine.Board
             }
             
         }
+
         public void DetermineValidMovesIfNotKing(Cell cell)
         {
             if (Cell.HasPiece(cell))
@@ -165,12 +166,14 @@ namespace SalisburyChessEngine.Board
                     return;
                 }
                 cell.CurrentPiece.CurrentCoordinates = cell.Coordinates;
-                
+
                 cell.CurrentPiece.determineValidMoves(cell.Coordinates, this.CheckingBoardMove);
             }
         }
 
-      
+        
+
+
         private void determineTeamPressure()
         {
             executeCellLevelFunction(determineCellPressure);

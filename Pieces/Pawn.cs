@@ -7,14 +7,11 @@ namespace SalisburyChessEngine.Pieces
 {
     public class Pawn: PieceBase
     {
-
-        private Func<string, Cell> getCell { get; set; }
         
-        public Pawn(bool isWhite, Func<string, Cell> getCell, string coordinates) : base(isWhite, coordinates)
+        public Pawn(bool isWhite, Func<string, Cell> getCell, string coordinates) : base(isWhite, coordinates, getCell)
         {
 
             this.TypeOfPiece = pieceType.Pawn;
-            this.getCell = getCell;
         }
 
         public override void determineValidMoves(string coords, ValidBoardMove checkingMove)
@@ -29,7 +26,7 @@ namespace SalisburyChessEngine.Pieces
             {
                 this.determineBlackMoves(coords);
             }
-            this.FilterMovesIfChecked(checkingMove, getCell);
+            this.FilterMovesIfChecked(checkingMove);
 
         }
 

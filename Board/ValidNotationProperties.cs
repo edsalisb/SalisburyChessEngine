@@ -3,19 +3,26 @@ using System.Linq;
 using System.Collections.Generic;
 using SalisburyChessEngine.Board;
 using SalisburyChessEngine.Utilities;
+using SalisburyChessEngine.Pieces;
+
 namespace SalisburyChessEngine.Board
 {
+
     public class ValidNotationProperties
     {
+
         public bool IsValid { get; set; }
         public bool IsTerminatable { get; set; }
         public bool IsProtected { get; set; }
+
+        public bool IsPotentiallyPinned { get; set; }
         public ValidNotationProperties()
         {
             IsProtected = false;
             IsValid = false;
             IsTerminatable = false;
         }
+
         public ValidNotationProperties determineMoveProperties(Cell fromCell, Cell toCell)
         {
             if (!Cell.IsNotNull(fromCell) || !Cell.IsNotNull(toCell))
@@ -41,6 +48,7 @@ namespace SalisburyChessEngine.Board
             {
                 IsValid = true;
                 IsTerminatable = true;
+                IsPotentiallyPinned = true;
                 return this;
             }
 
@@ -52,6 +60,8 @@ namespace SalisburyChessEngine.Board
                 return this;
             }
         }
+
+
 
         public ValidNotationProperties determineMoveProperties(Cell cellFrom, Cell cellTo, List<ValidBoardMove> enemyPressure)
         {
@@ -68,4 +78,5 @@ namespace SalisburyChessEngine.Board
             return instance;
         }
     }
+
 }

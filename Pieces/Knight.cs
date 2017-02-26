@@ -7,11 +7,9 @@ namespace SalisburyChessEngine.Pieces
     public class Knight : PieceBase
     {
    
-        private Func<string, Cell> getCell;
-        public Knight(bool isWhite, Func<string, Cell> getCell, string coordinates): base(isWhite, coordinates)
+        public Knight(bool isWhite, Func<string, Cell> getCell, string coordinates): base(isWhite, coordinates, getCell)
         {
             this.TypeOfPiece = pieceType.Knight;
-            this.getCell = getCell;
         }
         public override void determineValidMoves(string coords, ValidBoardMove checkingMove)
         {
@@ -78,7 +76,7 @@ namespace SalisburyChessEngine.Pieces
             }
 
            
-            this.FilterMovesIfChecked(checkingMove, getCell);
+            this.FilterMovesIfChecked(checkingMove);
             
         }
 

@@ -223,6 +223,18 @@ namespace SalisburyChessEngine.Board
                 return null;
             }
         }
+
+        public King GetKingForTeam(bool isWhite)
+        {
+            if (isWhite)
+            {
+                return this.WhiteKing;
+            }
+            else
+            {
+                return this.BlackKing;
+            }
+        }
         public List<ValidBoardMove> GetAllMovesForTeam(bool isWhite)
         {
             IEnumerable<PieceBase> pieces;
@@ -242,7 +254,5 @@ namespace SalisburyChessEngine.Board
 
             return moves;
         }
-
-        
     }
 }

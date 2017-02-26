@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using SalisburyChessEngine.Board;
+using System.Collections.ObjectModel;
 
 namespace SalisburyChessEngine.Pieces
 {
     public class Queen : PieceBase
     {
-        private Func<string, Cell> getCell;
-         
-        public Queen(bool isWhite, Func<string, Cell> getCell, string coordinates) : base(isWhite, coordinates)
+        
+        public Queen(bool isWhite, Func<string, Cell> getCell, string coordinates, King enemyKing) : base(isWhite, coordinates, getCell)
         {
             this.TypeOfPiece = pieceType.Queen;
             this.getCell = getCell;
+            this.enemyKing = enemyKing;
         }
 
         
@@ -25,20 +26,20 @@ namespace SalisburyChessEngine.Pieces
             ValidMoves = new List<ValidBoardMove>();
             PiecePressure = new List<ValidBoardMove>();
 
-            var downCells = getValidCellsDown(coords, getCell);
-            var leftCells = getValidCellsLeft(coords, getCell);
-            var rightCells = getValidCellsRight(coords, getCell);
-            var upCells = getValidCellsUp(coords, getCell);
+            var downCells = getValidCellsDown(coords);
+            var leftCells = getValidCellsLeft(coords);
+            var rightCells = getValidCellsRight(coords);
+            var upCells = getValidCellsUp(coords);
 
             this.ValidMoves.AddRange(downCells);
             this.ValidMoves.AddRange(leftCells);
             this.ValidMoves.AddRange(rightCells);
             this.ValidMoves.AddRange(upCells);
 
-            var downLeftCells = getValidCellsDownLeft(coords, getCell);
-            var downRightCells = getValidCellsDownRight(coords, getCell);
-            var upLeftCells = getValidCellsUpLeft(coords, getCell);
-            var upRightCells = getValidCellsUpRight(coords, getCell);
+            var downLeftCells = getValidCellsDownLeft(coords);
+            var downRightCells = getValidCellsDownRight(coords);
+            var upLeftCells = getValidCellsUpLeft(coords);
+            var upRightCells = getValidCellsUpRight(coords);
 
             this.ValidMoves.AddRange(downLeftCells);
             this.ValidMoves.AddRange(downRightCells);
@@ -46,7 +47,7 @@ namespace SalisburyChessEngine.Pieces
             this.ValidMoves.AddRange(upRightCells);
 
           
-            this.FilterMovesIfChecked(checkingMove, getCell);
+            this.FilterMovesIfChecked(checkingMove);
             
         }
     }

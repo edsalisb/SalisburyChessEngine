@@ -11,8 +11,7 @@ namespace SalisburyChessEngine.Pieces
         public delegate void OnCheckCallback();
         public delegate void OnCheckForCheckMateCallback(King k, EventArgs e);
         private bool isChecked;
-        private Func<string, Cell> getCell;
-
+        
         public event OnCheckCallback onCheckCallbacks;
         public event OnCheckForCheckMateCallback onCheckForCheckMateCallbacks;
         public bool IsChecked {
@@ -33,10 +32,9 @@ namespace SalisburyChessEngine.Pieces
                 }
             }
         }
-        public King(bool isWhite, Func<string, Cell> getCell, string coordinates): base(isWhite, coordinates)
+        public King(bool isWhite, Func<string, Cell> getCell, string coordinates): base(isWhite, coordinates, getCell)
         {
             this.TypeOfPiece = pieceType.King;
-            this.getCell = getCell;
             this.CurrentCoordinates = coordinates;
             
         }
@@ -141,7 +139,7 @@ namespace SalisburyChessEngine.Pieces
                 }
             }
           
-            this.FilterMovesIfChecked(checkingMove, getCell);
+            this.FilterMovesIfChecked(checkingMove);
             
             return samePressure;
         }

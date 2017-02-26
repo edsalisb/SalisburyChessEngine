@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using SalisburyChessEngine.Board;
+using System.Collections.ObjectModel;
 
 namespace SalisburyChessEngine.Pieces
 {
     public class Rook : PieceBase
     {
-        private Func<string, Cell> getCell;
-
-        public Rook(bool isWhite, Func<string, Cell> getCell, string coordinates) : base(isWhite, coordinates)
+        public Rook(bool isWhite, Func<string, Cell> getCell, string coordinates, King enemyKing) : base(isWhite, coordinates, getCell)
         {
             this.getCell = getCell;
             this.TypeOfPiece = pieceType.Rook;
+            this.enemyKing = enemyKing;
         }
         
 
@@ -20,10 +20,10 @@ namespace SalisburyChessEngine.Pieces
             ValidMoves = new List<ValidBoardMove>();
             PiecePressure = new List<ValidBoardMove>();
 
-            var downCells = getValidCellsDown(coords, getCell);
-            var leftCells = getValidCellsLeft(coords, getCell);
-            var rightCells = getValidCellsRight(coords, getCell);
-            var upCells = getValidCellsUp(coords, getCell);
+            var downCells = getValidCellsDown(coords);
+            var leftCells = getValidCellsLeft(coords);
+            var rightCells = getValidCellsRight(coords);
+            var upCells = getValidCellsUp(coords);
 
             this.ValidMoves.AddRange(downCells);
             this.ValidMoves.AddRange(leftCells);
@@ -31,7 +31,7 @@ namespace SalisburyChessEngine.Pieces
             this.ValidMoves.AddRange(upCells);
 
            
-            this.FilterMovesIfChecked(checkingMove, getCell);
+            this.FilterMovesIfChecked(checkingMove);
             
         }
 

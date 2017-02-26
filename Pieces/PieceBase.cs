@@ -25,327 +25,317 @@ namespace SalisburyChessEngine.Pieces
         public string CurrentCoordinates { get; set; }
         public bool isWhite;
         public abstract void determineValidMoves(string coords, ValidBoardMove checkingMove);
-
-        public PieceBase(bool isWhite, string coordinates)
+        public King enemyKing { get; set; }
+        public Func<string, Cell> getCell;
+        public PieceBase(bool isWhite, string coordinates, Func<string, Cell> getCell)
         {
+            this.getCell = getCell;
             this.CurrentCoordinates = coordinates;
             this.isWhite = isWhite;
             this.ValidMoves = new List<ValidBoardMove>();
             this.PiecePressure = new List<ValidBoardMove>();
             this.allowedCellsAfterCheck = new List<ValidBoardMove>();
         }
-        public List<ValidBoardMove> getValidCellsLeft(string coords, Func<string,Cell> getCell)
+
+        public List<ValidBoardMove> executeFunctionOnCellsToLeft(Cell cell, Func<Cell, Cell, ValidBoardMove.movePath, ValidBoardMove> func)
         {
+            ValidBoardMove.movePath path = ValidBoardMove.movePath.Left;
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
-            var startingCell = getCell(coords);
-            for (var i = startingCell.ColumnNumber; i > 0; i--)
+            for (var i = cell.ColumnNumber; i > 0; i--)
             {
                 char columnLetter;
                 if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
                 {
-                    var cellToLeft = getCell(columnLetter.ToString() + startingCell.Row);
-                    if (cellToLeft == null)
+                    var sequentialCell = getCell(columnLetter.ToString() + cell.Row);
+                    if (Cell.IsNotNull(sequentialCell))
                     {
-                        break;
-                    }
-                    if (cellToLeft.columnLetter + cellToLeft.Row.ToString() == coords)
-                    {
-                        continue;
-                    }
-                    var validMoveProps = this.cellIsValidForPiece(startingCell, cellToLeft);
-                    var moveProperties = new ValidBoardMove(coords, cellToLeft.Coordinates, ValidBoardMove.movePath.Left, this.isWhite);
+                        if (sequentialCell.columnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
+                        {
+                            continue;
+                        }
 
-                    if (validMoveProps.IsValid)
-                    {
-                        moveList.Add(moveProperties);
+                        var move = func(cell, sequentialCell, path);
+                        if (move == null)
+                        {
+                            break;
+                        }
+                        moveList.Add(move);
                     }
-                    if (validMoveProps.IsValid || validMoveProps.IsProtected)
-                    {
-                        this.PiecePressure.Add(moveProperties);
-                    }
-                    if (validMoveProps.IsTerminatable)
-                    {
-                        break;
-                    }
+                    
                 }
             }
             return moveList;
         }
-        public List<ValidBoardMove> getValidCellsRight(string coords, Func<string, Cell> getCell)
+
+        public List<ValidBoardMove> executeFunctionOnCellsToRight(Cell cell, Func<Cell, Cell, ValidBoardMove.movePath, ValidBoardMove> func)
         {
+            ValidBoardMove.movePath path = ValidBoardMove.movePath.Right;
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
-            var startingCell = getCell(coords);
-            for (var i = startingCell.ColumnNumber; i <= BoardProperties.Columns; i++)
+            for (var i = cell.ColumnNumber; i <= BoardProperties.Columns; i++)
             {
                 char columnLetter;
                 if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
                 {
-                    var cellToRight = getCell(columnLetter.ToString() + startingCell.Row);
-                    if (cellToRight == null)
+                    var sequentialCell = getCell(columnLetter.ToString() + cell.Row);
+                    if (Cell.IsNotNull(sequentialCell))
                     {
-                        break;
+                        if (sequentialCell.columnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
+                        {
+                            continue;
+                        }
+                        var move = func(cell, sequentialCell, path);
+                        if (move == null)
+                        {
+                            break;
+                        }
+                        moveList.Add(move);
                     }
-                    if (cellToRight.columnLetter + cellToRight.Row.ToString() == coords)
+                }
+            }
+            return moveList;
+        }
+
+        public List<ValidBoardMove> executeFunctionOnCellsUp(Cell cell, Func<Cell, Cell, ValidBoardMove.movePath, ValidBoardMove> func)
+        {
+            ValidBoardMove.movePath path = ValidBoardMove.movePath.Up;
+            List<ValidBoardMove> moveList = new List<ValidBoardMove>();
+            for (var i = cell.Row; i < BoardProperties.Rows; i++)
+            {
+                var sequentialCell = getCell(cell.columnLetter.ToString() + i.ToString());
+                if (Cell.IsNotNull(sequentialCell))
+                {
+                    if (sequentialCell.columnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
                     {
                         continue;
                     }
-                    var validMoveProps = this.cellIsValidForPiece(startingCell, cellToRight);
-                    var moveProperties = new ValidBoardMove(coords, cellToRight.Coordinates, ValidBoardMove.movePath.Right, this.isWhite);
-                    if (validMoveProps.IsValid)
-                    {
-                        moveList.Add(moveProperties);
-                    }
-                    if (validMoveProps.IsValid || validMoveProps.IsProtected)
-                    {
-                        this.PiecePressure.Add(moveProperties);
-                    }
-                    if (validMoveProps.IsTerminatable)
+                    var move = func(cell, sequentialCell, path);
+                    if (move == null)
                     {
                         break;
                     }
+                    moveList.Add(move);
                 }
             }
             return moveList;
         }
-
-        public List<ValidBoardMove> getValidCellsUp(string coords, Func<string, Cell> getCell)
+        public List<ValidBoardMove> executeFunctionOnCellsDown(Cell cell, Func<Cell, Cell, ValidBoardMove.movePath, ValidBoardMove> func)
         {
+            ValidBoardMove.movePath path = ValidBoardMove.movePath.Down;
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
-            var startingCell = getCell(coords);
-            for (var i = startingCell.Row; i < BoardProperties.Rows; i++)
+            for (var i = cell.Row; i > 0; i--)
             {
-                
-                var cellUp = getCell(startingCell.columnLetter.ToString() + i.ToString());
-                if (cellUp == null)
+                var sequentialCell = getCell(cell.columnLetter.ToString() + i.ToString());
+                if (Cell.IsNotNull(sequentialCell))
                 {
-                    break;
+                    if (sequentialCell.columnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
+                    {
+                        continue;
+                    }
+                    var move = func(cell, sequentialCell, path);
+                    if (move == null)
+                    {
+                        break;
+                    }
+                    moveList.Add(move);
                 }
-                if (cellUp.columnLetter + cellUp.Row.ToString() == coords)
-                {
-                    continue;
-                }
-                var validMoveProps = this.cellIsValidForPiece(startingCell, cellUp);
-                var moveProperties = new ValidBoardMove(coords, cellUp.Coordinates, ValidBoardMove.movePath.Up, this.isWhite);
-
-                if (validMoveProps.IsValid)
-                {
-                    moveList.Add(moveProperties);
-                }
-                if (validMoveProps.IsValid || validMoveProps.IsProtected)
-                {
-                    this.PiecePressure.Add(moveProperties);
-                }
-                if (validMoveProps.IsTerminatable)
-                {
-                    break;
-                }
-
             }
             return moveList;
         }
-        public List<ValidBoardMove> getValidCellsDown(string coords, Func<string, Cell> getCell)
+        public List<ValidBoardMove> executeFunctionOnCellsDownLeft(Cell cell, Func<Cell, Cell, ValidBoardMove.movePath, ValidBoardMove> func)
         {
+            var row = cell.Row;
+            ValidBoardMove.movePath path = ValidBoardMove.movePath.DownLeft;
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
-            var startingCell = getCell(coords);
-            for (var i = startingCell.Row; i > 0; i--)
-            {
-                
-                var cellDown = getCell(startingCell.columnLetter.ToString() + i.ToString());
-
-                if (cellDown == null)
-                {
-                    break;
-                }
-                if (cellDown.columnLetter + cellDown.Row.ToString() == coords)
-                {
-                    continue;
-                }
-                var validMoveProps = this.cellIsValidForPiece(startingCell, cellDown);
-                var moveProperties = new ValidBoardMove(coords, cellDown.Coordinates, ValidBoardMove.movePath.Down, this.isWhite);
-
-                if (validMoveProps.IsValid)
-                {
-                    moveList.Add(moveProperties);
-                }
-                if (validMoveProps.IsValid || validMoveProps.IsProtected)
-                {
-                    this.PiecePressure.Add(moveProperties);
-                }
-                if (validMoveProps.IsTerminatable)
-                {
-                    break;
-                }
-
-            }
-            return moveList;
-        }
-
-        public List<ValidBoardMove> getValidCellsDownLeft(string coords, Func<string, Cell> getCell)
-        {
-            List<ValidBoardMove> moveList = new List<ValidBoardMove>();
-            var startingCell = getCell(coords);
-            var row = startingCell.Row;
-            for (var i = startingCell.ColumnNumber; i > 0; i--)
+            for (var i = cell.ColumnNumber; i > 0; i--)
             {
                 char columnLetter;
                 if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
                 {
-                    var cellUpLeft = getCell(columnLetter.ToString() + row.ToString());
-                    if (cellUpLeft == null)
+                    var sequentialCell = getCell(columnLetter.ToString() + row.ToString());
+                    if (Cell.IsNotNull(sequentialCell))
                     {
-                        break;
-                    }
-                    if (cellUpLeft.columnLetter + cellUpLeft.Row.ToString() == coords)
-                    {
-                        row--;
-                        continue;
-                    }
-                    var validMoveProps = this.cellIsValidForPiece(startingCell, cellUpLeft);
-                    var moveProperties = new ValidBoardMove(coords, cellUpLeft.Coordinates, ValidBoardMove.movePath.DownLeft, this.isWhite);
+                        if (sequentialCell.columnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
+                        {
+                            row--;
+                            continue;
+                        }
 
-                    if (validMoveProps.IsValid)
-                    {
-                        moveList.Add(moveProperties);
+                        var move = func(cell, sequentialCell, path);
+                        if (move == null)
+                        {
+                            row--;
+                            break;
+                        }
+                        moveList.Add(move);
                     }
-                    if (validMoveProps.IsValid || validMoveProps.IsProtected)
-                    {
-                        this.PiecePressure.Add(moveProperties);
-                    }
-                    if (validMoveProps.IsTerminatable)
-                    {
-                        break;
-                    }
+
                 }
-
                 row--;
             }
             return moveList;
+        }
+        public List<ValidBoardMove> executeFunctionOnCellsDownRight(Cell cell, Func<Cell, Cell, ValidBoardMove.movePath, ValidBoardMove> func)
+        {
+            var row = cell.Row;
+            ValidBoardMove.movePath path = ValidBoardMove.movePath.DownRight;
+            List<ValidBoardMove> moveList = new List<ValidBoardMove>();
+            for (var i = cell.ColumnNumber; i <= BoardProperties.Columns; i++)
+            {
+                char columnLetter;
+                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
+                {
+                    var sequentialCell = getCell(columnLetter.ToString() + row.ToString());
+                    if (Cell.IsNotNull(sequentialCell))
+                    {
+                        if (sequentialCell.columnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
+                        {
+                            row--;
+                            continue;
+                        }
+                        var move = func(cell, sequentialCell, path);
+                        if (move == null)
+                        {
+                            row--;
+                            break;
+                        }
+                        moveList.Add(move);
+                    }
+                }
+                row--;
+            }
+            return moveList;
+        }
+        public List<ValidBoardMove> executeFunctionOnCellsUpLeft(Cell cell, Func<Cell, Cell, ValidBoardMove.movePath, ValidBoardMove> func)
+        {
+            var row = cell.Row;
+            ValidBoardMove.movePath path = ValidBoardMove.movePath.UpLeft;
+            List<ValidBoardMove> moveList = new List<ValidBoardMove>();
+            for (var i = cell.ColumnNumber; i > 0; i--)
+            {
+                char columnLetter;
+                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
+                {
+                    var sequentialCell = getCell(columnLetter.ToString() + row.ToString());
+                    if (Cell.IsNotNull(sequentialCell))
+                    {
+                        if (sequentialCell.columnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
+                        {
+                            row++;
+                            continue;
+                        }
+
+                        var move = func(cell, sequentialCell, path);
+                        if (move == null)
+                        {
+                            row++;
+                            break;
+                        }
+                        moveList.Add(move);
+                    }
+
+                }
+                row++;
+            }
+            return moveList;
+        }
+        public List<ValidBoardMove> executeFunctionOnCellsUpRight(Cell cell, Func<Cell, Cell, ValidBoardMove.movePath, ValidBoardMove> func)
+        {
+            ValidBoardMove.movePath path = ValidBoardMove.movePath.UpRight;
+            var row = cell.Row;
+            List<ValidBoardMove> moveList = new List<ValidBoardMove>();
+            for (var i = cell.ColumnNumber; i <= BoardProperties.Columns; i++)
+            {
+                char columnLetter;
+                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
+                {
+                    var sequentialCell = getCell(columnLetter.ToString() + row.ToString());
+                    if (Cell.IsNotNull(sequentialCell))
+                    {
+                        if (sequentialCell.columnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
+                        {
+                            row++;
+                            continue;
+                        }
+                        var move = func(cell, sequentialCell, path);
+                        if (move == null)
+                        {
+                            row++;
+                            break;
+                        }
+                        moveList.Add(move);
+                    }
+                }
+                row++;
+            }
+            return moveList;
+        }
+        public List<ValidBoardMove> getValidCellsLeft(string coords)
+        {
+            var startingCell = getCell(coords);
+            return executeFunctionOnCellsToLeft(startingCell, determineIfCellValid);
+        }
+
+        public List<ValidBoardMove> getValidCellsRight(string coords)
+        {
+            var startingCell = getCell(coords);
+            return executeFunctionOnCellsToRight(startingCell, determineIfCellValid);
+        }
+
+        public List<ValidBoardMove> getValidCellsUp(string coords)
+        {
+            var startingCell = getCell(coords);
+            return executeFunctionOnCellsUp(startingCell, determineIfCellValid);
+        }
+        public List<ValidBoardMove> getValidCellsDown(string coords)
+        {
+            var startingCell = getCell(coords);
+            return executeFunctionOnCellsDown(startingCell, determineIfCellValid);
+        }
+
+        public List<ValidBoardMove> getValidCellsDownLeft(string coords)
+        {
+            var startingCell = getCell(coords);
+            return executeFunctionOnCellsDownLeft(startingCell, determineIfCellValid);
         }
 
         
-        public List<ValidBoardMove> getValidCellsDownRight(string coords, Func<string, Cell> getCell)
+        public List<ValidBoardMove> getValidCellsDownRight(string coords)
         {
-            List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             var startingCell = getCell(coords);
-            var row = startingCell.Row;
-            for (var i = startingCell.ColumnNumber; i <= BoardProperties.Columns; i++)
-            {
-                char columnLetter;
-                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
-                {
-                    var cellDownRight = getCell(columnLetter.ToString() + row.ToString());
-                    if (cellDownRight == null)
-                    {
-                        break;
-                    }
-                    if (cellDownRight.columnLetter + cellDownRight.Row.ToString() == coords)
-                    {
-                        row--;
-                        continue;
-                    }
-                    var validMoveProps = this.cellIsValidForPiece(startingCell, cellDownRight);
-                    var moveProperties = new ValidBoardMove(coords, cellDownRight.Coordinates, ValidBoardMove.movePath.DownRight, this.isWhite);
-
-                    if (validMoveProps.IsValid)
-                    {
-                        moveList.Add(moveProperties);
-                    }
-                    if (validMoveProps.IsValid || validMoveProps.IsProtected)
-                    {
-                        this.PiecePressure.Add(moveProperties);
-                    }
-                    if (validMoveProps.IsTerminatable)
-                    {
-                        break;
-                    }
-                }
-
-                row--;
-            }
-            return moveList;
+            return executeFunctionOnCellsDownRight(startingCell, determineIfCellValid);
         }
-        public List<ValidBoardMove> getValidCellsUpLeft(string coords, Func<string, Cell> getCell)
+        public List<ValidBoardMove> getValidCellsUpLeft(string coords)
         {
-            List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             var startingCell = getCell(coords);
-            var row = startingCell.Row;
-            for (var i = startingCell.ColumnNumber; i > 0; i--)
-            {
-                char columnLetter;
-                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
-                {
-                    var cellUpLeft = getCell(columnLetter.ToString() + row.ToString());
-                    if (cellUpLeft == null)
-                    {
-                        break;
-                    }
-                    if (cellUpLeft.columnLetter + cellUpLeft.Row.ToString() == coords)
-                    {
-                        row++;
-                        continue;
-                    }
-                    var validMoveProps = this.cellIsValidForPiece(startingCell, cellUpLeft);
-                    var moveProperties = new ValidBoardMove(coords, cellUpLeft.Coordinates, ValidBoardMove.movePath.UpLeft, this.isWhite);
-
-                    if (validMoveProps.IsValid)
-                    {
-                        moveList.Add(moveProperties);
-                    }
-                    if (validMoveProps.IsValid || validMoveProps.IsProtected)
-                    {
-                        this.PiecePressure.Add(moveProperties);
-                    }
-                    if (validMoveProps.IsTerminatable)
-                    {
-                        break;
-                    }
-                }
-
-                row++;
-            }
-            return moveList;
+            return executeFunctionOnCellsUpLeft(startingCell, determineIfCellValid);
         }
-        public List<ValidBoardMove> getValidCellsUpRight(string coords, Func<string, Cell> getCell)
+        public List<ValidBoardMove> getValidCellsUpRight(string coords)
         {
-            List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             var startingCell = getCell(coords);
-            var row = startingCell.Row;
-            for (var i = startingCell.ColumnNumber; i <= BoardProperties.Columns; i++)
+            return executeFunctionOnCellsUpRight(startingCell, determineIfCellValid);
+        }
+        private ValidBoardMove determineIfCellValid(Cell fromCell, Cell toCell, ValidBoardMove.movePath path)
+        {
+            var validMoveProps = this.cellIsValidForPiece(fromCell, toCell);
+            var moveProperties = new ValidBoardMove(fromCell.Coordinates, toCell.Coordinates, path, this.isWhite);
+
+            if (validMoveProps.IsValid || validMoveProps.IsProtected)
             {
-                char columnLetter;
-                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
-                {
-                    var cellUpRight = getCell(columnLetter.ToString() + row.ToString());
-                    if (cellUpRight == null)
-                    {
-                        break;
-                    }
-                    if (cellUpRight.columnLetter + cellUpRight.Row.ToString() == coords)
-                    {
-                        row++;
-                        continue;
-                    }
-                    var validMoveProps = this.cellIsValidForPiece(startingCell, cellUpRight);
-                    var moveProperties = new ValidBoardMove(coords, cellUpRight.Coordinates, ValidBoardMove.movePath.UpRight, this.isWhite);
-
-                    if (validMoveProps.IsValid)
-                    {
-                        moveList.Add(moveProperties);
-                    }
-                    if (validMoveProps.IsValid || validMoveProps.IsProtected)
-                    {
-                        this.PiecePressure.Add(moveProperties);
-                    }
-                    if (validMoveProps.IsTerminatable)
-                    {
-                        break;
-                    }
-
-                }
-
-                row++;
+                this.PiecePressure.Add(moveProperties);
             }
-            return moveList;
+            if (validMoveProps.IsTerminatable)
+            {
+                return null;
+            }
+            if (validMoveProps.IsPotentiallyPinned)
+            {
+
+            }
+            //if (validMoveProps.IsValid)
+            //{
+            //    return moveProperties;
+            //}
+            return moveProperties;
         }
 
         public ValidNotationProperties cellIsValidForPiece(Cell fromCell, Cell toCell)
@@ -364,34 +354,34 @@ namespace SalisburyChessEngine.Pieces
             return null;
         }
 
-        public  List<ValidBoardMove> FindAttackPath(ValidBoardMove checkMove, Func<string, Cell> getCell)
+        public  List<ValidBoardMove> FindAttackPath(ValidBoardMove checkMove)
         {
             var returnList = new List<ValidBoardMove>();
             switch (checkMove.MovePath)
             {
                 case ValidBoardMove.movePath.Down:
-                    returnList = getValidCellsUp(checkMove.CoordinatesTo, getCell);
+                    returnList = getValidCellsUp(checkMove.CoordinatesTo);
                     break;
                 case ValidBoardMove.movePath.Up:
-                    returnList = getValidCellsDown(checkMove.CoordinatesTo, getCell);
+                    returnList = getValidCellsDown(checkMove.CoordinatesTo);
                     break;
                 case ValidBoardMove.movePath.Left:
-                    returnList = getValidCellsDownRight(checkMove.CoordinatesTo, getCell);
+                    returnList = getValidCellsDownRight(checkMove.CoordinatesTo);
                     break;
                 case ValidBoardMove.movePath.Right:
-                    returnList = getValidCellsLeft(checkMove.CoordinatesTo, getCell);
+                    returnList = getValidCellsLeft(checkMove.CoordinatesTo);
                     break;
                 case ValidBoardMove.movePath.UpLeft:
-                    returnList = getValidCellsDownRight(checkMove.CoordinatesTo, getCell);
+                    returnList = getValidCellsDownRight(checkMove.CoordinatesTo);
                     break;
                 case ValidBoardMove.movePath.UpRight:
-                    returnList = getValidCellsDownLeft(checkMove.CoordinatesTo, getCell);
+                    returnList = getValidCellsDownLeft(checkMove.CoordinatesTo);
                     break;
                 case ValidBoardMove.movePath.DownLeft:
-                    returnList = getValidCellsUpRight(checkMove.CoordinatesTo, getCell);
+                    returnList = getValidCellsUpRight(checkMove.CoordinatesTo);
                     break;
                 case ValidBoardMove.movePath.DownRight:
-                    returnList = getValidCellsUpLeft(checkMove.CoordinatesTo, getCell);
+                    returnList = getValidCellsUpLeft(checkMove.CoordinatesTo);
                     break;
                 default:
                     break;
@@ -423,11 +413,11 @@ namespace SalisburyChessEngine.Pieces
 
 
         }
-        public void FilterMovesIfChecked(ValidBoardMove checkingMove, Func<string, Cell> getCell)
+        public void FilterMovesIfChecked(ValidBoardMove checkingMove)
         {
             if (checkingMove != null)
             {
-                this.allowedCellsAfterCheck = FindAttackPath(checkingMove, getCell);
+                this.allowedCellsAfterCheck = FindAttackPath(checkingMove);
 
             }
             else
