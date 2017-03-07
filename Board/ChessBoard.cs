@@ -69,10 +69,48 @@ namespace SalisburyChessEngine.Board
 
         internal void replacePiece(Move move)
         {
-            var currentPiece = move.CellFrom.CurrentPiece;
-            move.CellTo.CurrentPiece = currentPiece;
-            move.CellTo.CurrentPiece.CurrentCoordinates = move.CellTo.Coordinates;
-            move.CellFrom.CurrentPiece = null;
+            if (move.isKingSideCastle)
+            {
+                if (move.isWhitesTurn)
+                {
+                    var kingCellFrom = this.getCell("e1");
+                    var kingCellTo = this.getCell("g1");
+                    var rookCellFrom = this.getCell("h1");
+                    var rookCellTo = this.getCell("f1");
+
+                    this.replacePieceBase(kingCellFrom, kingCellTo);
+                    this.replacePieceBase(rookCellFrom, rookCellTo);
+                }
+                else
+                {
+
+                }
+                return;
+            }
+            else if (move.isQueenSideCastle)
+            {
+                if (move.isWhitesTurn)
+                {
+
+                }
+                else
+                {
+
+                }
+                return;
+            }
+           else
+            {
+                this.replacePieceBase(move.CellFrom, move.CellTo);
+            }
+        }
+
+        private void replacePieceBase(Cell cellFrom, Cell cellTo)
+        {
+            var currentPiece = cellFrom.CurrentPiece;
+            cellTo.CurrentPiece = currentPiece;
+            cellTo.CurrentPiece.CurrentCoordinates = cellTo.Coordinates;
+            cellFrom.CurrentPiece = null;
         }
 
         internal void rollback(Move move)

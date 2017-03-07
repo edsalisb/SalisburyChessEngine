@@ -7,6 +7,8 @@ namespace SalisburyChessEngine.Pieces
 {
     public class Rook : PieceBase
     {
+        public bool hasMoved { get; set;
+        }
         public Rook(bool isWhite, Func<string, Cell> getCell, string coordinates, King enemyKing) : base(isWhite, coordinates, getCell)
         {
             this.getCell = getCell;

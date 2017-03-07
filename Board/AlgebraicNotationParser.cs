@@ -24,8 +24,19 @@ namespace SalisburyChessEngine.Board
             }
             internal Move Parse(string algebraicCoord, bool isWhitesTurn)
             {
-                algebraicCoord = algebraicCoord.Trim();
                 this.potentialMove = new Move(algebraicCoord, isWhitesTurn);
+                if (algebraicCoord == "O-O")
+                {
+                    this.determineIfKingSideCastleValid(isWhitesTurn);
+                    return potentialMove;
+                }
+                else if (algebraicCoord == "O-O-O")
+                {
+                    this.determineIfQueenSideCastleValid(isWhitesTurn);
+                    return potentialMove;
+                }
+
+                algebraicCoord = algebraicCoord.Trim();
                 this.leftToParse = algebraicCoord;
                 if (algebraicCoord[algebraicCoord.Length - 1] == '+')
                 {
@@ -43,6 +54,81 @@ namespace SalisburyChessEngine.Board
                     this.ensureChecked();
                 }
                 return potentialMove;
+            }
+
+            private void determineIfQueenSideCastleValid(bool isWhitesTurn)
+            {
+                if (isWhitesTurn)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+
+            private void determineIfKingSideCastleValid(bool isWhitesTurn)
+            {
+                if (isWhitesTurn)
+                {
+                    var kingCell = this.board.getCell("e1");
+                    var rookCell = this.board.getCell("h1");
+                    var emptyCell = this.board.getCell("f1");
+                    var emptyCell2 = this.board.getCell("g1");
+
+                    if (Cell.HasPiece(emptyCell) || Cell.HasPiece(emptyCell2))
+                    {
+                        return;
+                    }
+
+                    var blackPiecePressureCoordinates = this.board.blackPiecePressure.Select(GeneralUtilities.SelectCoordinates).ToList();
+                    if (blackPiecePressureCoordinates.IndexOf(emptyCell.Coordinates) > -1 || blackPiecePressureCoordinates.IndexOf(emptyCell2.Coordinates) > -1)
+                    {
+                        return;
+                    }
+
+                    King king;
+                    Rook rook;
+                    if (this.board.IsKingOnCell(kingCell, out king) && this.board.IsRookOnCell(rookCell, out rook))
+                    {
+                        if (king.isWhite && rook.isWhite && !king.hasMoved && !rook.hasMoved)
+                        {
+                            this.potentialMove.IsValid = true;
+                            this.potentialMove.isKingSideCastle = true;
+                        }
+                    }
+                    
+                }
+                else
+                {
+                    var kingCell = this.board.getCell("e8");
+                    var rookCell = this.board.getCell("h8");
+                    var emptyCell = this.board.getCell("f8");
+                    var emptyCell2 = this.board.getCell("g8");
+
+                    if (Cell.HasPiece(emptyCell) || Cell.HasPiece(emptyCell2))
+                    {
+                        return;
+                    }
+
+                    var whitePiecePressureCoordinates = this.board.whitePiecePressure.Select(GeneralUtilities.SelectCoordinates).ToList();
+                    if (whitePiecePressureCoordinates.IndexOf(emptyCell.Coordinates) > -1 || whitePiecePressureCoordinates.IndexOf(emptyCell2.Coordinates) > -1)
+                    {
+                        return;
+                    }
+
+                    King king;
+                    Rook rook;
+                    if (this.board.IsKingOnCell(kingCell, out king) && this.board.IsRookOnCell(rookCell, out rook))
+                    {
+                        if (king.isWhite && rook.isWhite && !king.hasMoved && !rook.hasMoved)
+                        {
+                            this.potentialMove.IsValid = true;
+                            this.potentialMove.isKingSideCastle = true;
+                        }
+                    }
+                }
             }
 
             private void ensureChecked()

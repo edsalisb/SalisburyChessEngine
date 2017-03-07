@@ -254,5 +254,47 @@ namespace SalisburyChessEngine.Board
 
             return moves;
         }
+
+        public bool IsRookOnCell(Cell cell, out Rook rook)
+        {
+            if (Cell.HasPiece(cell))
+            {
+                var potentialKingPiece = Cell.GetPiece(cell);
+                if (potentialKingPiece.TypeOfPiece != PieceBase.pieceType.Rook)
+                {
+                    rook = null;
+                    return false;
+                }
+                else
+                {
+                    rook = (Rook)potentialKingPiece;
+                    return true;
+                }
+
+            }
+            rook = null;
+            return false;
+        }
+
+        public bool IsKingOnCell(Cell cell, out King king)
+        {
+            if (Cell.HasPiece(cell))
+            {
+                var potentialKingPiece = Cell.GetPiece(cell);
+                if (potentialKingPiece.TypeOfPiece != PieceBase.pieceType.King)
+                {
+                    king = null;
+                    return false;
+                }
+                else
+                {
+                    king = (King)potentialKingPiece;
+                    return true;
+                }
+                
+            }
+            king = null;
+            return false;
+        }
     }
 }

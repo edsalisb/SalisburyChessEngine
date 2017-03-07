@@ -8,6 +8,7 @@ namespace SalisburyChessEngine.Pieces
 {
     public class King : PieceBase
     {
+        public bool hasMoved { get; set; }
         public delegate void OnCheckCallback();
         public delegate void OnCheckForCheckMateCallback(King k, EventArgs e);
         private bool isChecked;

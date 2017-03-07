@@ -3,6 +3,10 @@
     public class Move
     {
         public bool IsCapturable { get; set; }
+
+        public bool isKingSideCastle { get; set; }
+
+        public bool isQueenSideCastle { get; set; }
         public Cell CellFrom { get; set; }
 
         public Cell CellTo { get; set; }
