@@ -24,6 +24,11 @@ namespace SalisburyChessEngine.Board
             }
             internal Move Parse(string algebraicCoord, bool isWhitesTurn)
             {
+                if (algebraicCoord.Length < 2)
+                {
+                    return potentialMove;
+                }
+
                 this.potentialMove = new Move(algebraicCoord, isWhitesTurn);
                 if (algebraicCoord == "O-O")
                 {
@@ -146,7 +151,7 @@ namespace SalisburyChessEngine.Board
                 
                 if (this.board.IsKingOnCell(kingCell, out King king) && this.board.IsRookOnCell(rookCell, out Rook rook))
                 {
-                    if (king.isWhite && rook.isWhite && !king.HasMoved && !rook.HasMoved)
+                    if ((king.isWhite && rook.isWhite || !king.isWhite && !rook.isWhite) && !king.HasMoved && !rook.HasMoved)
                     {
                         this.potentialMove.IsValid = true;
                         if (rook.CurrentCoordinates[0] == 'a')
@@ -270,6 +275,20 @@ namespace SalisburyChessEngine.Board
                 else
                 {
                     friendlyPieceList = getBlackPieceList();
+                }
+
+                if (filter == this.leftToParse[this.leftToParse.Length - 1])
+                {
+                    if (int.TryParse(filter.ToString(), out int rowNum))
+                    {
+                        //filter on row number
+                        friendlyPieceList = friendlyPieceList.Where(x => x.CurrentCoordinates[1] == filter).ToList();
+                    }
+                    else
+                    {
+                        //filter on column letter
+                        friendlyPieceList = friendlyPieceList.Where(x => x.CurrentCoordinates[0] == filter).ToList();
+                    }
                 }
                 foreach (var piece in friendlyPieceList)
                 {

@@ -34,7 +34,7 @@ namespace SalisburyChessEngine.Pieces
             var twoColumnsLeft = GetColumnLetter(currentCell, -2);
             var oneColumnLeft = GetColumnLetter(currentCell, -1);
             var oneColumnRight = GetColumnLetter(currentCell, 1);
-            var twoColumnsRight = GetColumnLetter(currentCell, 1);
+            var twoColumnsRight = GetColumnLetter(currentCell, 2);
 
             //8 moves knight can make
             var twoUpOneLeftCell = this.getCell(oneColumnLeft.ToString() + (currentCell.Row + 2));
