@@ -16,8 +16,8 @@ namespace SalisburyChessEngine.Pieces
         private List<ValidBoardMove> samePressure;
 
 
-        public event OnCheckCallback onCheckCallbacks;
-        public event OnCheckForCheckMateCallback onCheckForCheckMateCallbacks;
+        public event OnCheckCallback OnCheckCallbacks;
+        public event OnCheckForCheckMateCallback OnCheckForCheckMateCallbacks;
         public bool IsChecked {
             get
             {
@@ -27,10 +27,10 @@ namespace SalisburyChessEngine.Pieces
             {
                 this.isChecked = value;
                 if (value) { 
-                    if (onCheckCallbacks != null)
+                    if (OnCheckCallbacks != null)
                     {
-                        onCheckCallbacks();
-                        onCheckForCheckMateCallbacks(this, EventArgs.Empty);
+                        OnCheckCallbacks();
+                        OnCheckForCheckMateCallbacks(this, EventArgs.Empty);
 
                     }
                 }
@@ -38,7 +38,7 @@ namespace SalisburyChessEngine.Pieces
         }
         public King(bool isWhite, Func<string, Cell> getCell, string coordinates): base(isWhite, coordinates, getCell)
         {
-            this.TypeOfPiece = pieceType.King;
+            this.TypeOfPiece = PieceType.King;
             this.CurrentCoordinates = coordinates;
             
         }
@@ -47,94 +47,94 @@ namespace SalisburyChessEngine.Pieces
             return "K";
         }
 
-        public override void determineValidMoves(string coords, ValidBoardMove checkingMove)
+        public override void DetermineValidMoves(string coords, ValidBoardMove checkingMove)
         {
             return;
         }
 
-        public List<ValidBoardMove> determineValidMoves(string coords, List<ValidBoardMove> enemyPressure, List<ValidBoardMove> samePressure, ValidBoardMove checkingMove)
+        public List<ValidBoardMove> DetermineValidMoves(string coords, List<ValidBoardMove> enemyPressure, List<ValidBoardMove> samePressure, ValidBoardMove checkingMove)
         {
             this.ValidMoves = new List<ValidBoardMove>();
             PiecePressure = new List<ValidBoardMove>();
             this.enemyPressure = enemyPressure;
             this.samePressure = samePressure;
 
-            this.addToValidMoves(coords);
+            this.AddToValidMoves(coords);
             this.FilterMovesIfChecked(checkingMove);
             
             return samePressure;
         }
-        public override void addToValidMoves(string coords)
+        public override void AddToValidMoves(string coords)
         {
             var kingCell = getCell(coords);
 
-            var oneLeftCell = getCell(getColumnLetter(kingCell, -1) + kingCell.Row.ToString());
-            var oneRightCell = getCell(getColumnLetter(kingCell, +1) + kingCell.Row.ToString());
-            var oneUpCell = getCell(kingCell.columnLetter + (kingCell.Row + 1).ToString());
-            var oneDownCell = getCell(kingCell.columnLetter + (kingCell.Row - 1).ToString());
+            var oneLeftCell = getCell(GetColumnLetter(kingCell, -1) + kingCell.Row.ToString());
+            var oneRightCell = getCell(GetColumnLetter(kingCell, +1) + kingCell.Row.ToString());
+            var oneUpCell = getCell(kingCell.ColumnLetter + (kingCell.Row + 1).ToString());
+            var oneDownCell = getCell(kingCell.ColumnLetter + (kingCell.Row - 1).ToString());
 
-            var oneUoneLCell = getCell(getColumnLetter(kingCell, -1) + (kingCell.Row + 1).ToString());
-            var oneUoneRCell = getCell(getColumnLetter(kingCell, 1) + (kingCell.Row + 1).ToString());
-            var oneDoneLCell = getCell(getColumnLetter(kingCell, -1) + (kingCell.Row - 1).ToString());
-            var oneDoneRCell = getCell(getColumnLetter(kingCell, 1) + (kingCell.Row - 1).ToString());
+            var oneUoneLCell = getCell(GetColumnLetter(kingCell, -1) + (kingCell.Row + 1).ToString());
+            var oneUoneRCell = getCell(GetColumnLetter(kingCell, 1) + (kingCell.Row + 1).ToString());
+            var oneDoneLCell = getCell(GetColumnLetter(kingCell, -1) + (kingCell.Row - 1).ToString());
+            var oneDoneRCell = getCell(GetColumnLetter(kingCell, 1) + (kingCell.Row - 1).ToString());
 
-            if (cellIsValidForKing(kingCell, oneLeftCell, enemyPressure))
+            if (CellIsValidForKing(kingCell, oneLeftCell, enemyPressure))
             {
-                var moveProperty = new ValidBoardMove(coords, oneLeftCell.Coordinates, ValidBoardMove.movePath.Left, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, oneLeftCell.Coordinates, ValidBoardMove.MovePath.Left, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
                 if (samePressure.Select(GeneralUtilities.SelectCoordinates).ToList().IndexOf(oneLeftCell.Coordinates) == -1)
                 {
                     samePressure.Add(moveProperty);
                 }
             }
-            if (cellIsValidForKing(kingCell, oneRightCell, enemyPressure))
+            if (CellIsValidForKing(kingCell, oneRightCell, enemyPressure))
             {
-                var moveProperty = new ValidBoardMove(coords, oneRightCell.Coordinates, ValidBoardMove.movePath.Right, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, oneRightCell.Coordinates, ValidBoardMove.MovePath.Right, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
                 if (samePressure.Select(GeneralUtilities.SelectCoordinates).ToList().IndexOf(oneRightCell.Coordinates) == -1)
                 {
                     samePressure.Add(moveProperty);
                 }
             }
-            if (cellIsValidForKing(kingCell, oneUpCell, enemyPressure))
+            if (CellIsValidForKing(kingCell, oneUpCell, enemyPressure))
             {
-                var moveProperty = new ValidBoardMove(coords, oneUpCell.Coordinates, ValidBoardMove.movePath.Up, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, oneUpCell.Coordinates, ValidBoardMove.MovePath.Up, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
                 if (samePressure.Select(GeneralUtilities.SelectCoordinates).ToList().IndexOf(oneUpCell.Coordinates) == -1)
                 {
                     samePressure.Add(moveProperty);
                 }
             }
-            if (cellIsValidForKing(kingCell, oneDownCell, enemyPressure))
+            if (CellIsValidForKing(kingCell, oneDownCell, enemyPressure))
             {
-                var moveProperty = new ValidBoardMove(coords, oneDownCell.Coordinates, ValidBoardMove.movePath.Down, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, oneDownCell.Coordinates, ValidBoardMove.MovePath.Down, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
                 if (samePressure.Select(GeneralUtilities.SelectCoordinates).ToList().IndexOf(oneDownCell.Coordinates) == -1)
                 {
                     samePressure.Add(moveProperty);
                 }
             }
-            if (cellIsValidForKing(kingCell, oneUoneLCell, enemyPressure))
+            if (CellIsValidForKing(kingCell, oneUoneLCell, enemyPressure))
             {
-                var moveProperty = new ValidBoardMove(coords, oneUoneLCell.Coordinates, ValidBoardMove.movePath.UpLeft, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, oneUoneLCell.Coordinates, ValidBoardMove.MovePath.UpLeft, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
                 if (samePressure.Select(GeneralUtilities.SelectCoordinates).ToList().IndexOf(oneUoneLCell.Coordinates) == -1)
                 {
                     samePressure.Add(moveProperty);
                 }
             }
-            if (cellIsValidForKing(kingCell, oneUoneRCell, enemyPressure))
+            if (CellIsValidForKing(kingCell, oneUoneRCell, enemyPressure))
             {
-                var moveProperty = new ValidBoardMove(coords, oneUoneRCell.Coordinates, ValidBoardMove.movePath.UpRight, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, oneUoneRCell.Coordinates, ValidBoardMove.MovePath.UpRight, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
                 if (samePressure.Select(GeneralUtilities.SelectCoordinates).ToList().IndexOf(oneUoneRCell.Coordinates) == -1)
                 {
                     samePressure.Add(moveProperty);
                 }
             }
-            if (cellIsValidForKing(kingCell, oneDoneLCell, enemyPressure))
+            if (CellIsValidForKing(kingCell, oneDoneLCell, enemyPressure))
             {
-                var moveProperty = new ValidBoardMove(coords, oneDoneLCell.Coordinates, ValidBoardMove.movePath.DownLeft, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, oneDoneLCell.Coordinates, ValidBoardMove.MovePath.DownLeft, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
                 if (samePressure.Select(GeneralUtilities.SelectCoordinates).ToList().IndexOf(oneDoneLCell.Coordinates) == -1)
                 {
@@ -142,9 +142,9 @@ namespace SalisburyChessEngine.Pieces
                 }
 
             }
-            if (cellIsValidForKing(kingCell, oneDoneRCell, enemyPressure))
+            if (CellIsValidForKing(kingCell, oneDoneRCell, enemyPressure))
             {
-                var moveProperty = new ValidBoardMove(coords, oneDoneRCell.Coordinates, ValidBoardMove.movePath.DownRight, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, oneDoneRCell.Coordinates, ValidBoardMove.MovePath.DownRight, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
                 if (samePressure.Select(GeneralUtilities.SelectCoordinates).ToList().IndexOf(oneDoneRCell.Coordinates) == -1)
                 {
@@ -152,10 +152,10 @@ namespace SalisburyChessEngine.Pieces
                 }
             }
         }
-        public bool cellIsValidForKing(Cell cellFrom, Cell cellTo, List<ValidBoardMove> enemyPressure)
+        public bool CellIsValidForKing(Cell cellFrom, Cell cellTo, List<ValidBoardMove> enemyPressure)
         {
             var moveProps = new ValidNotationProperties();
-            moveProps = moveProps.determineMoveProperties(cellFrom, cellTo, enemyPressure);
+            moveProps = moveProps.DetermineMoveProperties(cellFrom, cellTo, enemyPressure);
             if (moveProps.IsValid && !moveProps.IsProtected)
             {
                 return true;

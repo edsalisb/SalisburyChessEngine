@@ -6,10 +6,10 @@ namespace SalisburyChessEngine.Board
     {
         public string CoordinatesFrom { get; set; }
         public string CoordinatesTo { get; set; }
-        public movePath MovePath { get; set; }
+        public MovePath Path { get; set; }
         public bool IsWhite { get; set; }
         public bool IsPinningMove { get; set; }
-        public enum movePath
+        public enum MovePath
         {
             Up = 1,
             Down = 2,
@@ -22,15 +22,15 @@ namespace SalisburyChessEngine.Board
             Invalid = 99
         }
 
-        public ValidBoardMove(string coordinatesFrom, string coordinatesTo, movePath movepath, bool isWhite)
+        public ValidBoardMove(string coordinatesFrom, string coordinatesTo, MovePath movepath, bool isWhite)
         {
             this.IsWhite = isWhite;
             this.CoordinatesTo = coordinatesTo;
             this.CoordinatesFrom = coordinatesFrom;
-            this.MovePath = movepath;
+            this.Path = movepath;
             this.IsPinningMove = false;
         }
-        public ValidBoardMove(string coordinatesFrom, string coordinatesTo, movePath movepath, bool isWhite, bool pinningMove): this(coordinatesFrom, coordinatesTo, movepath, isWhite)
+        public ValidBoardMove(string coordinatesFrom, string coordinatesTo, MovePath movepath, bool isWhite, bool pinningMove): this(coordinatesFrom, coordinatesTo, movepath, isWhite)
         {
             this.IsPinningMove = pinningMove;
         }

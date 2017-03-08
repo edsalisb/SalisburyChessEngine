@@ -10,24 +10,24 @@ namespace SalisburyChessEngine.Pieces
     {
         public List<ValidBoardMove> ValidMoves { set; get; }
         public List<ValidBoardMove> PiecePressure { get; set; }
-        public List<ValidBoardMove> allowedCellsAfterCheck { get; set; }
-        public Cell pinnedCell { get; set; }
+        public List<ValidBoardMove> AllowedCellsAfterCheck { get; set; }
+        public Cell PinnedCell { get; set; }
 
-        public IReadOnlyDictionary<ValidBoardMove.movePath, List<ValidBoardMove.movePath>> pinnedAllowedMovePaths { get; } =
-            new Dictionary<ValidBoardMove.movePath, List<ValidBoardMove.movePath>>
+        public Dictionary<ValidBoardMove.MovePath, List<ValidBoardMove.MovePath>> PinnedAllowedMovePaths { get; } =
+            new Dictionary<ValidBoardMove.MovePath, List<ValidBoardMove.MovePath>>
             {
-                { ValidBoardMove.movePath.Up, new List<ValidBoardMove.movePath> {ValidBoardMove.movePath.Up, ValidBoardMove.movePath.Down } },
-                { ValidBoardMove.movePath.Down, new List<ValidBoardMove.movePath> {ValidBoardMove.movePath.Up, ValidBoardMove.movePath.Down } },
-                { ValidBoardMove.movePath.Left, new List<ValidBoardMove.movePath> {ValidBoardMove.movePath.Left, ValidBoardMove.movePath.Right } },
-                { ValidBoardMove.movePath.Right, new List<ValidBoardMove.movePath> {ValidBoardMove.movePath.Left, ValidBoardMove.movePath.Right } },
-                { ValidBoardMove.movePath.UpLeft, new List<ValidBoardMove.movePath> {ValidBoardMove.movePath.UpLeft, ValidBoardMove.movePath.DownRight } },
-                { ValidBoardMove.movePath.UpRight, new List<ValidBoardMove.movePath> {ValidBoardMove.movePath.UpRight, ValidBoardMove.movePath.DownLeft } },
-                { ValidBoardMove.movePath.DownLeft, new List<ValidBoardMove.movePath> {ValidBoardMove.movePath.UpLeft, ValidBoardMove.movePath.DownRight } },
-                { ValidBoardMove.movePath.DownRight, new List<ValidBoardMove.movePath> {ValidBoardMove.movePath.UpRight, ValidBoardMove.movePath.DownLeft } },
+                { ValidBoardMove.MovePath.Up, new List<ValidBoardMove.MovePath> {ValidBoardMove.MovePath.Up, ValidBoardMove.MovePath.Down } },
+                { ValidBoardMove.MovePath.Down, new List<ValidBoardMove.MovePath> {ValidBoardMove.MovePath.Up, ValidBoardMove.MovePath.Down } },
+                { ValidBoardMove.MovePath.Left, new List<ValidBoardMove.MovePath> {ValidBoardMove.MovePath.Left, ValidBoardMove.MovePath.Right } },
+                { ValidBoardMove.MovePath.Right, new List<ValidBoardMove.MovePath> {ValidBoardMove.MovePath.Left, ValidBoardMove.MovePath.Right } },
+                { ValidBoardMove.MovePath.UpLeft, new List<ValidBoardMove.MovePath> {ValidBoardMove.MovePath.UpLeft, ValidBoardMove.MovePath.DownRight } },
+                { ValidBoardMove.MovePath.UpRight, new List<ValidBoardMove.MovePath> {ValidBoardMove.MovePath.UpRight, ValidBoardMove.MovePath.DownLeft } },
+                { ValidBoardMove.MovePath.DownLeft, new List<ValidBoardMove.MovePath> {ValidBoardMove.MovePath.UpLeft, ValidBoardMove.MovePath.DownRight } },
+                { ValidBoardMove.MovePath.DownRight, new List<ValidBoardMove.MovePath> {ValidBoardMove.MovePath.UpRight, ValidBoardMove.MovePath.DownLeft } },
             };
 
 
-        public enum pieceType
+        public enum PieceType
         {
             Queen = 9,
             Bishop = 4,
@@ -36,13 +36,13 @@ namespace SalisburyChessEngine.Pieces
             Pawn = 1,
             King = 0
         }
-        public pieceType TypeOfPiece { get; set; }
+        public PieceType TypeOfPiece { get; set; }
 
         public string CurrentCoordinates { get; set; }
         public bool isWhite;
-        public abstract void addToValidMoves(string coords);
-        public abstract void determineValidMoves(string coords, ValidBoardMove checkingMove);
-        public King enemyKing { get; set; }
+        public abstract void AddToValidMoves(string coords);
+        public abstract void DetermineValidMoves(string coords, ValidBoardMove checkingMove);
+        public King EnemyKing { get; set; }
         public bool ValidMovesSet { get; set; } = false;
 
         public Func<string, Cell> getCell;
@@ -55,22 +55,21 @@ namespace SalisburyChessEngine.Pieces
             this.isWhite = isWhite;
             this.ValidMoves = new List<ValidBoardMove>();
             this.PiecePressure = new List<ValidBoardMove>();
-            this.allowedCellsAfterCheck = new List<ValidBoardMove>();
+            this.AllowedCellsAfterCheck = new List<ValidBoardMove>();
         }
 
-        public List<ValidBoardMove> executeFunctionOnCellsToLeft(Cell cell, Func<Cell, Cell, ValidBoardMove.movePath, ValidBoardMove> func)
+        public List<ValidBoardMove> ExecuteFunctionOnCellsToLeft(Cell cell, Func<Cell, Cell, ValidBoardMove.MovePath, ValidBoardMove> func)
         {
-            ValidBoardMove.movePath path = ValidBoardMove.movePath.Left;
+            ValidBoardMove.MovePath path = ValidBoardMove.MovePath.Left;
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             for (var i = cell.ColumnNumber; i > 0; i--)
             {
-                char columnLetter;
-                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
+                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
                 {
                     var sequentialCell = getCell(columnLetter.ToString() + cell.Row);
                     if (Cell.IsNotNull(sequentialCell))
                     {
-                        if (sequentialCell.columnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
+                        if (sequentialCell.ColumnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
                         {
                             continue;
                         }
@@ -88,19 +87,18 @@ namespace SalisburyChessEngine.Pieces
             return moveList;
         }
 
-        public List<ValidBoardMove> executeFunctionOnCellsToRight(Cell cell, Func<Cell, Cell, ValidBoardMove.movePath, ValidBoardMove> func)
+        public List<ValidBoardMove> ExecuteFunctionOnCellsToRight(Cell cell, Func<Cell, Cell, ValidBoardMove.MovePath, ValidBoardMove> func)
         {
-            ValidBoardMove.movePath path = ValidBoardMove.movePath.Right;
+            ValidBoardMove.MovePath path = ValidBoardMove.MovePath.Right;
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             for (var i = cell.ColumnNumber; i <= BoardProperties.Columns; i++)
             {
-                char columnLetter;
-                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
+                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
                 {
                     var sequentialCell = getCell(columnLetter.ToString() + cell.Row);
                     if (Cell.IsNotNull(sequentialCell))
                     {
-                        if (sequentialCell.columnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
+                        if (sequentialCell.ColumnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
                         {
                             continue;
                         }
@@ -116,16 +114,16 @@ namespace SalisburyChessEngine.Pieces
             return moveList;
         }
 
-        public List<ValidBoardMove> executeFunctionOnCellsUp(Cell cell, Func<Cell, Cell, ValidBoardMove.movePath, ValidBoardMove> func)
+        public List<ValidBoardMove> ExecuteFunctionOnCellsUp(Cell cell, Func<Cell, Cell, ValidBoardMove.MovePath, ValidBoardMove> func)
         {
-            ValidBoardMove.movePath path = ValidBoardMove.movePath.Up;
+            ValidBoardMove.MovePath path = ValidBoardMove.MovePath.Up;
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             for (var i = cell.Row; i < BoardProperties.Rows; i++)
             {
-                var sequentialCell = getCell(cell.columnLetter.ToString() + i.ToString());
+                var sequentialCell = getCell(cell.ColumnLetter.ToString() + i.ToString());
                 if (Cell.IsNotNull(sequentialCell))
                 {
-                    if (sequentialCell.columnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
+                    if (sequentialCell.ColumnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
                     {
                         continue;
                     }
@@ -139,16 +137,16 @@ namespace SalisburyChessEngine.Pieces
             }
             return moveList;
         }
-        public List<ValidBoardMove> executeFunctionOnCellsDown(Cell cell, Func<Cell, Cell, ValidBoardMove.movePath, ValidBoardMove> func)
+        public List<ValidBoardMove> ExecuteFunctionOnCellsDown(Cell cell, Func<Cell, Cell, ValidBoardMove.MovePath, ValidBoardMove> func)
         {
-            ValidBoardMove.movePath path = ValidBoardMove.movePath.Down;
+            ValidBoardMove.MovePath path = ValidBoardMove.MovePath.Down;
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             for (var i = cell.Row; i > 0; i--)
             {
-                var sequentialCell = getCell(cell.columnLetter.ToString() + i.ToString());
+                var sequentialCell = getCell(cell.ColumnLetter.ToString() + i.ToString());
                 if (Cell.IsNotNull(sequentialCell))
                 {
-                    if (sequentialCell.columnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
+                    if (sequentialCell.ColumnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
                     {
                         continue;
                     }
@@ -162,20 +160,19 @@ namespace SalisburyChessEngine.Pieces
             }
             return moveList;
         }
-        public List<ValidBoardMove> executeFunctionOnCellsDownLeft(Cell cell, Func<Cell, Cell, ValidBoardMove.movePath, ValidBoardMove> func)
+        public List<ValidBoardMove> ExecuteFunctionOnCellsDownLeft(Cell cell, Func<Cell, Cell, ValidBoardMove.MovePath, ValidBoardMove> func)
         {
             var row = cell.Row;
-            ValidBoardMove.movePath path = ValidBoardMove.movePath.DownLeft;
+            ValidBoardMove.MovePath path = ValidBoardMove.MovePath.DownLeft;
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             for (var i = cell.ColumnNumber; i > 0; i--)
             {
-                char columnLetter;
-                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
+                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
                 {
                     var sequentialCell = getCell(columnLetter.ToString() + row.ToString());
                     if (Cell.IsNotNull(sequentialCell))
                     {
-                        if (sequentialCell.columnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
+                        if (sequentialCell.ColumnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
                         {
                             row--;
                             continue;
@@ -195,20 +192,19 @@ namespace SalisburyChessEngine.Pieces
             }
             return moveList;
         }
-        public List<ValidBoardMove> executeFunctionOnCellsDownRight(Cell cell, Func<Cell, Cell, ValidBoardMove.movePath, ValidBoardMove> func)
+        public List<ValidBoardMove> ExecuteFunctionOnCellsDownRight(Cell cell, Func<Cell, Cell, ValidBoardMove.MovePath, ValidBoardMove> func)
         {
             var row = cell.Row;
-            ValidBoardMove.movePath path = ValidBoardMove.movePath.DownRight;
+            ValidBoardMove.MovePath path = ValidBoardMove.MovePath.DownRight;
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             for (var i = cell.ColumnNumber; i <= BoardProperties.Columns; i++)
             {
-                char columnLetter;
-                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
+                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
                 {
                     var sequentialCell = getCell(columnLetter.ToString() + row.ToString());
                     if (Cell.IsNotNull(sequentialCell))
                     {
-                        if (sequentialCell.columnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
+                        if (sequentialCell.ColumnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
                         {
                             row--;
                             continue;
@@ -226,20 +222,19 @@ namespace SalisburyChessEngine.Pieces
             }
             return moveList;
         }
-        public List<ValidBoardMove> executeFunctionOnCellsUpLeft(Cell cell, Func<Cell, Cell, ValidBoardMove.movePath, ValidBoardMove> func)
+        public List<ValidBoardMove> ExecuteFunctionOnCellsUpLeft(Cell cell, Func<Cell, Cell, ValidBoardMove.MovePath, ValidBoardMove> func)
         {
             var row = cell.Row;
-            ValidBoardMove.movePath path = ValidBoardMove.movePath.UpLeft;
+            ValidBoardMove.MovePath path = ValidBoardMove.MovePath.UpLeft;
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             for (var i = cell.ColumnNumber; i > 0; i--)
             {
-                char columnLetter;
-                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
+                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
                 {
                     var sequentialCell = getCell(columnLetter.ToString() + row.ToString());
                     if (Cell.IsNotNull(sequentialCell))
                     {
-                        if (sequentialCell.columnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
+                        if (sequentialCell.ColumnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
                         {
                             row++;
                             continue;
@@ -259,20 +254,19 @@ namespace SalisburyChessEngine.Pieces
             }
             return moveList;
         }
-        public List<ValidBoardMove> executeFunctionOnCellsUpRight(Cell cell, Func<Cell, Cell, ValidBoardMove.movePath, ValidBoardMove> func)
+        public List<ValidBoardMove> ExecuteFunctionOnCellsUpRight(Cell cell, Func<Cell, Cell, ValidBoardMove.MovePath, ValidBoardMove> func)
         {
-            ValidBoardMove.movePath path = ValidBoardMove.movePath.UpRight;
+            ValidBoardMove.MovePath path = ValidBoardMove.MovePath.UpRight;
             var row = cell.Row;
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             for (var i = cell.ColumnNumber; i <= BoardProperties.Columns; i++)
             {
-                char columnLetter;
-                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out columnLetter))
+                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
                 {
                     var sequentialCell = getCell(columnLetter.ToString() + row.ToString());
                     if (Cell.IsNotNull(sequentialCell))
                     {
-                        if (sequentialCell.columnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
+                        if (sequentialCell.ColumnLetter + sequentialCell.Row.ToString() == cell.Coordinates)
                         {
                             row++;
                             continue;
@@ -290,54 +284,54 @@ namespace SalisburyChessEngine.Pieces
             }
             return moveList;
         }
-        public List<ValidBoardMove> getValidCellsLeft(string coords)
+        public List<ValidBoardMove> GetValidCellsLeft(string coords)
         {
             var startingCell = getCell(coords);
-            return executeFunctionOnCellsToLeft(startingCell, determineIfCellValid);
+            return ExecuteFunctionOnCellsToLeft(startingCell, DetermineIfCellValid);
         }
 
-        public List<ValidBoardMove> getValidCellsRight(string coords)
+        public List<ValidBoardMove> GetValidCellsRight(string coords)
         {
             var startingCell = getCell(coords);
-            return executeFunctionOnCellsToRight(startingCell, determineIfCellValid);
+            return ExecuteFunctionOnCellsToRight(startingCell, DetermineIfCellValid);
         }
 
-        public List<ValidBoardMove> getValidCellsUp(string coords)
+        public List<ValidBoardMove> GetValidCellsUp(string coords)
         {
             var startingCell = getCell(coords);
-            return executeFunctionOnCellsUp(startingCell, determineIfCellValid);
+            return ExecuteFunctionOnCellsUp(startingCell, DetermineIfCellValid);
         }
-        public List<ValidBoardMove> getValidCellsDown(string coords)
+        public List<ValidBoardMove> GetValidCellsDown(string coords)
         {
             var startingCell = getCell(coords);
-            return executeFunctionOnCellsDown(startingCell, determineIfCellValid);
+            return ExecuteFunctionOnCellsDown(startingCell, DetermineIfCellValid);
         }
 
-        public List<ValidBoardMove> getValidCellsDownLeft(string coords)
+        public List<ValidBoardMove> GetValidCellsDownLeft(string coords)
         {
             var startingCell = getCell(coords);
-            return executeFunctionOnCellsDownLeft(startingCell, determineIfCellValid);
+            return ExecuteFunctionOnCellsDownLeft(startingCell, DetermineIfCellValid);
         }
 
         
-        public List<ValidBoardMove> getValidCellsDownRight(string coords)
+        public List<ValidBoardMove> GetValidCellsDownRight(string coords)
         {
             var startingCell = getCell(coords);
-            return executeFunctionOnCellsDownRight(startingCell, determineIfCellValid);
+            return ExecuteFunctionOnCellsDownRight(startingCell, DetermineIfCellValid);
         }
-        public List<ValidBoardMove> getValidCellsUpLeft(string coords)
+        public List<ValidBoardMove> GetValidCellsUpLeft(string coords)
         {
             var startingCell = getCell(coords);
-            return executeFunctionOnCellsUpLeft(startingCell, determineIfCellValid);
+            return ExecuteFunctionOnCellsUpLeft(startingCell, DetermineIfCellValid);
         }
-        public List<ValidBoardMove> getValidCellsUpRight(string coords)
+        public List<ValidBoardMove> GetValidCellsUpRight(string coords)
         {
             var startingCell = getCell(coords);
-            return executeFunctionOnCellsUpRight(startingCell, determineIfCellValid);
+            return ExecuteFunctionOnCellsUpRight(startingCell, DetermineIfCellValid);
         }
-        private ValidBoardMove determineIfCellValid(Cell fromCell, Cell toCell, ValidBoardMove.movePath path)
+        private ValidBoardMove DetermineIfCellValid(Cell fromCell, Cell toCell, ValidBoardMove.MovePath path)
         {
-            var validMoveProps = this.cellIsValidForPiece(fromCell, toCell);
+            var validMoveProps = this.CellIsValidForPiece(fromCell, toCell);
             var moveProperties = new ValidBoardMove(fromCell.Coordinates, toCell.Coordinates, path, this.isWhite);
 
             if (validMoveProps.IsValid || validMoveProps.IsProtected)
@@ -347,7 +341,7 @@ namespace SalisburyChessEngine.Pieces
             if (validMoveProps.IsPotentiallyPinned)
             {
                 this.startingCell = fromCell;
-                this.pinnedCell = toCell;
+                this.PinnedCell = toCell;
                 DetermineIfAbsolutePinned(toCell, path);
             }
             if (validMoveProps.IsTerminatable)
@@ -361,34 +355,34 @@ namespace SalisburyChessEngine.Pieces
             return moveProperties;
         }
 
-        private void DetermineIfAbsolutePinned(Cell pinnedCell,ValidBoardMove.movePath path)
+        private void DetermineIfAbsolutePinned(Cell pinnedCell,ValidBoardMove.MovePath path)
         {
             List<ValidBoardMove> test = new List<ValidBoardMove>();
             switch (path)
             {
-                case ValidBoardMove.movePath.Down:
-                    test = executeFunctionOnCellsDown(pinnedCell, determineIfCellPinned);
+                case ValidBoardMove.MovePath.Down:
+                    test = ExecuteFunctionOnCellsDown(pinnedCell, DetermineIfCellPinned);
                     break;
-                case ValidBoardMove.movePath.Up:
-                    test = executeFunctionOnCellsUp(pinnedCell, determineIfCellPinned);
+                case ValidBoardMove.MovePath.Up:
+                    test = ExecuteFunctionOnCellsUp(pinnedCell, DetermineIfCellPinned);
                     break;
-                case ValidBoardMove.movePath.Right:
-                    test = executeFunctionOnCellsToRight(pinnedCell, determineIfCellPinned);
+                case ValidBoardMove.MovePath.Right:
+                    test = ExecuteFunctionOnCellsToRight(pinnedCell, DetermineIfCellPinned);
                     break;
-                case ValidBoardMove.movePath.Left:
-                    test = executeFunctionOnCellsToLeft(pinnedCell, determineIfCellPinned);
+                case ValidBoardMove.MovePath.Left:
+                    test = ExecuteFunctionOnCellsToLeft(pinnedCell, DetermineIfCellPinned);
                     break;
-                case ValidBoardMove.movePath.DownLeft:
-                    test = executeFunctionOnCellsDownLeft(pinnedCell, determineIfCellPinned);
+                case ValidBoardMove.MovePath.DownLeft:
+                    test = ExecuteFunctionOnCellsDownLeft(pinnedCell, DetermineIfCellPinned);
                     break;
-                case ValidBoardMove.movePath.DownRight:
-                    test = executeFunctionOnCellsDownRight(pinnedCell, determineIfCellPinned);
+                case ValidBoardMove.MovePath.DownRight:
+                    test = ExecuteFunctionOnCellsDownRight(pinnedCell, DetermineIfCellPinned);
                     break;
-                case ValidBoardMove.movePath.UpLeft:
-                    test = executeFunctionOnCellsUpLeft(pinnedCell, determineIfCellPinned);
+                case ValidBoardMove.MovePath.UpLeft:
+                    test = ExecuteFunctionOnCellsUpLeft(pinnedCell, DetermineIfCellPinned);
                     break;
-                case ValidBoardMove.movePath.UpRight:
-                    test = executeFunctionOnCellsUpRight(pinnedCell, determineIfCellPinned);
+                case ValidBoardMove.MovePath.UpRight:
+                    test = ExecuteFunctionOnCellsUpRight(pinnedCell, DetermineIfCellPinned);
                     break;
                 default:
                     break;
@@ -397,43 +391,43 @@ namespace SalisburyChessEngine.Pieces
             if (arePinned.Count == 1)
             {
                 // we are absolutely pinned hgere
-                var piece= Cell.GetPiece(this.pinnedCell);
-                if (piece.TypeOfPiece == pieceType.Rook)
+                var piece= Cell.GetPiece(this.PinnedCell);
+                if (piece.TypeOfPiece == PieceType.Rook)
                 {
                     var rook = (Rook)piece;
-                    rook.determineValidMoves(rook.CurrentCoordinates, test);
+                    rook.DetermineValidMoves(rook.CurrentCoordinates, test);
                 }
-                else if (piece.TypeOfPiece == pieceType.Bishop)
+                else if (piece.TypeOfPiece == PieceType.Bishop)
                 {
                     var bishop = (Bishop)piece;
-                    bishop.determineValidMoves(bishop.CurrentCoordinates, test);
+                    bishop.DetermineValidMoves(bishop.CurrentCoordinates, test);
                 }
-                else if (piece.TypeOfPiece == pieceType.Pawn)
+                else if (piece.TypeOfPiece == PieceType.Pawn)
                 {
                     var pawn = (Pawn)piece;
-                    pawn.determineValidMoves(pawn.CurrentCoordinates, test);
+                    pawn.DetermineValidMoves(pawn.CurrentCoordinates, test);
                 }
-                else if (piece.TypeOfPiece == pieceType.King)
+                else if (piece.TypeOfPiece == PieceType.King)
                 {
                     throw new NotImplementedException();
                 }
-                else if (piece.TypeOfPiece == pieceType.Queen)
+                else if (piece.TypeOfPiece == PieceType.Queen)
                 {
                     var queen = (Queen)piece;
-                    queen.determineValidMoves(queen.CurrentCoordinates, test);
+                    queen.DetermineValidMoves(queen.CurrentCoordinates, test);
                 }
-                else if (piece.TypeOfPiece == pieceType.Knight)
+                else if (piece.TypeOfPiece == PieceType.Knight)
                 {
                     var knight = (Knight)piece;
-                    knight.determineValidMoves(knight.CurrentCoordinates, test);
+                    knight.DetermineValidMoves(knight.CurrentCoordinates, test);
                 }
             }
         }
 
-        private ValidBoardMove determineIfCellPinned(Cell pinnedCell, Cell potentialCell, ValidBoardMove.movePath path)
+        private ValidBoardMove DetermineIfCellPinned(Cell pinnedCell, Cell potentialCell, ValidBoardMove.MovePath path)
         {
             var piece = Cell.GetPiece(potentialCell);
-            if (piece == enemyKing)
+            if (piece == EnemyKing)
             {
                 return new ValidBoardMove(pinnedCell.Coordinates, potentialCell.Coordinates, path, piece.isWhite, true);
             }
@@ -448,16 +442,15 @@ namespace SalisburyChessEngine.Pieces
             
         }
 
-        public ValidNotationProperties cellIsValidForPiece(Cell fromCell, Cell toCell)
+        public ValidNotationProperties CellIsValidForPiece(Cell fromCell, Cell toCell)
         {
             var validMoveProps = new ValidNotationProperties();
-            return validMoveProps.determineMoveProperties(fromCell, toCell);
+            return validMoveProps.DetermineMoveProperties(fromCell, toCell);
         }
 
-        public char? getColumnLetter(Cell currentCell, int spacesAway)
+        public char? GetColumnLetter(Cell currentCell, int spacesAway)
         {
-            char columnletter;
-            if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(currentCell.ColumnNumber + spacesAway, out columnletter))
+            if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(currentCell.ColumnNumber + spacesAway, out char columnletter))
             {
                 return columnletter;
             }
@@ -467,31 +460,31 @@ namespace SalisburyChessEngine.Pieces
         public  List<ValidBoardMove> FindAttackPath(ValidBoardMove checkMove)
         {
             var returnList = new List<ValidBoardMove>();
-            switch (checkMove.MovePath)
+            switch (checkMove.Path)
             {
-                case ValidBoardMove.movePath.Down:
-                    returnList = getValidCellsUp(checkMove.CoordinatesTo);
+                case ValidBoardMove.MovePath.Down:
+                    returnList = GetValidCellsUp(checkMove.CoordinatesTo);
                     break;
-                case ValidBoardMove.movePath.Up:
-                    returnList = getValidCellsDown(checkMove.CoordinatesTo);
+                case ValidBoardMove.MovePath.Up:
+                    returnList = GetValidCellsDown(checkMove.CoordinatesTo);
                     break;
-                case ValidBoardMove.movePath.Left:
-                    returnList = getValidCellsDownRight(checkMove.CoordinatesTo);
+                case ValidBoardMove.MovePath.Left:
+                    returnList = GetValidCellsDownRight(checkMove.CoordinatesTo);
                     break;
-                case ValidBoardMove.movePath.Right:
-                    returnList = getValidCellsLeft(checkMove.CoordinatesTo);
+                case ValidBoardMove.MovePath.Right:
+                    returnList = GetValidCellsLeft(checkMove.CoordinatesTo);
                     break;
-                case ValidBoardMove.movePath.UpLeft:
-                    returnList = getValidCellsDownRight(checkMove.CoordinatesTo);
+                case ValidBoardMove.MovePath.UpLeft:
+                    returnList = GetValidCellsDownRight(checkMove.CoordinatesTo);
                     break;
-                case ValidBoardMove.movePath.UpRight:
-                    returnList = getValidCellsDownLeft(checkMove.CoordinatesTo);
+                case ValidBoardMove.MovePath.UpRight:
+                    returnList = GetValidCellsDownLeft(checkMove.CoordinatesTo);
                     break;
-                case ValidBoardMove.movePath.DownLeft:
-                    returnList = getValidCellsUpRight(checkMove.CoordinatesTo);
+                case ValidBoardMove.MovePath.DownLeft:
+                    returnList = GetValidCellsUpRight(checkMove.CoordinatesTo);
                     break;
-                case ValidBoardMove.movePath.DownRight:
-                    returnList = getValidCellsUpLeft(checkMove.CoordinatesTo);
+                case ValidBoardMove.MovePath.DownRight:
+                    returnList = GetValidCellsUpLeft(checkMove.CoordinatesTo);
                     break;
                 default:
                     break;
@@ -503,19 +496,19 @@ namespace SalisburyChessEngine.Pieces
         private bool MovesAreBetweenCheckMovePath(ValidBoardMove move, ValidBoardMove checkMove)
         {
             var checkCoordsTo = checkMove.CoordinatesTo;
-            var checkCoordsToColumnLetter = checkCoordsTo.getColumnLetter();
-            var checkCoordsToRowNumber = checkCoordsTo.getRowNumber();
+            var checkCoordsToColumnLetter = checkCoordsTo.GetColumnLetter();
+            var checkCoordsToRowNumber = checkCoordsTo.GetRowNumber();
 
             var checkCoordsFrom = checkMove.CoordinatesFrom;
-            var checkCoordsFromColumnLetter = checkCoordsFrom.getColumnLetter();
-            var checkCoordsFromRowNumber = checkCoordsFrom.getRowNumber();
+            var checkCoordsFromColumnLetter = checkCoordsFrom.GetColumnLetter();
+            var checkCoordsFromRowNumber = checkCoordsFrom.GetRowNumber();
 
             var moveCoordsTo = move.CoordinatesTo;
-            var moveColumnLetter = moveCoordsTo.getColumnLetter();
-            var moveRowNumber = moveCoordsTo.getRowNumber();
+            var moveColumnLetter = moveCoordsTo.GetColumnLetter();
+            var moveRowNumber = moveCoordsTo.GetRowNumber();
 
-            if (moveColumnLetter.isBetween<char?>(checkCoordsFromColumnLetter, checkCoordsToColumnLetter) &&
-                moveRowNumber.isBetween<char?>(checkCoordsFromRowNumber, checkCoordsToRowNumber))
+            if (moveColumnLetter.IsBetween<char?>(checkCoordsFromColumnLetter, checkCoordsToColumnLetter) &&
+                moveRowNumber.IsBetween<char?>(checkCoordsFromRowNumber, checkCoordsToRowNumber))
             {
                 return true;
             }
@@ -527,19 +520,19 @@ namespace SalisburyChessEngine.Pieces
         {
             if (checkingMove != null)
             {
-                this.allowedCellsAfterCheck = FindAttackPath(checkingMove);
+                this.AllowedCellsAfterCheck = FindAttackPath(checkingMove);
 
             }
             else
             {
-                this.allowedCellsAfterCheck = new List<ValidBoardMove>();
+                this.AllowedCellsAfterCheck = new List<ValidBoardMove>();
             }
             
-            if (this.allowedCellsAfterCheck.Count > 0 &&
+            if (this.AllowedCellsAfterCheck.Count > 0 &&
                 checkingMove.IsWhite != this.isWhite)
             {
                 var filteredCoordinateList = this.ValidMoves.Select(GeneralUtilities.SelectCoordinates)
-                    .Intersect(this.allowedCellsAfterCheck.Select(GeneralUtilities.SelectCoordinates)).ToList();
+                    .Intersect(this.AllowedCellsAfterCheck.Select(GeneralUtilities.SelectCoordinates)).ToList();
 
                 this.ValidMoves = this.ValidMoves.Where(x => filteredCoordinateList.IndexOf(x.CoordinatesTo) > -1).ToList();
             }
@@ -547,18 +540,17 @@ namespace SalisburyChessEngine.Pieces
 
         public void FilterMovesIfPinned(List<ValidBoardMove> pinnedMoves)
         {
-            List<ValidBoardMove.movePath> combinedMovePaths = new List<ValidBoardMove.movePath>();
-            var movePaths = pinnedMoves.Select(move => move.MovePath).ToList();
+            List<ValidBoardMove.MovePath> combinedMovePaths = new List<ValidBoardMove.MovePath>();
+            var movePaths = pinnedMoves.Select(move => move.Path).ToList();
             foreach(var path in movePaths)
             {
-                List<ValidBoardMove.movePath> rangeToAdd;
-                if (pinnedAllowedMovePaths.TryGetValue(path, out rangeToAdd))
+                if (PinnedAllowedMovePaths.TryGetValue(path, out List<ValidBoardMove.MovePath>  rangeToAdd))
                 {
                     combinedMovePaths.AddRange(rangeToAdd);
                 }
             }
             combinedMovePaths = combinedMovePaths.Distinct().ToList();
-            this.ValidMoves = this.ValidMoves.Where(x => combinedMovePaths.IndexOf(x.MovePath) > -1).ToList();
+            this.ValidMoves = this.ValidMoves.Where(x => combinedMovePaths.IndexOf(x.Path) > -1).ToList();
         }
     }
 }

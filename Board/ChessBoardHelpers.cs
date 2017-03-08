@@ -8,7 +8,7 @@ namespace SalisburyChessEngine.Board
     public partial class ChessBoard: List<List<Cell>>
     {
         //wanted a wrapper around the double loop. Used to get rid of repetitive code
-        public void executeCellLevelFunction(Action<Cell> func)
+        public void ExecuteCellLevelFunction(Action<Cell> func)
         {
             foreach (var row in this)
             {
@@ -18,7 +18,7 @@ namespace SalisburyChessEngine.Board
                 }
             }
         }
-        public List<T> executeCellLevelFunction<T>(Func<Cell, T> func)
+        public List<T> ExecuteCellLevelFunction<T>(Func<Cell, T> func)
         {
             var listOfStuff = new List<T>();
             foreach (var row in this)
@@ -33,56 +33,56 @@ namespace SalisburyChessEngine.Board
         }
         public List<Pawn> FindWhitePawns()
         {
-            return executeCellLevelFunction(FindPawns).Where(piecesAreWhiteAndNotNull).ToList();
+            return ExecuteCellLevelFunction(FindPawns).Where(PiecesAreWhiteAndNotNull).ToList();
         }
 
         public List<Pawn> FindBlackPawns()
         {
-            return executeCellLevelFunction(FindPawns).Where(piecesAreBlackAndNotNull).ToList();
+            return ExecuteCellLevelFunction(FindPawns).Where(PiecesAreBlackAndNotNull).ToList();
         }
 
         public List<Knight> FindWhiteKnights()
         {
-            return executeCellLevelFunction(FindKnights).Where(piecesAreWhiteAndNotNull).ToList();
+            return ExecuteCellLevelFunction(FindKnights).Where(PiecesAreWhiteAndNotNull).ToList();
         }
         public List<Knight> FindBlackKnights()
         {
-            return executeCellLevelFunction(FindKnights).Where(piecesAreBlackAndNotNull).ToList();
+            return ExecuteCellLevelFunction(FindKnights).Where(PiecesAreBlackAndNotNull).ToList();
         }
         public List<Bishop> FindWhiteBishops()
         {
-            return executeCellLevelFunction(FindBishops).Where(piecesAreWhiteAndNotNull).ToList();
+            return ExecuteCellLevelFunction(FindBishops).Where(PiecesAreWhiteAndNotNull).ToList();
         }
         public List<Bishop> FindBlackBishops()
         {
-            return executeCellLevelFunction(FindBishops).Where(piecesAreBlackAndNotNull).ToList();
+            return ExecuteCellLevelFunction(FindBishops).Where(PiecesAreBlackAndNotNull).ToList();
         }
         public List<Rook> FindWhiteRooks()
         {
-            return executeCellLevelFunction(FindRooks).Where(piecesAreWhiteAndNotNull).ToList();
+            return ExecuteCellLevelFunction(FindRooks).Where(PiecesAreWhiteAndNotNull).ToList();
         }
         public List<Rook> FindBlackRooks()
         {
-            return executeCellLevelFunction(FindRooks).Where(piecesAreBlackAndNotNull).ToList();
+            return ExecuteCellLevelFunction(FindRooks).Where(PiecesAreBlackAndNotNull).ToList();
         }
         public List<Queen> FindWhiteQueens()
         {
-            return executeCellLevelFunction(FindQueens).Where(piecesAreWhiteAndNotNull).ToList();
+            return ExecuteCellLevelFunction(FindQueens).Where(PiecesAreWhiteAndNotNull).ToList();
         }
         public List<Queen> FindBlackQueens()
         {
-            return executeCellLevelFunction(FindQueens).Where(piecesAreBlackAndNotNull).ToList();
+            return ExecuteCellLevelFunction(FindQueens).Where(PiecesAreBlackAndNotNull).ToList();
         }
         public List<King> FindWhiteKings()
         {
-            return executeCellLevelFunction(FindKings).Where(piecesAreWhiteAndNotNull).ToList();
+            return ExecuteCellLevelFunction(FindKings).Where(PiecesAreWhiteAndNotNull).ToList();
         }
         public List<King> FindBlackKings()
         {
-            return executeCellLevelFunction(FindKings).Where(piecesAreBlackAndNotNull).ToList();
+            return ExecuteCellLevelFunction(FindKings).Where(PiecesAreBlackAndNotNull).ToList();
         }
 
-        private bool piecesAreWhiteAndNotNull<T>(T arg) where T : PieceBase
+        private bool PiecesAreWhiteAndNotNull<T>(T arg) where T : PieceBase
         {
             var piece = (PieceBase)arg;
             if (piece != null)
@@ -95,7 +95,7 @@ namespace SalisburyChessEngine.Board
             return false;
         }
 
-        private bool piecesAreBlackAndNotNull<T>(T arg) where T : PieceBase
+        private bool PiecesAreBlackAndNotNull<T>(T arg) where T : PieceBase
         {
             var piece = (PieceBase)arg;
             if (piece != null)
@@ -113,7 +113,7 @@ namespace SalisburyChessEngine.Board
             if (Cell.HasPiece(cell))
             {
                 var piece = cell.CurrentPiece;
-                if (piece.TypeOfPiece == PieceBase.pieceType.Pawn)
+                if (piece.TypeOfPiece == PieceBase.PieceType.Pawn)
                 {
                     return (Pawn)piece;
                 }
@@ -133,7 +133,7 @@ namespace SalisburyChessEngine.Board
             if (Cell.HasPiece(cell))
             {
                 var piece = cell.CurrentPiece;
-                if (piece.TypeOfPiece == PieceBase.pieceType.Knight)
+                if (piece.TypeOfPiece == PieceBase.PieceType.Knight)
                 {
                     return (Knight)piece;
                 }
@@ -152,7 +152,7 @@ namespace SalisburyChessEngine.Board
             if (Cell.HasPiece(cell))
             {
                 var piece = cell.CurrentPiece;
-                if (piece.TypeOfPiece == PieceBase.pieceType.Bishop)
+                if (piece.TypeOfPiece == PieceBase.PieceType.Bishop)
                 {
                     return (Bishop)piece;
                 }
@@ -171,7 +171,7 @@ namespace SalisburyChessEngine.Board
             if (Cell.HasPiece(cell))
             {
                 var piece = cell.CurrentPiece;
-                if (piece.TypeOfPiece == PieceBase.pieceType.Rook)
+                if (piece.TypeOfPiece == PieceBase.PieceType.Rook)
                 {
                     return (Rook)piece;
                 }
@@ -190,7 +190,7 @@ namespace SalisburyChessEngine.Board
             if (Cell.HasPiece(cell))
             {
                 var piece = cell.CurrentPiece;
-                if (piece.TypeOfPiece == PieceBase.pieceType.Queen)
+                if (piece.TypeOfPiece == PieceBase.PieceType.Queen)
                 {
                     return (Queen)piece;
                 }
@@ -209,7 +209,7 @@ namespace SalisburyChessEngine.Board
             if (Cell.HasPiece(cell))
             {
                 var piece = cell.CurrentPiece;
-                if (piece.TypeOfPiece == PieceBase.pieceType.King)
+                if (piece.TypeOfPiece == PieceBase.PieceType.King)
                 {
                     return (King)piece;
                 }
@@ -241,11 +241,11 @@ namespace SalisburyChessEngine.Board
             List<ValidBoardMove> moves = new List<ValidBoardMove>();
             if (isWhite)
             {
-                pieces = executeCellLevelFunction<PieceBase>(Cell.GetPiece).Where(piecesAreWhiteAndNotNull);
+                pieces = ExecuteCellLevelFunction<PieceBase>(Cell.GetPiece).Where(PiecesAreWhiteAndNotNull);
             }
             else
             {
-                pieces = executeCellLevelFunction<PieceBase>(Cell.GetPiece).Where(piecesAreBlackAndNotNull);
+                pieces = ExecuteCellLevelFunction<PieceBase>(Cell.GetPiece).Where(PiecesAreBlackAndNotNull);
             }
             foreach(var piece in pieces)
             {
@@ -260,7 +260,7 @@ namespace SalisburyChessEngine.Board
             if (Cell.HasPiece(cell))
             {
                 var potentialKingPiece = Cell.GetPiece(cell);
-                if (potentialKingPiece.TypeOfPiece != PieceBase.pieceType.Rook)
+                if (potentialKingPiece.TypeOfPiece != PieceBase.PieceType.Rook)
                 {
                     rook = null;
                     return false;
@@ -281,7 +281,7 @@ namespace SalisburyChessEngine.Board
             if (Cell.HasPiece(cell))
             {
                 var potentialKingPiece = Cell.GetPiece(cell);
-                if (potentialKingPiece.TypeOfPiece != PieceBase.pieceType.King)
+                if (potentialKingPiece.TypeOfPiece != PieceBase.PieceType.King)
                 {
                     king = null;
                     return false;

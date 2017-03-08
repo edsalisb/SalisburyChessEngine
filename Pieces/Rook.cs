@@ -7,38 +7,38 @@ namespace SalisburyChessEngine.Pieces
 {
     public class Rook : PieceBase
     {
-        public bool hasMoved { get; set;
+        public bool HasMoved { get; set;
         }
         public Rook(bool isWhite, Func<string, Cell> getCell, string coordinates, King enemyKing) : base(isWhite, coordinates, getCell)
         {
             this.getCell = getCell;
-            this.TypeOfPiece = pieceType.Rook;
-            this.enemyKing = enemyKing;
+            this.TypeOfPiece = PieceType.Rook;
+            this.EnemyKing = enemyKing;
         }
         
 
-        public override void determineValidMoves(string coords, ValidBoardMove checkingMove)
+        public override void DetermineValidMoves(string coords, ValidBoardMove checkingMove)
         {
             ValidMoves = new List<ValidBoardMove>();
             PiecePressure = new List<ValidBoardMove>();
-            this.addToValidMoves(coords);
+            this.AddToValidMoves(coords);
 
             this.FilterMovesIfChecked(checkingMove);
             
         }
 
-        public void determineValidMoves(string coords, List<ValidBoardMove> filterCells)
+        public void DetermineValidMoves(string coords, List<ValidBoardMove> filterCells)
         {
             ValidMoves = new List<ValidBoardMove>();
             PiecePressure = new List<ValidBoardMove>();
-            this.addToValidMoves(coords);
+            this.AddToValidMoves(coords);
         }
-        public override void addToValidMoves(string coords)
+        public override void AddToValidMoves(string coords)
         {
-            var downCells = getValidCellsDown(coords);
-            var leftCells = getValidCellsLeft(coords);
-            var rightCells = getValidCellsRight(coords);
-            var upCells = getValidCellsUp(coords);
+            var downCells = GetValidCellsDown(coords);
+            var leftCells = GetValidCellsLeft(coords);
+            var rightCells = GetValidCellsRight(coords);
+            var upCells = GetValidCellsUp(coords);
 
             this.ValidMoves.AddRange(downCells);
             this.ValidMoves.AddRange(leftCells);

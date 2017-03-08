@@ -23,7 +23,7 @@ namespace SalisburyChessEngine.Board
             IsTerminatable = false;
         }
 
-        public ValidNotationProperties determineMoveProperties(Cell fromCell, Cell toCell)
+        public ValidNotationProperties DetermineMoveProperties(Cell fromCell, Cell toCell)
         {
             if (!Cell.IsNotNull(fromCell) || !Cell.IsNotNull(toCell))
             {
@@ -60,12 +60,10 @@ namespace SalisburyChessEngine.Board
                 return this;
             }
         }
-
-
-
-        public ValidNotationProperties determineMoveProperties(Cell cellFrom, Cell cellTo, List<ValidBoardMove> enemyPressure)
+        
+        public ValidNotationProperties DetermineMoveProperties(Cell cellFrom, Cell cellTo, List<ValidBoardMove> enemyPressure)
         {
-            var instance = determineMoveProperties(cellFrom, cellTo);
+            var instance = DetermineMoveProperties(cellFrom, cellTo);
             if (instance.IsValid)
             {
                 var enemyCoordinatePressure = enemyPressure.Select(GeneralUtilities.SelectCoordinates).ToList();

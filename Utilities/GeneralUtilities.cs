@@ -16,7 +16,7 @@ namespace SalisburyChessEngine.Utilities
 
     static class Extensions
     {
-        public static char? getColumnLetter(this string coords)
+        public static char? GetColumnLetter(this string coords)
         {
             if (coords.Length >= 1)
             {
@@ -26,7 +26,7 @@ namespace SalisburyChessEngine.Utilities
 
         }
 
-        public static char? getRowNumber(this string coords)
+        public static char? GetRowNumber(this string coords)
         {
             if (coords.Length >= 2)
             {
@@ -35,7 +35,7 @@ namespace SalisburyChessEngine.Utilities
             return null;
         }
 
-        public static bool isBetween<T>(this T item, T constraint1, T constraint2)
+        public static bool IsBetween<T>(this T item, T constraint1, T constraint2)
         {
             int compare = Comparer<T>.Default.Compare(constraint1, constraint2);
             if (compare < 0)

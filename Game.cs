@@ -39,24 +39,24 @@ namespace SalisburyChessEngine
         public void Begin()
         {
             this.cb = new ChessBoard();
-            this.cb.BlackKing.onCheckCallbacks += UpdateMoveNotation;
-            this.cb.WhiteKing.onCheckCallbacks += UpdateMoveNotation;
+            this.cb.BlackKing.OnCheckCallbacks += UpdateMoveNotation;
+            this.cb.WhiteKing.OnCheckCallbacks += UpdateMoveNotation;
 
-            this.cb.BlackKing.onCheckForCheckMateCallbacks += CheckIfCheckMateOccurred;
-            this.cb.WhiteKing.onCheckForCheckMateCallbacks += CheckIfCheckMateOccurred;
+            this.cb.BlackKing.OnCheckForCheckMateCallbacks += CheckIfCheckMateOccurred;
+            this.cb.WhiteKing.OnCheckForCheckMateCallbacks += CheckIfCheckMateOccurred;
 
             while (!this.gameEnded)
             {
-                this.displayTurnStatus();
+                this.DisplayTurnStatus();
 
                 Console.WriteLine("Move:");
                 string algebraicCoord = Console.ReadLine();
-                Move move;
-                if (this.cb.TryMovePiece(algebraicCoord, out move))
+               
+                if (this.cb.TryMovePiece(algebraicCoord, out Move move))
                 {
                     this.MostRecentMove = move;
 
-                    this.cb.replacePiece(move);
+                    this.cb.ReplacePiece(move);
                     this.cb.UpdateBoardState();
                     this.UpdateGameStatus();
 
@@ -89,10 +89,10 @@ namespace SalisburyChessEngine
             this.MostRecentMove.AlgebraicCoord += '+';
         }
 
-        private void displayTurnStatus()
+        private void DisplayTurnStatus()
         {
             string output = "";
-            if (this.cb.isWhitesTurn)
+            if (this.cb.IsWhitesTurn)
             {
                 output += "White's turn: ";
             }
@@ -107,13 +107,13 @@ namespace SalisburyChessEngine
 
         private void UpdateGameStatus()
         {
-            if (this.cb.isWhitesTurn)
+            if (this.cb.IsWhitesTurn)
             {
-                this.cb.isWhitesTurn = false;
+                this.cb.IsWhitesTurn = false;
             }
             else
             {
-                this.cb.isWhitesTurn = true;
+                this.cb.IsWhitesTurn = true;
                 this.turnNumber++;
             }
         }

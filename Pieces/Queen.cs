@@ -10,9 +10,9 @@ namespace SalisburyChessEngine.Pieces
         
         public Queen(bool isWhite, Func<string, Cell> getCell, string coordinates, King enemyKing) : base(isWhite, coordinates, getCell)
         {
-            this.TypeOfPiece = pieceType.Queen;
+            this.TypeOfPiece = PieceType.Queen;
             this.getCell = getCell;
-            this.enemyKing = enemyKing;
+            this.EnemyKing = enemyKing;
         }
 
         
@@ -21,38 +21,38 @@ namespace SalisburyChessEngine.Pieces
             return "Q";
         }
 
-        public override void determineValidMoves(string coords, ValidBoardMove checkingMove)
+        public override void DetermineValidMoves(string coords, ValidBoardMove checkingMove)
         {
             ValidMoves = new List<ValidBoardMove>();
             PiecePressure = new List<ValidBoardMove>();
-            this.addToValidMoves(coords);
+            this.AddToValidMoves(coords);
             this.FilterMovesIfChecked(checkingMove);
             
         }
 
-        public void determineValidMoves(string coords, List<ValidBoardMove> filterMoves)
+        public void DetermineValidMoves(string coords, List<ValidBoardMove> filterMoves)
         {
             ValidMoves = new List<ValidBoardMove>();
             PiecePressure = new List<ValidBoardMove>();
-            this.addToValidMoves(coords);
+            this.AddToValidMoves(coords);
         }
 
-        public override void addToValidMoves(string coords)
+        public override void AddToValidMoves(string coords)
         {
-            var downCells = getValidCellsDown(coords);
-            var leftCells = getValidCellsLeft(coords);
-            var rightCells = getValidCellsRight(coords);
-            var upCells = getValidCellsUp(coords);
+            var downCells = GetValidCellsDown(coords);
+            var leftCells = GetValidCellsLeft(coords);
+            var rightCells = GetValidCellsRight(coords);
+            var upCells = GetValidCellsUp(coords);
 
             this.ValidMoves.AddRange(downCells);
             this.ValidMoves.AddRange(leftCells);
             this.ValidMoves.AddRange(rightCells);
             this.ValidMoves.AddRange(upCells);
 
-            var downLeftCells = getValidCellsDownLeft(coords);
-            var downRightCells = getValidCellsDownRight(coords);
-            var upLeftCells = getValidCellsUpLeft(coords);
-            var upRightCells = getValidCellsUpRight(coords);
+            var downLeftCells = GetValidCellsDownLeft(coords);
+            var downRightCells = GetValidCellsDownRight(coords);
+            var upLeftCells = GetValidCellsUpLeft(coords);
+            var upRightCells = GetValidCellsUpRight(coords);
 
             this.ValidMoves.AddRange(downLeftCells);
             this.ValidMoves.AddRange(downRightCells);

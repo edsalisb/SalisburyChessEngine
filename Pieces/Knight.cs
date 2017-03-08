@@ -9,32 +9,32 @@ namespace SalisburyChessEngine.Pieces
    
         public Knight(bool isWhite, Func<string, Cell> getCell, string coordinates): base(isWhite, coordinates, getCell)
         {
-            this.TypeOfPiece = pieceType.Knight;
+            this.TypeOfPiece = PieceType.Knight;
         }
-        public override void determineValidMoves(string coords, ValidBoardMove checkingMove)
+        public override void DetermineValidMoves(string coords, ValidBoardMove checkingMove)
         {
             ValidMoves = new List<ValidBoardMove>();
             PiecePressure = new List<ValidBoardMove>();
-            addToValidMoves(coords);
+            AddToValidMoves(coords);
 
             this.FilterMovesIfChecked(checkingMove);
 
         }
-        public void determineValidMoves(string coords, List<ValidBoardMove> pinnedMoves)
+        public void DetermineValidMoves(string coords, List<ValidBoardMove> pinnedMoves)
         {
             ValidMoves = new List<ValidBoardMove>();
             PiecePressure = new List<ValidBoardMove>();
-            addToValidMoves(coords);
+            AddToValidMoves(coords);
         }
 
-        public override void addToValidMoves(string coords)
+        public override void AddToValidMoves(string coords)
         {
             var currentCell = this.getCell(coords);
 
-            var twoColumnsLeft = getColumnLetter(currentCell, -2);
-            var oneColumnLeft = getColumnLetter(currentCell, -1);
-            var oneColumnRight = getColumnLetter(currentCell, 1);
-            var twoColumnsRight = getColumnLetter(currentCell, 1);
+            var twoColumnsLeft = GetColumnLetter(currentCell, -2);
+            var oneColumnLeft = GetColumnLetter(currentCell, -1);
+            var oneColumnRight = GetColumnLetter(currentCell, 1);
+            var twoColumnsRight = GetColumnLetter(currentCell, 1);
 
             //8 moves knight can make
             var twoUpOneLeftCell = this.getCell(oneColumnLeft.ToString() + (currentCell.Row + 2));
@@ -47,44 +47,44 @@ namespace SalisburyChessEngine.Pieces
             var oneUpTwoLeftCell = this.getCell(twoColumnsLeft.ToString() + (currentCell.Row + 1));
 
 
-            if (cellIsValidForPiece(currentCell, twoUpOneLeftCell).IsValid)
+            if (CellIsValidForPiece(currentCell, twoUpOneLeftCell).IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, twoUpOneLeftCell.Coordinates, ValidBoardMove.movePath.Invalid, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, twoUpOneLeftCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
-            if (cellIsValidForPiece(currentCell, twoUpOneRightCell).IsValid)
+            if (CellIsValidForPiece(currentCell, twoUpOneRightCell).IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, twoUpOneRightCell.Coordinates, ValidBoardMove.movePath.Invalid, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, twoUpOneRightCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
-            if (cellIsValidForPiece(currentCell, oneUpTwoRightCell).IsValid)
+            if (CellIsValidForPiece(currentCell, oneUpTwoRightCell).IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, oneUpTwoRightCell.Coordinates, ValidBoardMove.movePath.Invalid, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, oneUpTwoRightCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
-            if (cellIsValidForPiece(currentCell, oneDownTwoRightCell).IsValid)
+            if (CellIsValidForPiece(currentCell, oneDownTwoRightCell).IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, oneDownTwoRightCell.Coordinates, ValidBoardMove.movePath.Invalid, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, oneDownTwoRightCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
-            if (cellIsValidForPiece(currentCell, twoDownOneRightCell).IsValid)
+            if (CellIsValidForPiece(currentCell, twoDownOneRightCell).IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, twoDownOneRightCell.Coordinates, ValidBoardMove.movePath.Invalid, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, twoDownOneRightCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
-            if (cellIsValidForPiece(currentCell, twoDownOneLeftCell).IsValid)
+            if (CellIsValidForPiece(currentCell, twoDownOneLeftCell).IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, twoDownOneLeftCell.Coordinates, ValidBoardMove.movePath.Invalid, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, twoDownOneLeftCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
-            if (cellIsValidForPiece(currentCell, oneDownTwoLeftCell).IsValid)
+            if (CellIsValidForPiece(currentCell, oneDownTwoLeftCell).IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, oneDownTwoLeftCell.Coordinates, ValidBoardMove.movePath.Invalid, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, oneDownTwoLeftCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
-            if (cellIsValidForPiece(currentCell, oneUpTwoLeftCell).IsValid)
+            if (CellIsValidForPiece(currentCell, oneUpTwoLeftCell).IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, oneUpTwoLeftCell.Coordinates, ValidBoardMove.movePath.Invalid, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, oneUpTwoLeftCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
             this.ValidMovesSet = true;

@@ -10,16 +10,15 @@ namespace SalisburyChessEngine
         public int Row { get; set; }
         public string Coordinates { get; set; }
         public PieceBase CurrentPiece { get; set; }
-        public char columnLetter { get; set; }
+        public char ColumnLetter { get; set; }
         public Cell(int row, int column)
         {
             this.ColumnNumber = column;
             this.Row = row;
             this.CurrentPiece = null;
-            char columnLetter;
 
-            CellProperties.ColumnNumbersMappedToLetters.TryGetValue(column, out columnLetter);
-            this.columnLetter = columnLetter;
+            CellProperties.ColumnNumbersMappedToLetters.TryGetValue(column, out char columnLetter);
+            this.ColumnLetter = columnLetter;
             Coordinates = columnLetter + row.ToString();
             
         }
