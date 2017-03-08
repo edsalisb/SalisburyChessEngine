@@ -8,7 +8,7 @@ namespace SalisburyChessEngine.Pieces
 {
     public class King : PieceBase
     {
-        public bool hasMoved { get; set; }
+        public bool HasMoved { get; set; }
         public delegate void OnCheckCallback();
         public delegate void OnCheckForCheckMateCallback(King k, EventArgs e);
         private bool isChecked;
@@ -61,7 +61,6 @@ namespace SalisburyChessEngine.Pieces
 
             this.AddToValidMoves(coords);
             this.FilterMovesIfChecked(checkingMove);
-            
             return samePressure;
         }
         public override void AddToValidMoves(string coords)
@@ -151,7 +150,15 @@ namespace SalisburyChessEngine.Pieces
                     samePressure.Add(moveProperty);
                 }
             }
+
+            this.CheckForCastleCells();
         }
+
+        private void CheckForCastleCells()
+        {
+            //TODO: Add castle cells to king valid moves
+        }
+
         public bool CellIsValidForKing(Cell cellFrom, Cell cellTo, List<ValidBoardMove> enemyPressure)
         {
             var moveProps = new ValidNotationProperties();

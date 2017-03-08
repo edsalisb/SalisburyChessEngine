@@ -60,11 +60,32 @@ namespace SalisburyChessEngine.Board
             {
                 if (isWhitesTurn)
                 {
+                    var kingCell = this.board.GetCell("e1");
+                    var rookCell = this.board.GetCell("a1");
+                    var emptyCells = new List<Cell>()
+                    { 
+                    
+                        this.board.GetCell("b1"),
+                        this.board.GetCell("c1"),
+                        this.board.GetCell("d1")
+                    };
+
+                    this.FindIfCastleIsValidBase(isWhitesTurn, kingCell, rookCell, emptyCells);
 
                 }
                 else
                 {
+                    var kingCell = this.board.GetCell("e8");
+                    var rookCell = this.board.GetCell("a8");
+                    var emptyCells = new List<Cell>()
+                    {
 
+                        this.board.GetCell("b8"),
+                        this.board.GetCell("c8"),
+                        this.board.GetCell("d8")
+                    };
+
+                    this.FindIfCastleIsValidBase(isWhitesTurn, kingCell, rookCell, emptyCells);
                 }
             }
 
@@ -89,27 +110,13 @@ namespace SalisburyChessEngine.Board
                 {
                     var kingCell = this.board.GetCell("e8");
                     var rookCell = this.board.GetCell("h8");
-                    var emptyCell = this.board.GetCell("f8");
-                    var emptyCell2 = this.board.GetCell("g8");
+                    var emptyCells = new List<Cell>()
+                    {
+                        this.board.GetCell("f8"),
+                        this.board.GetCell("g8")
+                    };
 
-                    if (Cell.HasPiece(emptyCell) || Cell.HasPiece(emptyCell2))
-                    {
-                        return;
-                    }
-
-                    var whitePiecePressureCoordinates = this.board.WhitePiecePressure.Select(GeneralUtilities.SelectCoordinates).ToList();
-                    if (whitePiecePressureCoordinates.IndexOf(emptyCell.Coordinates) > -1 || whitePiecePressureCoordinates.IndexOf(emptyCell2.Coordinates) > -1)
-                    {
-                        return;
-                    }
-                    if (this.board.IsKingOnCell(kingCell, out King king) && this.board.IsRookOnCell(rookCell, out Rook rook))
-                    {
-                        if (king.isWhite && rook.isWhite && !king.hasMoved && !rook.HasMoved)
-                        {
-                            this.potentialMove.IsValid = true;
-                            this.potentialMove.IsKingSideCastle = true;
-                        }
-                    }
+                    this.FindIfCastleIsValidBase(isWhitesTurn, kingCell, rookCell, emptyCells);
                 }
             }
 
@@ -119,11 +126,11 @@ namespace SalisburyChessEngine.Board
 
                 if (isWhitesTurn)
                 {
-                    boardPressureCoordinates = this.board.WhitePiecePressure.Select(GeneralUtilities.SelectCoordinates).ToList();
+                    boardPressureCoordinates = this.board.BlackPiecePressure.Select(GeneralUtilities.SelectCoordinates).ToList();
                 }
                 else
                 {
-                    boardPressureCoordinates = this.board.BlackPiecePressure.Select(GeneralUtilities.SelectCoordinates).ToList();
+                    boardPressureCoordinates = this.board.WhitePiecePressure.Select(GeneralUtilities.SelectCoordinates).ToList();
                 }
                 foreach(var cell in emptyCells)
                 {
@@ -139,7 +146,7 @@ namespace SalisburyChessEngine.Board
                 
                 if (this.board.IsKingOnCell(kingCell, out King king) && this.board.IsRookOnCell(rookCell, out Rook rook))
                 {
-                    if (king.isWhite && rook.isWhite && !king.hasMoved && !rook.HasMoved)
+                    if (king.isWhite && rook.isWhite && !king.HasMoved && !rook.HasMoved)
                     {
                         this.potentialMove.IsValid = true;
                         if (rook.CurrentCoordinates[0] == 'a')

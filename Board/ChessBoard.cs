@@ -83,7 +83,13 @@ namespace SalisburyChessEngine.Board
                 }
                 else
                 {
+                    var kingCellFrom = this.GetCell("e8");
+                    var kingCellTo = this.GetCell("g8");
+                    var rookCellFrom = this.GetCell("h8");
+                    var rookCellTo = this.GetCell("f8");
 
+                    this.ReplacePieceBase(kingCellFrom, kingCellTo);
+                    this.ReplacePieceBase(rookCellFrom, rookCellTo);
                 }
                 return;
             }
@@ -91,11 +97,23 @@ namespace SalisburyChessEngine.Board
             {
                 if (move.IsWhitesTurn)
                 {
+                    var kingCellFrom = this.GetCell("e1");
+                    var kingCellTo = this.GetCell("c1");
+                    var rookCellFrom = this.GetCell("a1");
+                    var rookCellTo = this.GetCell("d1");
 
+                    this.ReplacePieceBase(kingCellFrom, kingCellTo);
+                    this.ReplacePieceBase(rookCellFrom, rookCellTo);
                 }
                 else
                 {
+                    var kingCellFrom = this.GetCell("e8");
+                    var kingCellTo = this.GetCell("c8");
+                    var rookCellFrom = this.GetCell("a8");
+                    var rookCellTo = this.GetCell("d8");
 
+                    this.ReplacePieceBase(kingCellFrom, kingCellTo);
+                    this.ReplacePieceBase(rookCellFrom, rookCellTo);
                 }
                 return;
             }
@@ -108,6 +126,16 @@ namespace SalisburyChessEngine.Board
         private void ReplacePieceBase(Cell cellFrom, Cell cellTo)
         {
             var currentPiece = cellFrom.CurrentPiece;
+            if (currentPiece.TypeOfPiece == PieceBase.PieceType.Rook)
+            {
+                var rook = (Rook)currentPiece;
+                rook.HasMoved = true;
+            }
+            else if (currentPiece.TypeOfPiece == PieceBase.PieceType.King)
+            {
+                var king = (King)currentPiece;
+                king.HasMoved = true;
+            }
             cellTo.CurrentPiece = currentPiece;
             cellTo.CurrentPiece.CurrentCoordinates = cellTo.Coordinates;
             cellFrom.CurrentPiece = null;
