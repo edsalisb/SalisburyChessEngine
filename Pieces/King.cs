@@ -67,8 +67,12 @@ namespace SalisburyChessEngine.Pieces
         {
             var kingCell = getCell(coords);
 
-            var oneLeftCell = getCell(GetColumnLetter(kingCell, -1) + kingCell.Row.ToString());
-            var oneRightCell = getCell(GetColumnLetter(kingCell, +1) + kingCell.Row.ToString());
+            var oneLeftCell = getCell(GetColumnLetter(kingCell, - 1) + kingCell.Row.ToString());
+            var oneRightCell = getCell(GetColumnLetter(kingCell, + 1) + kingCell.Row.ToString());
+
+            var twoLeftCell = getCell(GetColumnLetter(kingCell, - 2) + kingCell.Row.ToString());
+            var twoRightCell = getCell(GetColumnLetter(kingCell, + 2) + kingCell.Row.ToString());
+
             var oneUpCell = getCell(kingCell.ColumnLetter + (kingCell.Row + 1).ToString());
             var oneDownCell = getCell(kingCell.ColumnLetter + (kingCell.Row - 1).ToString());
 
@@ -76,6 +80,30 @@ namespace SalisburyChessEngine.Pieces
             var oneUoneRCell = getCell(GetColumnLetter(kingCell, 1) + (kingCell.Row + 1).ToString());
             var oneDoneLCell = getCell(GetColumnLetter(kingCell, -1) + (kingCell.Row - 1).ToString());
             var oneDoneRCell = getCell(GetColumnLetter(kingCell, 1) + (kingCell.Row - 1).ToString());
+
+            //castling moves, maybe break out into their own function?
+            if (CellIsValidForKing(kingCell, oneLeftCell, enemyPressure) && 
+                CellIsValidForKing(kingCell, twoLeftCell, enemyPressure))
+            {
+                var moveProperty = new ValidBoardMove(coords, twoLeftCell.Coordinates, ValidBoardMove.MovePath.Castle, this.isWhite);
+                this.ValidMoves.Add(moveProperty);
+                if (samePressure.Select(GeneralUtilities.SelectCoordinates).ToList().IndexOf(twoLeftCell.Coordinates) == -1)
+                {
+                    samePressure.Add(moveProperty);
+                }
+            }
+
+            if (CellIsValidForKing(kingCell, oneRightCell, enemyPressure) &&
+                CellIsValidForKing(kingCell, twoRightCell, enemyPressure))
+            {
+                var moveProperty = new ValidBoardMove(coords, twoRightCell.Coordinates, ValidBoardMove.MovePath.Castle, this.isWhite);
+                this.ValidMoves.Add(moveProperty);
+                if (samePressure.Select(GeneralUtilities.SelectCoordinates).ToList().IndexOf(twoRightCell.Coordinates) == -1)
+                {
+                    samePressure.Add(moveProperty);
+                }
+            }
+
 
             if (CellIsValidForKing(kingCell, oneLeftCell, enemyPressure))
             {

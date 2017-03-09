@@ -80,6 +80,10 @@ namespace SalisburyChessEngine.Pieces
                             break;
                         }
                         moveList.Add(move);
+                        if (move.MoveProperties.IsTerminatable)
+                        {
+                            break;
+                        }
                     }
                     
                 }
@@ -108,6 +112,10 @@ namespace SalisburyChessEngine.Pieces
                             break;
                         }
                         moveList.Add(move);
+                        if (move.MoveProperties.IsTerminatable)
+                        {
+                            break;
+                        }
                     }
                 }
             }
@@ -133,6 +141,10 @@ namespace SalisburyChessEngine.Pieces
                         break;
                     }
                     moveList.Add(move);
+                    if (move.MoveProperties.IsTerminatable)
+                    {
+                        break;
+                    }
                 }
             }
             return moveList;
@@ -155,7 +167,12 @@ namespace SalisburyChessEngine.Pieces
                     {
                         break;
                     }
+
                     moveList.Add(move);
+                    if (move.MoveProperties.IsTerminatable)
+                    {
+                        break;
+                    }
                 }
             }
             return moveList;
@@ -185,6 +202,10 @@ namespace SalisburyChessEngine.Pieces
                             break;
                         }
                         moveList.Add(move);
+                        if (move.MoveProperties.IsTerminatable)
+                        {
+                            break;
+                        }
                     }
 
                 }
@@ -216,6 +237,10 @@ namespace SalisburyChessEngine.Pieces
                             break;
                         }
                         moveList.Add(move);
+                        if (move.MoveProperties.IsTerminatable)
+                        {
+                            break;
+                        }
                     }
                 }
                 row--;
@@ -247,6 +272,10 @@ namespace SalisburyChessEngine.Pieces
                             break;
                         }
                         moveList.Add(move);
+                        if (move.MoveProperties.IsTerminatable)
+                        {
+                            break;
+                        }
                     }
 
                 }
@@ -277,7 +306,12 @@ namespace SalisburyChessEngine.Pieces
                             row++;
                             break;
                         }
+                        
                         moveList.Add(move);
+                        if (move.MoveProperties.IsTerminatable)
+                        {
+                            break;
+                        }
                     }
                 }
                 row++;
@@ -331,12 +365,12 @@ namespace SalisburyChessEngine.Pieces
         }
         private ValidBoardMove DetermineIfCellValid(Cell fromCell, Cell toCell, ValidBoardMove.MovePath path)
         {
-            var validMoveProps = this.CellIsValidForPiece(fromCell, toCell);
-            var moveProperties = new ValidBoardMove(fromCell.Coordinates, toCell.Coordinates, path, this.isWhite);
+            ValidNotationProperties validMoveProps = this.CellIsValidForPiece(fromCell, toCell);
+            var move = new ValidBoardMove(fromCell.Coordinates, toCell.Coordinates, path, this.isWhite);
 
             if (validMoveProps.IsValid || validMoveProps.IsProtected)
             {
-                this.PiecePressure.Add(moveProperties);
+                this.PiecePressure.Add(move);
             }
             if (validMoveProps.IsPotentiallyPinned)
             {
@@ -344,15 +378,8 @@ namespace SalisburyChessEngine.Pieces
                 this.PinnedCell = toCell;
                 DetermineIfAbsolutePinned(toCell, path);
             }
-            if (validMoveProps.IsTerminatable)
-            {
-                return null;
-            }
-            //if (validMoveProps.IsValid)
-            //{
-            //    return moveProperties;
-            //}
-            return moveProperties;
+            move.MoveProperties = validMoveProps;
+            return move;
         }
 
         private void DetermineIfAbsolutePinned(Cell pinnedCell,ValidBoardMove.MovePath path)
@@ -429,7 +456,12 @@ namespace SalisburyChessEngine.Pieces
             var piece = Cell.GetPiece(potentialCell);
             if (piece == EnemyKing)
             {
-                return new ValidBoardMove(pinnedCell.Coordinates, potentialCell.Coordinates, path, piece.isWhite, true);
+                if (piece != null)
+                {
+                    return new ValidBoardMove(pinnedCell.Coordinates, potentialCell.Coordinates, path, piece.isWhite, true);
+                }
+                return null;
+                
             }
             else
             {

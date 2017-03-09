@@ -245,7 +245,7 @@ namespace SalisburyChessEngine.Board
                 {
                     return;
                 }
-                if (!cell.CurrentPiece.ValidMovesSet)
+                if (!cell.CurrentPiece.ValidMovesSet || (this.WhiteKing.IsChecked || this.BlackKing.IsChecked))
                 {
                     cell.CurrentPiece.CurrentCoordinates = cell.Coordinates;
                     cell.CurrentPiece.DetermineValidMoves(cell.Coordinates, this.CheckingBoardMove);
@@ -386,7 +386,21 @@ namespace SalisburyChessEngine.Board
         {
             for (var j = 1; j <= BoardProperties.Columns; j++)
             {
+                var cell = this[BoardProperties.Rows - rowNumber][j - 1];
+                if (Cell.HasPiece(cell))
+                {
+                    var piece = Cell.GetPiece(cell);
+                    if (piece.isWhite)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                    }
+                }
                 Console.Write(this[BoardProperties.Rows - rowNumber][j - 1].ToString() + " ");
+                Console.ForegroundColor = ConsoleColor.White;
             }
         }
         public void DisplayFooter()

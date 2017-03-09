@@ -277,7 +277,8 @@ namespace SalisburyChessEngine.Board
                     friendlyPieceList = getBlackPieceList();
                 }
 
-                if (filter == this.leftToParse[this.leftToParse.Length - 1])
+                if (filter == this.leftToParse[this.leftToParse.Length - 1] &&
+                    filter != 'x')
                 {
                     if (int.TryParse(filter.ToString(), out int rowNum))
                     {
