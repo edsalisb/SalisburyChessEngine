@@ -46,6 +46,8 @@ Network Trash Folder
 Temporary Items
 .apdisk
 .user
+/obj
+/bin
 /obj/Debug
 /bin/Debug
 /obj/x86/Debug

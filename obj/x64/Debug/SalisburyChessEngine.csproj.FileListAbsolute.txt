@@ -1,6 +1,0 @@
-C:\Repos\SalisburyChessEngine\bin\x64\Debug\ConsoleApplication.exe.config
-C:\Repos\SalisburyChessEngine\bin\x64\Debug\ConsoleApplication.exe
-C:\Repos\SalisburyChessEngine\bin\x64\Debug\ConsoleApplication.pdb
-C:\Repos\SalisburyChessEngine\obj\x64\Debug\SalisburyChessEngine.csprojResolveAssemblyReference.cache
-C:\Repos\SalisburyChessEngine\obj\x64\Debug\ConsoleApplication.exe
-C:\Repos\SalisburyChessEngine\obj\x64\Debug\ConsoleApplication.pdb

@@ -572,6 +572,10 @@ namespace SalisburyChessEngine.Pieces
 
         public void FilterMovesIfPinned(List<ValidBoardMove> pinnedMoves)
         {
+            if (pinnedMoves == null)
+            {
+                return;
+            }
             List<ValidBoardMove.MovePath> combinedMovePaths = new List<ValidBoardMove.MovePath>();
             var movePaths = pinnedMoves.Select(move => move.Path).ToList();
             foreach(var path in movePaths)
