@@ -41,7 +41,7 @@ namespace SalisburyChessEngine.Pieces
         public string CurrentCoordinates { get; set; }
         public bool isWhite;
         public abstract void AddToValidMoves(string coords);
-        public abstract void DetermineValidMoves(string coords, ValidBoardMove checkingMove);
+        public abstract void DetermineValidMoves(string coords, ValidBoardMove checkingMove, List<ValidBoardMove> pinnedMoves);
         public King EnemyKing { get; set; }
         public bool ValidMovesSet { get; set; } = false;
 
@@ -363,9 +363,9 @@ namespace SalisburyChessEngine.Pieces
             var startingCell = getCell(coords);
             return ExecuteFunctionOnCellsUpRight(startingCell, DetermineIfCellValid);
         }
-        private ValidBoardMove DetermineIfCellValid(Cell fromCell, Cell toCell, ValidBoardMove.MovePath path)
+        public ValidBoardMove DetermineIfCellValid(Cell fromCell, Cell toCell, ValidBoardMove.MovePath path)
         {
-            ValidNotationProperties validMoveProps = this.CellIsValidForPiece(fromCell, toCell);
+            ValidNotationProperties validMoveProps = this.CellIsValid(fromCell, toCell);
             var move = new ValidBoardMove(fromCell.Coordinates, toCell.Coordinates, path, this.isWhite);
 
             if (validMoveProps.IsValid || validMoveProps.IsProtected)
@@ -422,17 +422,17 @@ namespace SalisburyChessEngine.Pieces
                 if (piece.TypeOfPiece == PieceType.Rook)
                 {
                     var rook = (Rook)piece;
-                    rook.DetermineValidMoves(rook.CurrentCoordinates, test);
+                    rook.DetermineValidMoves(rook.CurrentCoordinates, null, test);
                 }
                 else if (piece.TypeOfPiece == PieceType.Bishop)
                 {
                     var bishop = (Bishop)piece;
-                    bishop.DetermineValidMoves(bishop.CurrentCoordinates, test);
+                    bishop.DetermineValidMoves(bishop.CurrentCoordinates,null, test);
                 }
                 else if (piece.TypeOfPiece == PieceType.Pawn)
                 {
                     var pawn = (Pawn)piece;
-                    pawn.DetermineValidMoves(pawn.CurrentCoordinates, test);
+                    pawn.DetermineValidMoves(pawn.CurrentCoordinates,null, test);
                 }
                 else if (piece.TypeOfPiece == PieceType.King)
                 {
@@ -441,12 +441,12 @@ namespace SalisburyChessEngine.Pieces
                 else if (piece.TypeOfPiece == PieceType.Queen)
                 {
                     var queen = (Queen)piece;
-                    queen.DetermineValidMoves(queen.CurrentCoordinates, test);
+                    queen.DetermineValidMoves(queen.CurrentCoordinates, null,test);
                 }
                 else if (piece.TypeOfPiece == PieceType.Knight)
                 {
                     var knight = (Knight)piece;
-                    knight.DetermineValidMoves(knight.CurrentCoordinates, test);
+                    knight.DetermineValidMoves(knight.CurrentCoordinates, null,test);
                 }
             }
         }
@@ -474,7 +474,7 @@ namespace SalisburyChessEngine.Pieces
             
         }
 
-        public ValidNotationProperties CellIsValidForPiece(Cell fromCell, Cell toCell)
+        public ValidNotationProperties CellIsValid(Cell fromCell, Cell toCell)
         {
             var validMoveProps = new ValidNotationProperties();
             return validMoveProps.DetermineMoveProperties(fromCell, toCell);

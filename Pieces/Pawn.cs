@@ -14,14 +14,14 @@ namespace SalisburyChessEngine.Pieces
             this.TypeOfPiece = PieceType.Pawn;
         }
 
-        public override void DetermineValidMoves(string coords, ValidBoardMove checkingMove)
+        public override void DetermineValidMoves(string coords, ValidBoardMove checkingMove, List<ValidBoardMove> pinnedMoves)
         {
             ValidMoves = new List<ValidBoardMove>();
             PiecePressure = new List<ValidBoardMove>();
 
             this.AddToValidMoves(coords);
-
             this.FilterMovesIfChecked(checkingMove);
+            this.FilterMovesIfPinned(pinnedMoves);
 
         }
 
@@ -53,20 +53,21 @@ namespace SalisburyChessEngine.Pieces
             if (startingCell.Row == 2)
             {
                 var twoRowsForwardCell = getCell(startingCell.ColumnLetter.ToString() + (startingCell.Row + 2));
-                if (CellIsValidForPawn(startingCell, twoRowsForwardCell))
+                var twoCellsForwardMove = DetermineIfCellValid(startingCell, twoRowsForwardCell, ValidBoardMove.MovePath.Up);
+                if (twoCellsForwardMove.MoveProperties.IsValid)
                 {
-                    var moveProperty = new ValidBoardMove(coords, twoRowsForwardCell.Coordinates, ValidBoardMove.MovePath.Up, this.isWhite);
-                    this.ValidMoves.Add(moveProperty);
+                    this.ValidMoves.Add(twoCellsForwardMove);
                 }
             }
 
             //checking one row forward
             var oneRowForwardCell = getCell(startingCell.ColumnLetter.ToString() + (startingCell.Row + 1));
-            if (CellIsValidForPawn(startingCell, oneRowForwardCell))
+            var oneCellForwardMove = DetermineIfCellValid(startingCell, oneRowForwardCell, ValidBoardMove.MovePath.Up);
+            if (oneCellForwardMove.MoveProperties.IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, oneRowForwardCell.Coordinates, ValidBoardMove.MovePath.Up, this.isWhite);
-                this.ValidMoves.Add(moveProperty);
+                this.ValidMoves.Add(oneCellForwardMove);
             }
+
 
             //checking cells 1U1L and 1U1R for an enemy piece to take
             var leftColumnLetter = GetColumnLetter(startingCell, -1);
@@ -77,18 +78,10 @@ namespace SalisburyChessEngine.Pieces
                 var oneUoneLCell = getCell(leftColumnLetter.ToString() + (startingCell.Row + 1));
                 if (Cell.IsNotNull(oneUoneLCell))
                 {
-                    var moveProperty = new ValidBoardMove(coords, oneUoneLCell.Coordinates, ValidBoardMove.MovePath.UpLeft, this.isWhite);
-                    if (Cell.HasPiece(oneUoneLCell))
+                    var oneUoneLMove = DetermineIfCellValid(startingCell, oneUoneLCell, ValidBoardMove.MovePath.UpLeft);
+                    if (oneUoneLMove.MoveProperties.IsValid)
                     {
-                        if (startingCell.CurrentPiece.isWhite != oneUoneLCell.CurrentPiece.isWhite)
-                        {
-                            this.ValidMoves.Add(moveProperty);
-                            this.PiecePressure.Add(moveProperty);
-                        }
-                    }
-                    else
-                    {
-                        this.PiecePressure.Add(moveProperty);
+                        this.ValidMoves.Add(oneUoneLMove);
                     }
                 }
                
@@ -98,18 +91,10 @@ namespace SalisburyChessEngine.Pieces
                 var oneUoneRCell = getCell(rightColumnLetter.ToString() + (startingCell.Row + 1));
                 if (Cell.IsNotNull(oneUoneRCell))
                 {
-                    var moveProperty = new ValidBoardMove(coords, oneUoneRCell.Coordinates, ValidBoardMove.MovePath.UpLeft, this.isWhite);
-                    if (Cell.HasPiece(oneUoneRCell))
+                    var oneUoneRMove = DetermineIfCellValid(startingCell, oneUoneRCell, ValidBoardMove.MovePath.UpRight);
+                    if (oneUoneRMove.MoveProperties.IsValid)
                     {
-                        if (startingCell.CurrentPiece.isWhite != oneUoneRCell.CurrentPiece.isWhite)
-                        {
-                            this.ValidMoves.Add(moveProperty);
-                            this.PiecePressure.Add(moveProperty);
-                        }
-                    }
-                    else
-                    {
-                        this.PiecePressure.Add(moveProperty);
+                        this.ValidMoves.Add(oneUoneRMove);
                     }
                 }
             }
@@ -121,19 +106,19 @@ namespace SalisburyChessEngine.Pieces
             if (startingCell.Row == 7)
             {
                 var twoRowsForwardCell = getCell(startingCell.ColumnLetter.ToString() + (startingCell.Row - 2));
-                if (CellIsValidForPawn(startingCell, twoRowsForwardCell))
+                var twoCellsForwardMove = DetermineIfCellValid(startingCell, twoRowsForwardCell, ValidBoardMove.MovePath.Down);
+                if (twoCellsForwardMove.MoveProperties.IsValid)
                 {
-                    var moveProperty = new ValidBoardMove(coords, twoRowsForwardCell.Coordinates, ValidBoardMove.MovePath.Down, this.isWhite);
-                    this.ValidMoves.Add(moveProperty);
+                    this.ValidMoves.Add(twoCellsForwardMove);
                 }
             }
 
             //checking one row forward
             var oneRowForwardCell = getCell(startingCell.ColumnLetter.ToString() + (startingCell.Row - 1));
-            if (CellIsValidForPawn(startingCell, oneRowForwardCell))
+            var oneCellForwardMove = DetermineIfCellValid(startingCell, oneRowForwardCell, ValidBoardMove.MovePath.Down);
+            if (oneCellForwardMove.MoveProperties.IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, oneRowForwardCell.Coordinates, ValidBoardMove.MovePath.Down, this.isWhite);
-                this.ValidMoves.Add(moveProperty);
+                this.ValidMoves.Add(oneCellForwardMove);
             }
 
             //checking cells 1U1L and 1U1R for an enemy piece to take
@@ -145,18 +130,10 @@ namespace SalisburyChessEngine.Pieces
                 var oneUoneLCell = getCell(leftColumnLetter.ToString() + (startingCell.Row - 1));
                 if (Cell.IsNotNull(oneUoneLCell))
                 {
-                    var moveProperty = new ValidBoardMove(coords, oneUoneLCell.Coordinates, ValidBoardMove.MovePath.UpLeft, this.isWhite);
-                    if (Cell.HasPiece(oneUoneLCell))
+                    var oneUoneLMove = DetermineIfCellValid(startingCell, oneUoneLCell, ValidBoardMove.MovePath.DownLeft);
+                    if (oneUoneLMove.MoveProperties.IsValid)
                     {
-                        if (startingCell.CurrentPiece.isWhite != oneUoneLCell.CurrentPiece.isWhite)
-                        {
-                            this.ValidMoves.Add(moveProperty);
-                            this.PiecePressure.Add(moveProperty);
-                        }
-                    }
-                    else
-                    {
-                        this.PiecePressure.Add(moveProperty);
+                        this.ValidMoves.Add(oneUoneLMove);
                     }
                 }
 
@@ -166,39 +143,16 @@ namespace SalisburyChessEngine.Pieces
                 var oneUoneRCell = getCell(rightColumnLetter.ToString() + (startingCell.Row - 1));
                 if (Cell.IsNotNull(oneUoneRCell))
                 {
-                    var moveProperty = new ValidBoardMove(coords, oneUoneRCell.Coordinates, ValidBoardMove.MovePath.UpLeft, this.isWhite);
-                    if (Cell.HasPiece(oneUoneRCell))
+                    var oneUoneRMove = DetermineIfCellValid(startingCell, oneUoneRCell, ValidBoardMove.MovePath.DownRight);
+                    if (oneUoneRMove.MoveProperties.IsValid)
                     {
-                        if (startingCell.CurrentPiece.isWhite != oneUoneRCell.CurrentPiece.isWhite)
-                        {
-                            this.ValidMoves.Add(moveProperty);
-                            this.PiecePressure.Add(moveProperty);
-                        }
-                    }
-                    else
-                    {
-                        this.PiecePressure.Add(moveProperty);
+                        this.ValidMoves.Add(oneUoneRMove);
                     }
                 }
             }
         }
 
-        private bool CellIsValidForPawn(Cell fromCell, Cell toCell)
-        {
-            if (fromCell == null)
-            {
-                return false;
-            }
-            if (toCell == null)
-            {
-                return false;
-            }
-            if (toCell.CurrentPiece == null)
-            {
-                return true;
-            }
-            return false;
-        }
+       
         public override string ToString()
         {
             return "P";

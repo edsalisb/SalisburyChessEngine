@@ -11,21 +11,17 @@ namespace SalisburyChessEngine.Pieces
         {
             this.TypeOfPiece = PieceType.Knight;
         }
-        public override void DetermineValidMoves(string coords, ValidBoardMove checkingMove)
+        public override void DetermineValidMoves(string coords, ValidBoardMove checkingMove, List<ValidBoardMove> pinnedMoves)
         {
             ValidMoves = new List<ValidBoardMove>();
             PiecePressure = new List<ValidBoardMove>();
             AddToValidMoves(coords);
 
             this.FilterMovesIfChecked(checkingMove);
+            this.FilterMovesIfPinned(pinnedMoves);
 
         }
-        public void DetermineValidMoves(string coords, List<ValidBoardMove> pinnedMoves)
-        {
-            ValidMoves = new List<ValidBoardMove>();
-            PiecePressure = new List<ValidBoardMove>();
-            AddToValidMoves(coords);
-        }
+       
 
         public override void AddToValidMoves(string coords)
         {
@@ -47,42 +43,42 @@ namespace SalisburyChessEngine.Pieces
             var oneUpTwoLeftCell = this.getCell(twoColumnsLeft.ToString() + (currentCell.Row + 1));
 
 
-            if (CellIsValidForPiece(currentCell, twoUpOneLeftCell).IsValid)
+            if (CellIsValid(currentCell, twoUpOneLeftCell).IsValid)
             {
                 var moveProperty = new ValidBoardMove(coords, twoUpOneLeftCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
-            if (CellIsValidForPiece(currentCell, twoUpOneRightCell).IsValid)
+            if (CellIsValid(currentCell, twoUpOneRightCell).IsValid)
             {
                 var moveProperty = new ValidBoardMove(coords, twoUpOneRightCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
-            if (CellIsValidForPiece(currentCell, oneUpTwoRightCell).IsValid)
+            if (CellIsValid(currentCell, oneUpTwoRightCell).IsValid)
             {
                 var moveProperty = new ValidBoardMove(coords, oneUpTwoRightCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
-            if (CellIsValidForPiece(currentCell, oneDownTwoRightCell).IsValid)
+            if (CellIsValid(currentCell, oneDownTwoRightCell).IsValid)
             {
                 var moveProperty = new ValidBoardMove(coords, oneDownTwoRightCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
-            if (CellIsValidForPiece(currentCell, twoDownOneRightCell).IsValid)
+            if (CellIsValid(currentCell, twoDownOneRightCell).IsValid)
             {
                 var moveProperty = new ValidBoardMove(coords, twoDownOneRightCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
-            if (CellIsValidForPiece(currentCell, twoDownOneLeftCell).IsValid)
+            if (CellIsValid(currentCell, twoDownOneLeftCell).IsValid)
             {
                 var moveProperty = new ValidBoardMove(coords, twoDownOneLeftCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
-            if (CellIsValidForPiece(currentCell, oneDownTwoLeftCell).IsValid)
+            if (CellIsValid(currentCell, oneDownTwoLeftCell).IsValid)
             {
                 var moveProperty = new ValidBoardMove(coords, oneDownTwoLeftCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
-            if (CellIsValidForPiece(currentCell, oneUpTwoLeftCell).IsValid)
+            if (CellIsValid(currentCell, oneUpTwoLeftCell).IsValid)
             {
                 var moveProperty = new ValidBoardMove(coords, oneUpTwoLeftCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
                 this.ValidMoves.Add(moveProperty);

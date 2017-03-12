@@ -47,7 +47,7 @@ namespace SalisburyChessEngine.Pieces
             return "K";
         }
 
-        public override void DetermineValidMoves(string coords, ValidBoardMove checkingMove)
+        public override void DetermineValidMoves(string coords, ValidBoardMove checkingMove, List<ValidBoardMove> pinnedMove)
         {
             return;
         }

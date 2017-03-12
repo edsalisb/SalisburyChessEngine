@@ -51,7 +51,11 @@ namespace SalisburyChessEngine
 
                 Console.WriteLine("Move:");
                 string algebraicCoord = Console.ReadLine();
-               
+                if(algebraicCoord == "-print")
+                {
+                    this.PrintMoves();
+                    continue;
+                }
                 if (this.cb.TryMovePiece(algebraicCoord, out Move move))
                 {
                     this.MostRecentMove = move;
@@ -67,6 +71,23 @@ namespace SalisburyChessEngine
                     Console.WriteLine("Invalid Move entered");
                 }
             }
+        }
+
+        private void PrintMoves()
+        {
+            var turnCount = 1;
+            for (var i = 0; i < this.moveList.Count; i++)
+            {
+                var move = this.moveList[i];
+                if (i % 2 == 0)
+                {
+                    //1. 2. 3. 
+                    Console.Write(turnCount.ToString() + ". ");
+                    turnCount++;
+                }
+                Console.Write(move.AlgebraicCoord + " ");
+            }
+            Console.WriteLine();
         }
 
         public void CheckIfCheckMateOccurred(Pieces.King k, EventArgs e)

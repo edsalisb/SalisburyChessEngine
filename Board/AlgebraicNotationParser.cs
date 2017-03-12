@@ -179,7 +179,7 @@ namespace SalisburyChessEngine.Board
             {
                 this.board.ReplacePiece(potentialMove);
                 var piece = this.board.GetCell(potentialMove.CellTo.Coordinates).CurrentPiece;
-                piece.DetermineValidMoves(potentialMove.CellTo.Coordinates, null);
+                piece.DetermineValidMoves(potentialMove.CellTo.Coordinates, null, null);
 
                 var validMoveCoords = piece.ValidMoves.Select(GeneralUtilities.SelectCoordinates).ToList();
                 if ((this.board.IsWhitesTurn && validMoveCoords.IndexOf(this.board.BlackKing.CurrentCoordinates) == -1) ||
@@ -189,7 +189,7 @@ namespace SalisburyChessEngine.Board
                 }
                 this.board.Rollback(potentialMove);
                 piece = this.board.GetCell(potentialMove.CellFrom.Coordinates).CurrentPiece;
-                piece.DetermineValidMoves(potentialMove.CellFrom.Coordinates, null);
+                piece.DetermineValidMoves(potentialMove.CellFrom.Coordinates, null, null);
 
             }
            
@@ -375,8 +375,13 @@ namespace SalisburyChessEngine.Board
                     if (lastTwoLetters[1] == '4')
                     {
                         var whiteInitialCell = this.board.GetCell(lastTwoLetters[0] + '2'.ToString());
+                        if (!Cell.HasPiece(whiteInitialCell))
+                        {
+                            return;
+                        }
                         this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(whiteInitialCell, this.potentialMove.CellTo);
-                        if (this.validMoveProperties.IsValid && whiteInitialCell.CurrentPiece.ValidMoves.Count > 0)
+                        if (this.validMoveProperties.IsValid && whiteInitialCell.CurrentPiece.ValidMoves.Count > 0 &&
+                            whiteInitialCell.CurrentPiece.isWhite == potentialMove.IsWhitesTurn)
                         {
                             this.potentialMove.CellFrom = whiteInitialCell;
                             this.potentialMove.IsValid = true;
@@ -385,7 +390,8 @@ namespace SalisburyChessEngine.Board
 
                         var whiteOneRow = this.board.GetCell(lastTwoLetters[0] + '3'.ToString());
                         this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(whiteOneRow, this.potentialMove.CellTo);
-                        if (this.validMoveProperties.IsValid && whiteOneRow.CurrentPiece.ValidMoves.Count > 0)
+                        if (this.validMoveProperties.IsValid && whiteOneRow.CurrentPiece.ValidMoves.Count > 0 &&
+                            whiteInitialCell.CurrentPiece.isWhite == potentialMove.IsWhitesTurn)
                         {
                             this.potentialMove.CellFrom = whiteOneRow;
                             this.potentialMove.IsValid = true;
@@ -398,7 +404,8 @@ namespace SalisburyChessEngine.Board
                         {
                             var potentialCellFrom = this.board.GetCell(lastTwoLetters[0] + (rowNum - 1).ToString());
                             this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(potentialCellFrom, this.potentialMove.CellTo);
-                            if (this.validMoveProperties.IsValid && potentialCellFrom.CurrentPiece.ValidMoves.Count > 0)
+                            if (this.validMoveProperties.IsValid && potentialCellFrom.CurrentPiece.ValidMoves.Count > 0 &&
+                                potentialCellFrom.CurrentPiece.isWhite == this.potentialMove.IsWhitesTurn)
                             {
                                 this.potentialMove.CellFrom = potentialCellFrom;
                                 this.potentialMove.IsValid = true;
@@ -418,8 +425,13 @@ namespace SalisburyChessEngine.Board
                     if (lastTwoLetters[1] == '5')
                     {
                         var blackInitialCell = this.board.GetCell(lastTwoLetters[0] + '7'.ToString());
+                        if (!Cell.HasPiece(blackInitialCell))
+                        {
+                            return;
+                        }
                         this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(blackInitialCell, this.potentialMove.CellTo);
-                        if (this.validMoveProperties.IsValid && blackInitialCell.CurrentPiece.ValidMoves.Count > 0)
+                        if (this.validMoveProperties.IsValid && blackInitialCell.CurrentPiece.ValidMoves.Count > 0 &&
+                                blackInitialCell.CurrentPiece.isWhite == this.potentialMove.IsWhitesTurn)
                         {
                             this.potentialMove.CellFrom = blackInitialCell;
                             this.potentialMove.IsValid = true;
@@ -428,7 +440,8 @@ namespace SalisburyChessEngine.Board
 
                         var whiteOneRow = this.board.GetCell(lastTwoLetters[0] + '6'.ToString());
                         this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(whiteOneRow, this.potentialMove.CellTo);
-                        if (this.validMoveProperties.IsValid && whiteOneRow.CurrentPiece.ValidMoves.Count > 0)
+                        if (this.validMoveProperties.IsValid && whiteOneRow.CurrentPiece.ValidMoves.Count > 0 &&
+                            blackInitialCell.CurrentPiece.isWhite == this.potentialMove.IsWhitesTurn)
                         {
                             this.potentialMove.CellFrom = whiteOneRow;
                             this.potentialMove.IsValid = true;
@@ -441,7 +454,8 @@ namespace SalisburyChessEngine.Board
                         {
                             var potentialCellFrom = this.board.GetCell(lastTwoLetters[0] + (rowNum + 1).ToString());
                             this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(potentialCellFrom, this.potentialMove.CellTo);
-                            if (this.validMoveProperties.IsValid && potentialCellFrom.CurrentPiece.ValidMoves.Count > 0)
+                            if (this.validMoveProperties.IsValid && potentialCellFrom.CurrentPiece.ValidMoves.Count > 0 &&
+                                potentialCellFrom.CurrentPiece.isWhite == this.potentialMove.IsWhitesTurn)
                             {
                                 this.potentialMove.CellFrom = potentialCellFrom;
                                 this.potentialMove.IsValid = true;

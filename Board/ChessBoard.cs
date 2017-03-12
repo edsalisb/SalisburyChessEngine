@@ -248,7 +248,7 @@ namespace SalisburyChessEngine.Board
                 if (!cell.CurrentPiece.ValidMovesSet || (this.WhiteKing.IsChecked || this.BlackKing.IsChecked))
                 {
                     cell.CurrentPiece.CurrentCoordinates = cell.Coordinates;
-                    cell.CurrentPiece.DetermineValidMoves(cell.Coordinates, this.CheckingBoardMove);
+                    cell.CurrentPiece.DetermineValidMoves(cell.Coordinates, this.CheckingBoardMove, null);
                 }
             }
         }

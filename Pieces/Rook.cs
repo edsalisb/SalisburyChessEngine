@@ -17,21 +17,15 @@ namespace SalisburyChessEngine.Pieces
         }
         
 
-        public override void DetermineValidMoves(string coords, ValidBoardMove checkingMove)
+        public override void DetermineValidMoves(string coords, ValidBoardMove checkingMove, List<ValidBoardMove> pinnedMoves)
         {
             ValidMoves = new List<ValidBoardMove>();
             PiecePressure = new List<ValidBoardMove>();
             this.AddToValidMoves(coords);
 
             this.FilterMovesIfChecked(checkingMove);
+            this.FilterMovesIfPinned(pinnedMoves);
             
-        }
-
-        public void DetermineValidMoves(string coords, List<ValidBoardMove> filterCells)
-        {
-            ValidMoves = new List<ValidBoardMove>();
-            PiecePressure = new List<ValidBoardMove>();
-            this.AddToValidMoves(coords);
         }
         public override void AddToValidMoves(string coords)
         {
