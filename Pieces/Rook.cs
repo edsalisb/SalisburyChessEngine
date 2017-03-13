@@ -21,11 +21,12 @@ namespace SalisburyChessEngine.Pieces
         {
             ValidMoves = new List<ValidBoardMove>();
             PiecePressure = new List<ValidBoardMove>();
-            this.AddToValidMoves(coords);
-
-            this.FilterMovesIfChecked(checkingMove);
-            this.FilterMovesIfPinned(pinnedMoves);
-            
+            if (!this.ValidMovesSet)
+            {
+                this.AddToValidMoves(coords);
+                this.FilterMovesIfChecked(checkingMove);
+                this.FilterMovesIfPinned(pinnedMoves);
+            }
         }
         public override void AddToValidMoves(string coords)
         {

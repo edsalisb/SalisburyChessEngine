@@ -304,7 +304,7 @@ namespace SalisburyChessEngine.Pieces
                         if (move == null)
                         {
                             row++;
-                            break;
+                            continue;
                         }
                         
                         moveList.Add(move);
@@ -414,41 +414,62 @@ namespace SalisburyChessEngine.Pieces
                 default:
                     break;
             }
-            List<bool> arePinned = test.Select(x => x.IsPinningMove).Where(x => x == true).ToList();
+            List<ValidBoardMove> arePinned = test.Where(x => x.IsPinningMove == true && x.CoordinatesTo == EnemyKing.CurrentCoordinates).ToList();
             if (arePinned.Count == 1)
             {
-                // we are absolutely pinned hgere
-                var piece= Cell.GetPiece(this.PinnedCell);
-                if (piece.TypeOfPiece == PieceType.Rook)
+                var movesOnPath = FindPiecesBetween(arePinned[0]);
+                var filteredMoves = movesOnPath.Where(IsPieceColorSameAsSelf).ToList();
+
+                if (filteredMoves.Count == 1)
                 {
-                    var rook = (Rook)piece;
-                    rook.DetermineValidMoves(rook.CurrentCoordinates, null, test);
-                }
-                else if (piece.TypeOfPiece == PieceType.Bishop)
-                {
-                    var bishop = (Bishop)piece;
-                    bishop.DetermineValidMoves(bishop.CurrentCoordinates,null, test);
-                }
-                else if (piece.TypeOfPiece == PieceType.Pawn)
-                {
-                    var pawn = (Pawn)piece;
-                    pawn.DetermineValidMoves(pawn.CurrentCoordinates,null, test);
-                }
-                else if (piece.TypeOfPiece == PieceType.King)
-                {
-                    throw new NotImplementedException();
-                }
-                else if (piece.TypeOfPiece == PieceType.Queen)
-                {
-                    var queen = (Queen)piece;
-                    queen.DetermineValidMoves(queen.CurrentCoordinates, null,test);
-                }
-                else if (piece.TypeOfPiece == PieceType.Knight)
-                {
-                    var knight = (Knight)piece;
-                    knight.DetermineValidMoves(knight.CurrentCoordinates, null,test);
+
+                    // we are absolutely pinned hgere
+                    var piece = Cell.GetPiece(this.PinnedCell);
+                    if (piece.TypeOfPiece == PieceType.Rook)
+                    {
+                        var rook = (Rook)piece;
+                        rook.DetermineValidMoves(rook.CurrentCoordinates, null, test);
+                    }
+                    else if (piece.TypeOfPiece == PieceType.Bishop)
+                    {
+                        var bishop = (Bishop)piece;
+                        bishop.DetermineValidMoves(bishop.CurrentCoordinates, null, test);
+                    }
+                    else if (piece.TypeOfPiece == PieceType.Pawn)
+                    {
+                        var pawn = (Pawn)piece;
+                        pawn.DetermineValidMoves(pawn.CurrentCoordinates, null, test);
+                    }
+                    else if (piece.TypeOfPiece == PieceType.King)
+                    {
+                        throw new NotImplementedException();
+                    }
+                    else if (piece.TypeOfPiece == PieceType.Queen)
+                    {
+                        var queen = (Queen)piece;
+                        queen.DetermineValidMoves(queen.CurrentCoordinates, null, test);
+                    }
+                    else if (piece.TypeOfPiece == PieceType.Knight)
+                    {
+                        var knight = (Knight)piece;
+                        knight.DetermineValidMoves(knight.CurrentCoordinates, null, test);
+                    }
                 }
             }
+        }
+
+        private bool IsPieceColorSameAsSelf(ValidBoardMove move)
+        {
+            var cell = this.getCell(move.CoordinatesFrom);
+            if (Cell.HasPiece(cell))
+            {
+                var piece = Cell.GetPiece(cell);
+                if (piece.isWhite != isWhite)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private ValidBoardMove DetermineIfCellPinned(Cell pinnedCell, Cell potentialCell, ValidBoardMove.MovePath path)
@@ -489,42 +510,83 @@ namespace SalisburyChessEngine.Pieces
             return null;
         }
 
-        public  List<ValidBoardMove> FindAttackPath(ValidBoardMove checkMove)
+        public List<ValidBoardMove> FindPiecesBetween(ValidBoardMove move)
         {
-            var returnList = new List<ValidBoardMove>();
-            switch (checkMove.Path)
+            var cell = this.getCell(move.CoordinatesFrom);
+            var moves = new List<ValidBoardMove>();
+            switch (move.Path)
             {
                 case ValidBoardMove.MovePath.Down:
-                    returnList = GetValidCellsUp(checkMove.CoordinatesTo);
+                    moves = ExecuteFunctionOnCellsDown(cell, DetermineAllCellsOnPath);
                     break;
                 case ValidBoardMove.MovePath.Up:
-                    returnList = GetValidCellsDown(checkMove.CoordinatesTo);
-                    break;
-                case ValidBoardMove.MovePath.Left:
-                    returnList = GetValidCellsDownRight(checkMove.CoordinatesTo);
+                    moves = ExecuteFunctionOnCellsUp(cell, DetermineAllCellsOnPath);
                     break;
                 case ValidBoardMove.MovePath.Right:
-                    returnList = GetValidCellsLeft(checkMove.CoordinatesTo);
+                    moves = ExecuteFunctionOnCellsToRight(cell, DetermineAllCellsOnPath);
                     break;
-                case ValidBoardMove.MovePath.UpLeft:
-                    returnList = GetValidCellsDownRight(checkMove.CoordinatesTo);
-                    break;
-                case ValidBoardMove.MovePath.UpRight:
-                    returnList = GetValidCellsDownLeft(checkMove.CoordinatesTo);
+                case ValidBoardMove.MovePath.Left:
+                    moves = ExecuteFunctionOnCellsToLeft(cell, DetermineAllCellsOnPath);
                     break;
                 case ValidBoardMove.MovePath.DownLeft:
-                    returnList = GetValidCellsUpRight(checkMove.CoordinatesTo);
+                    moves = ExecuteFunctionOnCellsDownLeft(cell, DetermineAllCellsOnPath);
                     break;
                 case ValidBoardMove.MovePath.DownRight:
-                    returnList = GetValidCellsUpLeft(checkMove.CoordinatesTo);
+                    moves = ExecuteFunctionOnCellsDownRight(cell, DetermineAllCellsOnPath);
+                    break;
+                case ValidBoardMove.MovePath.UpLeft:
+                    moves = ExecuteFunctionOnCellsUpLeft(cell, DetermineAllCellsOnPath);
+                    break;
+                case ValidBoardMove.MovePath.UpRight:
+                    moves = ExecuteFunctionOnCellsUpRight(cell, DetermineAllCellsOnPath);
+                    break;
+                default:
+                    break;
+            }
+
+            return moves;
+        }
+
+        private ValidBoardMove DetermineAllCellsOnPath(Cell fromCell, Cell toCell, ValidBoardMove.MovePath path)
+        {
+            return new ValidBoardMove(fromCell.Coordinates, toCell.Coordinates, path, isWhite);
+        }
+
+        public  List<ValidBoardMove> FindAttackPath(ValidBoardMove boardPath)
+        {
+            var returnList = new List<ValidBoardMove>();
+            switch (boardPath.Path)
+            {
+                case ValidBoardMove.MovePath.Down:
+                    returnList = GetValidCellsUp(boardPath.CoordinatesTo);
+                    break;
+                case ValidBoardMove.MovePath.Up:
+                    returnList = GetValidCellsDown(boardPath.CoordinatesTo);
+                    break;
+                case ValidBoardMove.MovePath.Left:
+                    returnList = GetValidCellsDownRight(boardPath.CoordinatesTo);
+                    break;
+                case ValidBoardMove.MovePath.Right:
+                    returnList = GetValidCellsLeft(boardPath.CoordinatesTo);
+                    break;
+                case ValidBoardMove.MovePath.UpLeft:
+                    returnList = GetValidCellsDownRight(boardPath.CoordinatesTo);
+                    break;
+                case ValidBoardMove.MovePath.UpRight:
+                    returnList = GetValidCellsDownLeft(boardPath.CoordinatesTo);
+                    break;
+                case ValidBoardMove.MovePath.DownLeft:
+                    returnList = GetValidCellsUpRight(boardPath.CoordinatesTo);
+                    break;
+                case ValidBoardMove.MovePath.DownRight:
+                    returnList = GetValidCellsUpLeft(boardPath.CoordinatesTo);
                     break;
                 default:
                     break;
 
             }
-            return returnList.Where(move => MovesAreBetweenCheckMovePath(move, checkMove)).ToList();
+            return returnList.Where(move => MovesAreBetweenCheckMovePath(move, boardPath)).ToList();
         }
-
         private bool MovesAreBetweenCheckMovePath(ValidBoardMove move, ValidBoardMove checkMove)
         {
             var checkCoordsTo = checkMove.CoordinatesTo;
