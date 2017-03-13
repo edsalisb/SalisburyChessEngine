@@ -460,7 +460,7 @@ namespace SalisburyChessEngine.Pieces
 
         private bool IsPieceColorSameAsSelf(ValidBoardMove move)
         {
-            var cell = this.getCell(move.CoordinatesFrom);
+            var cell = this.getCell(move.CoordinatesTo);
             if (Cell.HasPiece(cell))
             {
                 var piece = Cell.GetPiece(cell);

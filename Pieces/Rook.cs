@@ -21,11 +21,13 @@ namespace SalisburyChessEngine.Pieces
         {
             ValidMoves = new List<ValidBoardMove>();
             PiecePressure = new List<ValidBoardMove>();
-            if (!this.ValidMovesSet)
+            if (!this.ValidMovesSet || checkingMove != null || pinnedMoves != null)
             {
                 this.AddToValidMoves(coords);
                 this.FilterMovesIfChecked(checkingMove);
                 this.FilterMovesIfPinned(pinnedMoves);
+
+                this.ValidMovesSet = true;
             }
         }
         public override void AddToValidMoves(string coords)
@@ -39,8 +41,6 @@ namespace SalisburyChessEngine.Pieces
             this.ValidMoves.AddRange(leftCells);
             this.ValidMoves.AddRange(rightCells);
             this.ValidMoves.AddRange(upCells);
-
-            this.ValidMovesSet = true;
         }
         public override string ToString()
         {
