@@ -380,21 +380,21 @@ namespace SalisburyChessEngine.Board
                     if (lastTwoLetters[1] == '4')
                     {
                         var whiteInitialCell = this.board.GetCell(lastTwoLetters[0] + '2'.ToString());
-                        if (!Cell.HasPiece(whiteInitialCell))
-                        {
-                            return;
-                        }
+                        
                         this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(whiteInitialCell, this.potentialMove.CellTo);
 
                         if (this.validMoveProperties.IsValid)
                         {
                             var piece = Cell.GetPiece(whiteInitialCell);
-                            List<string> validMoveCoords = piece.ValidMoves.Select(GeneralUtilities.SelectCoordinates).ToList();
-                            if (validMoveCoords.IndexOf(this.potentialMove.CellTo.Coordinates) > -1)
+                            if (piece != null)
                             {
-                                this.potentialMove.CellFrom = whiteInitialCell;
-                                this.potentialMove.IsValid = true;
-                                return;
+                                List<string> validMoveCoords = piece.ValidMoves.Select(GeneralUtilities.SelectCoordinates).ToList();
+                                if (validMoveCoords.IndexOf(this.potentialMove.CellTo.Coordinates) > -1)
+                                {
+                                    this.potentialMove.CellFrom = whiteInitialCell;
+                                    this.potentialMove.IsValid = true;
+                                    return;
+                                }
                             }
                         }
 
@@ -402,13 +402,16 @@ namespace SalisburyChessEngine.Board
                         this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(whiteOneRow, this.potentialMove.CellTo);
                         if (this.validMoveProperties.IsValid)
                         {
-                            var piece = Cell.GetPiece(whiteInitialCell);
-                            List<string> validMoveCoords = piece.ValidMoves.Select(GeneralUtilities.SelectCoordinates).ToList();
-                            if (validMoveCoords.IndexOf(this.potentialMove.CellTo.Coordinates) > -1)
+                            var piece = Cell.GetPiece(whiteOneRow);
+                            if (piece != null)
                             {
-                                this.potentialMove.CellFrom = whiteOneRow;
-                                this.potentialMove.IsValid = true;
-                                return;
+                                List<string> validMoveCoords = piece.ValidMoves.Select(GeneralUtilities.SelectCoordinates).ToList();
+                                if (validMoveCoords.IndexOf(this.potentialMove.CellTo.Coordinates) > -1)
+                                {
+                                    this.potentialMove.CellFrom = whiteOneRow;
+                                    this.potentialMove.IsValid = true;
+                                    return;
+                                }
                             }
                         }
                     }
@@ -443,34 +446,37 @@ namespace SalisburyChessEngine.Board
                     if (lastTwoLetters[1] == '5')
                     {
                         var blackInitialCell = this.board.GetCell(lastTwoLetters[0] + '7'.ToString());
-                        if (!Cell.HasPiece(blackInitialCell))
-                        {
-                            return;
-                        }
+                        
                         this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(blackInitialCell, this.potentialMove.CellTo);
                         if (this.validMoveProperties.IsValid)
                         {
                             var piece = Cell.GetPiece(blackInitialCell);
-                            List<string> validMoveCoords = piece.ValidMoves.Select(GeneralUtilities.SelectCoordinates).ToList();
-                            if (validMoveCoords.IndexOf(this.potentialMove.CellTo.Coordinates) > -1)
+                            if (piece != null)
                             {
-                                this.potentialMove.CellFrom = blackInitialCell;
-                                this.potentialMove.IsValid = true;
-                                return;
+                                List<string> validMoveCoords = piece.ValidMoves.Select(GeneralUtilities.SelectCoordinates).ToList();
+                                if (validMoveCoords.IndexOf(this.potentialMove.CellTo.Coordinates) > -1)
+                                {
+                                    this.potentialMove.CellFrom = blackInitialCell;
+                                    this.potentialMove.IsValid = true;
+                                    return;
+                                }
                             }
                         }
 
-                        var whiteOneRow = this.board.GetCell(lastTwoLetters[0] + '6'.ToString());
-                        this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(whiteOneRow, this.potentialMove.CellTo);
+                        var blackOneRow = this.board.GetCell(lastTwoLetters[0] + '6'.ToString());
+                        this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(blackOneRow, this.potentialMove.CellTo);
                         if (this.validMoveProperties.IsValid)
                         {
-                            var piece = Cell.GetPiece(blackInitialCell);
-                            List<string> validMoveCoords = piece.ValidMoves.Select(GeneralUtilities.SelectCoordinates).ToList();
-                            if (validMoveCoords.IndexOf(this.potentialMove.CellTo.Coordinates) > -1)
+                            var piece = Cell.GetPiece(blackOneRow);
+                            if (piece != null)
                             {
-                                this.potentialMove.CellFrom = whiteOneRow;
-                                this.potentialMove.IsValid = true;
-                                return;
+                                List<string> validMoveCoords = piece.ValidMoves.Select(GeneralUtilities.SelectCoordinates).ToList();
+                                if (validMoveCoords.IndexOf(this.potentialMove.CellTo.Coordinates) > -1)
+                                {
+                                    this.potentialMove.CellFrom = blackOneRow;
+                                    this.potentialMove.IsValid = true;
+                                    return;
+                                }
                             }
                         }
                     }

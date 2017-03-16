@@ -126,7 +126,7 @@ namespace SalisburyChessEngine.Pieces
         {
             ValidBoardMove.MovePath path = ValidBoardMove.MovePath.Up;
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
-            for (var i = cell.Row; i < BoardProperties.Rows; i++)
+            for (var i = cell.Row; i <= BoardProperties.Rows; i++)
             {
                 var sequentialCell = getCell(cell.ColumnLetter.ToString() + i.ToString());
                 if (Cell.IsNotNull(sequentialCell))

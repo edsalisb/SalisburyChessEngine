@@ -16,11 +16,12 @@ namespace SalisburyChessEngine
             List<string> command = args.ToList();
             while (!command.Contains("-q")) 
             {
-                if (command.Contains("/help"))
+                if (command.Contains("-help"))
                 {
                     DisplayHelp();
                     continue;
                 }
+
                 var white = command.IndexOf("-white");
                 var black = command.IndexOf("-black");
                 if (white == -1)
@@ -50,6 +51,16 @@ namespace SalisburyChessEngine
                     command = Console.ReadLine().Split(' ').ToList();
                     continue;
                 }
+
+                //init fen parser -- need a way to import custom board states.
+
+                var fen = command.IndexOf("-fen");
+                if (fen > -1)
+                {
+                    var fenContents = command[fen + 1]; //important that we do not ToLower here. We need the exact string contents
+                    FENNotationPosition fnp = new FENNotationPosition(fenContents);
+                }
+
                 var Game = new Game(whiteMode, blackMode);
                 Game.Begin();
                 

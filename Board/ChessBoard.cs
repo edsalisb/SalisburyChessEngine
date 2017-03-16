@@ -16,7 +16,7 @@ namespace SalisburyChessEngine.Board
 
         public List<ValidBoardMove> BlackPiecePressure { get; set; }
         public List<ValidBoardMove> WhitePiecePressure { get; set; }
-   
+        
         public bool IsWhitesTurn { get;  set; }
 
         private AlgebraicNotationParser parser;
