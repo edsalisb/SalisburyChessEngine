@@ -4,6 +4,7 @@ using System.Linq;
 using SalisburyChessEngine.Pieces;
 using SalisburyChessEngine.Moves;
 using SalisburyChessEngine.Utilities;
+using SalisburyChessEngine.Board.Positions;
 
 namespace SalisburyChessEngine.Board
 {
@@ -20,23 +21,106 @@ namespace SalisburyChessEngine.Board
         public bool IsWhitesTurn { get;  set; }
 
         private AlgebraicNotationParser parser;
-        public ChessBoard()
+
+        private ChessBoard()
         {
             this.IsWhitesTurn = true;
             this.parser = new AlgebraicNotationParser(this);
-
-            this.WhiteKing = new King(true, this.GetCell, "e1");
-            this.BlackKing = new King(false, this.GetCell, "e8");
 
             this.WhiteKing.OnCheckCallbacks += UpdateBoard;
             this.BlackKing.OnCheckCallbacks += UpdateBoard;
             this.BlackPiecePressure = new List<ValidBoardMove>();
             this.WhitePiecePressure = new List<ValidBoardMove>();
-
-
-            this.InitializeBoard();
+        }
+        public ChessBoard(BoardPosition position) : base()
+        { 
+            this.InitializeBoard(position);
             this.UpdateBoardState();
         }
+
+        public ChessBoard(FENNotationPosition fen): base()
+        {
+            this.InitializeBoard(fen);
+            this.UpdateBoardState();
+        }
+        public void InitializeBoard(BoardPosition position)
+        {
+            InitializeCells();
+            CreatePieceFactory(position);
+        }
+
+        private void CreatePieceFactory(BoardPosition position)
+        {
+            var bKing = position.Where(x => x.Value == 'k').ToList();
+            var wKing = position.Where(x => x.Value == 'K').ToList();
+
+            if (wKing.Count != 1 || bKing.Count != 1)
+            {
+                return;
+            }
+
+            this.WhiteKing = new King(true, this.GetCell, wKing[0].Key);
+            this.BlackKing = new King(false, this.GetCell, bKing[0].Key);
+
+            foreach (KeyValuePair<string, char> kvp in position)
+            {
+                if (kvp.Value == 'K')
+                {
+                    this.GetCell(kvp.Key).CurrentPiece = this.WhiteKing;
+                }
+                else if (kvp.Value == 'k')
+                {
+                    this.GetCell(kvp.Key).CurrentPiece = this.BlackKing;
+                }
+                else
+                {
+                    var cell = this.GetCell(kvp.Key);
+                    switch (kvp.Value)
+                    {
+                        case 'R':
+                            cell.CurrentPiece = new Rook(true, this.GetCell, kvp.Key, this.BlackKing);
+                            break;
+                        case 'r':
+                            cell.CurrentPiece = new Rook(false, this.GetCell, kvp.Key, this.WhiteKing);
+                            break;
+                        case 'N':
+                            cell.CurrentPiece = new Knight(true, this.GetCell, kvp.Key);
+                            break;
+                        case 'n':
+                            cell.CurrentPiece = new Knight(false, this.GetCell, kvp.Key);
+                            break;
+                        case 'B':
+                            cell.CurrentPiece = new Bishop(true, this.GetCell, kvp.Key, this.BlackKing);
+                            break;
+                        case 'b':
+                            cell.CurrentPiece = new Bishop(false, this.GetCell, kvp.Key, this.WhiteKing);
+                            break;
+                        case 'Q':
+                            cell.CurrentPiece = new Queen(true, this.GetCell, kvp.Key, this.BlackKing);
+                            break;
+                        case 'q':
+                            cell.CurrentPiece = new Queen(false, this.GetCell, kvp.Key, this.WhiteKing);
+                            break;
+                        case 'P':
+                            cell.CurrentPiece = new Pawn(true, this.GetCell, kvp.Key);
+                            break;
+                        case 'p':
+                            cell.CurrentPiece = new Pawn(false, this.GetCell, kvp.Key);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+
+        }
+
+        public void InitializeBoard(FENNotationPosition fen)
+        {
+            throw new NotImplementedException();
+        }
+
         public void UpdateBoardState()
         {
             this.BlackPiecePressure = new List<ValidBoardMove>();
@@ -49,11 +133,6 @@ namespace SalisburyChessEngine.Board
             this.DisplayBoard();
         }
 
-        public void InitializeBoard()
-        {
-            InitializeCells();
-            PlacePiecesOnBoard();
-        }
         private void InitializeCells()
         {
             for (var i = BoardProperties.Rows; i >= 1; i--)
@@ -185,48 +264,6 @@ namespace SalisburyChessEngine.Board
                 this.WhiteKing.IsChecked = false;
             }
         }
-
-        private void PlacePiecesOnBoard()
-        {
-            //white back rank
-            this.GetCell("a1").CurrentPiece = new Rook(true, this.GetCell, "a1", this.BlackKing);
-            this.GetCell("b1").CurrentPiece = new Knight(true, this.GetCell, "b1");
-            this.GetCell("c1").CurrentPiece = new Bishop(true, this.GetCell, "c1", this.BlackKing);
-            this.GetCell("d1").CurrentPiece = new Queen(true, this.GetCell, "d1", this.BlackKing);
-            this.GetCell("e1").CurrentPiece = this.WhiteKing;
-            this.GetCell("f1").CurrentPiece = new Bishop(true, this.GetCell, "f1", this.BlackKing);
-            this.GetCell("g1").CurrentPiece = new Knight(true, this.GetCell, "g1");
-            this.GetCell("h1").CurrentPiece = new Rook(true, this.GetCell, "h1", this.BlackKing);
-            //white pawn rank
-            this.GetCell("a2").CurrentPiece = new Pawn(true, this.GetCell, "a2");
-            this.GetCell("b2").CurrentPiece = new Pawn(true, this.GetCell, "b2");
-            this.GetCell("c2").CurrentPiece = new Pawn(true, this.GetCell, "c2");
-            this.GetCell("d2").CurrentPiece = new Pawn(true, this.GetCell, "d2");
-            this.GetCell("e2").CurrentPiece = new Pawn(true, this.GetCell, "e2");
-            this.GetCell("f2").CurrentPiece = new Pawn(true, this.GetCell, "f2");
-            this.GetCell("g2").CurrentPiece = new Pawn(true, this.GetCell, "g2");
-            this.GetCell("h2").CurrentPiece = new Pawn(true, this.GetCell, "h2");
-
-            //black back rank
-            this.GetCell("a8").CurrentPiece = new Rook(false, this.GetCell, "a8", this.WhiteKing);
-            this.GetCell("b8").CurrentPiece = new Knight(false, this.GetCell, "b8");
-            this.GetCell("c8").CurrentPiece = new Bishop(false, this.GetCell, "c8", this.WhiteKing);
-            this.GetCell("d8").CurrentPiece = new Queen(false, this.GetCell, "d8", this.WhiteKing);
-            this.GetCell("e8").CurrentPiece = this.BlackKing;
-            this.GetCell("f8").CurrentPiece = new Bishop(false, this.GetCell, "f8", this.WhiteKing);
-            this.GetCell("g8").CurrentPiece = new Knight(false, this.GetCell, "g8");
-            this.GetCell("h8").CurrentPiece = new Rook(false, this.GetCell, "h8", this.WhiteKing);
-
-            this.GetCell("a7").CurrentPiece = new Pawn(false, this.GetCell, "a7");
-            this.GetCell("b7").CurrentPiece = new Pawn(false, this.GetCell, "b7");
-            this.GetCell("c7").CurrentPiece = new Pawn(false, this.GetCell, "c7");
-            this.GetCell("d7").CurrentPiece = new Pawn(false, this.GetCell, "d7");
-            this.GetCell("e7").CurrentPiece = new Pawn(false, this.GetCell, "e7");
-            this.GetCell("f7").CurrentPiece = new Pawn(false, this.GetCell, "f7");
-            this.GetCell("g7").CurrentPiece = new Pawn(false, this.GetCell, "g7");
-            this.GetCell("h7").CurrentPiece = new Pawn(false, this.GetCell, "h7");
-        }
-
         public void UpdateBoard()
         {
             ExecuteCellLevelFunction(DetermineValidMovesIfNotKing);
@@ -363,7 +400,7 @@ namespace SalisburyChessEngine.Board
             {
                 return -1;
             }
-            if (!CellProperties.ColumnLettersMappedToNumbers.TryGetValue(columnLetter, out int parsedColumn))
+            if (!BoardProperties.ColumnLettersMappedToNumbers.TryGetValue(columnLetter, out int parsedColumn))
             {
                 return -1;
             }

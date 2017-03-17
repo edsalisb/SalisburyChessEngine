@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SalisburyChessEngine.Pieces;
 
-namespace SalisburyChessEngine
+namespace SalisburyChessEngine.Board
 {
     public class Cell
     {
@@ -17,7 +17,7 @@ namespace SalisburyChessEngine
             this.Row = row;
             this.CurrentPiece = null;
 
-            CellProperties.ColumnNumbersMappedToLetters.TryGetValue(column, out char columnLetter);
+            BoardProperties.ColumnNumbersMappedToLetters.TryGetValue(column, out char columnLetter);
             this.ColumnLetter = columnLetter;
             Coordinates = columnLetter + row.ToString();
             

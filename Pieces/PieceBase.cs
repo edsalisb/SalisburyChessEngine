@@ -64,7 +64,7 @@ namespace SalisburyChessEngine.Pieces
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             for (var i = cell.ColumnNumber; i > 0; i--)
             {
-                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
+                if (BoardProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
                 {
                     var sequentialCell = getCell(columnLetter.ToString() + cell.Row);
                     if (Cell.IsNotNull(sequentialCell))
@@ -97,7 +97,7 @@ namespace SalisburyChessEngine.Pieces
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             for (var i = cell.ColumnNumber; i <= BoardProperties.Columns; i++)
             {
-                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
+                if (BoardProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
                 {
                     var sequentialCell = getCell(columnLetter.ToString() + cell.Row);
                     if (Cell.IsNotNull(sequentialCell))
@@ -184,7 +184,7 @@ namespace SalisburyChessEngine.Pieces
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             for (var i = cell.ColumnNumber; i > 0; i--)
             {
-                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
+                if (BoardProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
                 {
                     var sequentialCell = getCell(columnLetter.ToString() + row.ToString());
                     if (Cell.IsNotNull(sequentialCell))
@@ -220,7 +220,7 @@ namespace SalisburyChessEngine.Pieces
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             for (var i = cell.ColumnNumber; i <= BoardProperties.Columns; i++)
             {
-                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
+                if (BoardProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
                 {
                     var sequentialCell = getCell(columnLetter.ToString() + row.ToString());
                     if (Cell.IsNotNull(sequentialCell))
@@ -254,7 +254,7 @@ namespace SalisburyChessEngine.Pieces
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             for (var i = cell.ColumnNumber; i > 0; i--)
             {
-                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
+                if (BoardProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
                 {
                     var sequentialCell = getCell(columnLetter.ToString() + row.ToString());
                     if (Cell.IsNotNull(sequentialCell))
@@ -290,7 +290,7 @@ namespace SalisburyChessEngine.Pieces
             List<ValidBoardMove> moveList = new List<ValidBoardMove>();
             for (var i = cell.ColumnNumber; i <= BoardProperties.Columns; i++)
             {
-                if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
+                if (BoardProperties.ColumnNumbersMappedToLetters.TryGetValue(i, out char columnLetter))
                 {
                     var sequentialCell = getCell(columnLetter.ToString() + row.ToString());
                     if (Cell.IsNotNull(sequentialCell))
@@ -503,7 +503,7 @@ namespace SalisburyChessEngine.Pieces
 
         public char? GetColumnLetter(Cell currentCell, int spacesAway)
         {
-            if (CellProperties.ColumnNumbersMappedToLetters.TryGetValue(currentCell.ColumnNumber + spacesAway, out char columnletter))
+            if (BoardProperties.ColumnNumbersMappedToLetters.TryGetValue(currentCell.ColumnNumber + spacesAway, out char columnletter))
             {
                 return columnletter;
             }

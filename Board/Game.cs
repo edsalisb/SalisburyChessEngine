@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using SalisburyChessEngine.Board;
+using SalisburyChessEngine.Board.Positions;
 using SalisburyChessEngine.Moves;
+using SalisburyChessEngine.Pieces;
 
-namespace SalisburyChessEngine
+namespace SalisburyChessEngine.Board
 {
     public class Game
     {
@@ -15,20 +16,24 @@ namespace SalisburyChessEngine
         private byte turnNumber;
 
         //TODO: add to destroyed pieces List
-        public List<object>DestroyedBlackPieces { get; set; }
-        public List<object> DestroyedWhitePieces { get; set; }
+        public List<PieceBase>DestroyedBlackPieces { get; set; }
+        public List<PieceBase> DestroyedWhitePieces { get; set; }
 
         public Move MostRecentMove { get; set; }
-        public Game(string whiteMode, string blackMode)
+
+        private Game()
+        {
+            this.moveList = new List<Move>();
+            this.DestroyedBlackPieces = new List<PieceBase>();
+            this.DestroyedWhitePieces = new List<PieceBase>();
+            this.gameEnded = false;
+        }
+        public Game(string whiteMode, string blackMode) : this()
         {
             this.whiteMode = whiteMode;
             this.blackMode = blackMode;
             this.turnNumber = 1;
-
-            this.gameEnded = false;
-            this.moveList = new List<Move>();
-            this.DestroyedBlackPieces = new List<object>();
-            this.DestroyedWhitePieces = new List<object>();
+            
             if (this.whiteMode == "ai" || this.blackMode == "ai")
             {
                 Console.WriteLine("Not Supported Yet");
@@ -36,9 +41,14 @@ namespace SalisburyChessEngine
             }
         }
 
+        public Game(string whiteMode, string blackMode, FENNotationPosition fnp): this(whiteMode, blackMode)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Begin()
         {
-            this.cb = new ChessBoard();
+            this.cb = new ChessBoard(new BoardPosition());
             this.cb.BlackKing.OnCheckCallbacks += UpdateMoveNotation;
             this.cb.WhiteKing.OnCheckCallbacks += UpdateMoveNotation;
 

@@ -90,14 +90,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Board\AlgebraicNotationParser.cs" />
+    <Compile Include="Board\Positions\BoardPosition.cs" />
     <Compile Include="Board\BoardProperties.cs" />
     <Compile Include="Board\ChessBoard.cs" />
     <Compile Include="Board\ChessBoardHelpers.cs" />
     <Compile Include="Board\ValidBoardMove.cs" />
     <Compile Include="Board\ValidNotationProperties.cs" />
     <Compile Include="Board\Cell.cs" />
-    <Compile Include="Board\CellProperties.cs" />
-    <Compile Include="Board\FENNotationPosition.cs" />
+    <Compile Include="Board\Positions\FENNotationPosition.cs" />
     <Compile Include="Board\Game.cs" />
     <Compile Include="Moves\Move.cs" />
     <Compile Include="Pieces\Bishop.cs" />

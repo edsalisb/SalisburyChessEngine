@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SalisburyChessEngine.Board;
+using SalisburyChessEngine.Board.Positions;
 
 namespace SalisburyChessEngine
 {
@@ -57,8 +59,12 @@ namespace SalisburyChessEngine
                 var fen = command.IndexOf("-fen");
                 if (fen > -1)
                 {
-                    var fenContents = command[fen + 1]; //important that we do not ToLower here. We need the exact string contents
+                    const int FEN_FIELD_LENGTH = 6;
+                    var fenContents = command.GetRange(fen + 1, FEN_FIELD_LENGTH); //important that we do not ToLower here. We need the exact string contents
                     FENNotationPosition fnp = new FENNotationPosition(fenContents);
+                    fnp.DeterminePositionInformation();
+                    var game = new Game(whiteMode, blackMode, fnp);
+                    game.Begin();
                 }
 
                 var Game = new Game(whiteMode, blackMode);
