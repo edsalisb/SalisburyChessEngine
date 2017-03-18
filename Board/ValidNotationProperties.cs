@@ -15,12 +15,20 @@ namespace SalisburyChessEngine.Board
         public bool IsTerminatable { get; set; }
         public bool IsProtected { get; set; }
 
+        public bool IsAbsolutePinned { get; set; }
+
         public bool IsPotentiallyPinned { get; set; }
         public ValidNotationProperties()
         {
             IsProtected = false;
             IsValid = false;
             IsTerminatable = false;
+            this.IsAbsolutePinned = false;
+        }
+
+        public ValidNotationProperties(bool isAbsolutePinned): this()
+        {
+            this.IsAbsolutePinned = isAbsolutePinned;
         }
 
         public ValidNotationProperties DetermineMoveProperties(Cell fromCell, Cell toCell)

@@ -29,17 +29,33 @@ namespace SalisburyChessEngine.Board.Positions
             HalfMoveClock = 4,
             FullMoveNumber = 5
         }
-        public List<string> FENContents { get; set; }
-        public bool? IsWhitesTurn { get; set; }
+        public List<string> FENContents { get; private set; }
+        public bool? IsWhitesTurn { get; private set; }
+
+        public bool IsWhiteQueenSideCastleValid { get; private set; }
+
+        public bool IsBlackQueenSideCastleValid { get; private set; }
+
+        public bool IsWhiteKingSideCastleValid { get; private set; }
+
+        public bool IsBlackKingSideCastleValid { get; private set; }
+
+        public string EnPessantSquare { get; private set; }
+        public int TurnNumber { get; private set; }
+        public int HalfMoveNumber { get; private set; }
 
         public FENNotationPosition() : base()
         {
-
+            IsWhiteKingSideCastleValid = false;
+            IsWhiteQueenSideCastleValid = false;
+            IsBlackKingSideCastleValid = false;
+            IsBlackQueenSideCastleValid = false;
         }
-        public FENNotationPosition(List<string> fenContents)
+        public FENNotationPosition(List<string> fenContents) : this()
         {
             this.Clear();
             this.FENContents = fenContents;
+            this.DeterminePositionInformation();
         }
 
         public void DeterminePositionInformation()
@@ -49,11 +65,16 @@ namespace SalisburyChessEngine.Board.Positions
             {
                 DeterminePiecePlacement(this.FENContents[(int)FenRecordFields.PiecePlacement]);
                 DetermineActiveColor(this.FENContents[(int)FenRecordFields.ActiveColor]);
+                DetermineCastlingAvailability(this.FENContents[(int)FenRecordFields.CastlingAvailability]);
+                DetermineEnPessantSquare(this.FENContents[(int)FenRecordFields.EnPessantSquare]);
+                DetermineHalfMoveAmount(this.FENContents[(int)FenRecordFields.HalfMoveClock]);
+                DetermineTurnNumber(this.FENContents[(int)FenRecordFields.FullMoveNumber]);
             }
-            catch (IndexOutOfRangeException ex)
+            catch (Exception ex)
             {
                 Console.WriteLine("Not Valid FEN Notation");
             }
+            
         }
         private void DeterminePiecePlacement(string notation)
         {
@@ -121,6 +142,62 @@ namespace SalisburyChessEngine.Board.Positions
                 return;
             }
             return;
+        }
+
+        private void DetermineCastlingAvailability(string castleString)
+        {
+            if (castleString.IndexOf("-") > -1)
+            {
+                return;
+            }
+
+            if (castleString.IndexOf("Q") > -1){
+                IsWhiteQueenSideCastleValid = true;
+            }
+            if (castleString.IndexOf("K") > -1)
+            {
+                IsWhiteKingSideCastleValid = true;
+            }
+            if (castleString.IndexOf("q") > -1)
+            {
+                IsBlackQueenSideCastleValid = true;
+            }
+            if (castleString.IndexOf("k") > -1)
+            {
+                IsBlackKingSideCastleValid = true;
+            }
+
+        }
+
+        private void DetermineEnPessantSquare(string enPessantString)
+        {
+            if (enPessantString == "-")
+            {
+                return;
+            }
+            this.EnPessantSquare = enPessantString;
+        }
+        private void DetermineHalfMoveAmount(string halfMove)
+        {
+            if (int.TryParse(halfMove, out int halfMoveNumber))
+            {
+                this.HalfMoveNumber = halfMoveNumber;
+            }
+            else
+            {
+                throw new Exception();
+            }
+        }
+        private void DetermineTurnNumber(string turn)
+        {
+            if (int.TryParse(turn, out int turnNumber))
+            {
+                this.TurnNumber = turnNumber;
+            }
+            else
+            {
+                throw new Exception();
+            }
         }
     }
 }

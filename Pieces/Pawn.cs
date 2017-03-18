@@ -14,17 +14,20 @@ namespace SalisburyChessEngine.Pieces
             this.TypeOfPiece = PieceType.Pawn;
         }
 
-        public override void DetermineValidMoves(string coords, ValidBoardMove checkingMove, List<ValidBoardMove> pinnedMoves)
+        public override void DetermineValidMoves(string coords, ValidBoardMove checkingMove)
         {
-            ValidMoves = new List<ValidBoardMove>();
-            PiecePressure = new List<ValidBoardMove>();
-            if (!this.ValidMovesSet || checkingMove != null || pinnedMoves != null)
+            
+            if (!this.ValidMovesSet)
             {
-                this.AddToValidMoves(coords);
-                this.FilterMovesIfChecked(checkingMove);
-                this.FilterMovesIfPinned(pinnedMoves);
-
+                ValidMoves = new List<ValidBoardMove>();
+                PiecePressure = new List<ValidBoardMove>();
                 this.ValidMovesSet = true;
+                this.AddToValidMoves(coords);
+                this.FilterMoves(checkingMove);
+            }
+            else
+            {
+                this.FilterMoves(checkingMove);
             }
 
         }
@@ -40,7 +43,17 @@ namespace SalisburyChessEngine.Pieces
                 this.DetermineBlackMoves(coords);
             }
         }
-
+        private void FilterMoves(ValidBoardMove checkingMove)
+        {
+            if (checkingMove != null)
+            {
+                this.FilterMovesIfChecked(checkingMove);
+            }
+            if (this.PinnedMoves.Count > 0)
+            {
+                this.FilterMovesIfPinned();
+            }
+        }
         private void DetermineWhiteMoves(string coords)
         {
             var startingCell = getCell(coords);

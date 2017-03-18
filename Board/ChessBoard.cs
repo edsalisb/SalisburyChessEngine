@@ -26,27 +26,43 @@ namespace SalisburyChessEngine.Board
         {
             this.IsWhitesTurn = true;
             this.parser = new AlgebraicNotationParser(this);
-
-            this.WhiteKing.OnCheckCallbacks += UpdateBoard;
-            this.BlackKing.OnCheckCallbacks += UpdateBoard;
-            this.BlackPiecePressure = new List<ValidBoardMove>();
-            this.WhitePiecePressure = new List<ValidBoardMove>();
         }
-        public ChessBoard(BoardPosition position) : base()
+        public ChessBoard(BoardPosition position) : this()
         { 
             this.InitializeBoard(position);
+            this.InitializeKingComponents();
             this.UpdateBoardState();
         }
 
-        public ChessBoard(FENNotationPosition fen): base()
+       
+
+        public ChessBoard(FENNotationPosition fen): this()
         {
             this.InitializeBoard(fen);
+            this.InitializeKingComponents();
             this.UpdateBoardState();
         }
+
         public void InitializeBoard(BoardPosition position)
         {
             InitializeCells();
             CreatePieceFactory(position);
+        }
+
+        
+
+        public void InitializeBoard(FENNotationPosition fen)
+        {
+            this.InitializeCells();
+            this.CreatePieceFactory(fen);
+        }
+
+        private void InitializeKingComponents()
+        {
+            this.WhiteKing.OnCheckCallbacks += UpdateBoard;
+            this.BlackKing.OnCheckCallbacks += UpdateBoard;
+            this.BlackPiecePressure = new List<ValidBoardMove>();
+            this.WhitePiecePressure = new List<ValidBoardMove>();
         }
 
         private void CreatePieceFactory(BoardPosition position)
@@ -114,11 +130,6 @@ namespace SalisburyChessEngine.Board
             }
 
 
-        }
-
-        public void InitializeBoard(FENNotationPosition fen)
-        {
-            throw new NotImplementedException();
         }
 
         public void UpdateBoardState()
@@ -239,6 +250,7 @@ namespace SalisburyChessEngine.Board
             {
                 var piece = Cell.GetPiece(cell);
                 piece.ValidMovesSet = false;
+                piece.PinnedMoves = new List<ValidBoardMove>();
             }
         }
         internal void CheckIfKingChecked()
@@ -285,7 +297,7 @@ namespace SalisburyChessEngine.Board
                 if (!cell.CurrentPiece.ValidMovesSet || (this.WhiteKing.IsChecked || this.BlackKing.IsChecked))
                 {
                     cell.CurrentPiece.CurrentCoordinates = cell.Coordinates;
-                    cell.CurrentPiece.DetermineValidMoves(cell.Coordinates, this.CheckingBoardMove, null);
+                    cell.CurrentPiece.DetermineValidMoves(cell.Coordinates, this.CheckingBoardMove);
                 }
             }
         }

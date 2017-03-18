@@ -179,7 +179,7 @@ namespace SalisburyChessEngine.Board
             {
                 this.board.ReplacePiece(potentialMove);
                 var piece = this.board.GetCell(potentialMove.CellTo.Coordinates).CurrentPiece;
-                piece.DetermineValidMoves(potentialMove.CellTo.Coordinates, null, null);
+                piece.DetermineValidMoves(potentialMove.CellTo.Coordinates, null);
 
                 var validMoveCoords = piece.ValidMoves.Select(GeneralUtilities.SelectCoordinates).ToList();
                 if ((this.board.IsWhitesTurn && validMoveCoords.IndexOf(this.board.BlackKing.CurrentCoordinates) == -1) ||
@@ -189,7 +189,7 @@ namespace SalisburyChessEngine.Board
                 }
                 this.board.Rollback(potentialMove);
                 piece = this.board.GetCell(potentialMove.CellFrom.Coordinates).CurrentPiece;
-                piece.DetermineValidMoves(potentialMove.CellFrom.Coordinates, null, null);
+                piece.DetermineValidMoves(potentialMove.CellFrom.Coordinates, null);
 
             }
            

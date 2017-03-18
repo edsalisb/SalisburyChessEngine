@@ -13,6 +13,8 @@ namespace SalisburyChessEngine.Pieces
         public List<ValidBoardMove> AllowedCellsAfterCheck { get; set; }
         public Cell PinnedCell { get; set; }
 
+        public List<ValidBoardMove> PinnedMoves { get; set; }
+
         public Dictionary<ValidBoardMove.MovePath, List<ValidBoardMove.MovePath>> PinnedAllowedMovePaths { get; } =
             new Dictionary<ValidBoardMove.MovePath, List<ValidBoardMove.MovePath>>
             {
@@ -41,7 +43,7 @@ namespace SalisburyChessEngine.Pieces
         public string CurrentCoordinates { get; set; }
         public bool isWhite;
         public abstract void AddToValidMoves(string coords);
-        public abstract void DetermineValidMoves(string coords, ValidBoardMove checkingMove, List<ValidBoardMove> pinnedMoves);
+        public abstract void DetermineValidMoves(string coords, ValidBoardMove checkingMove);
         public King EnemyKing { get; set; }
         public bool ValidMovesSet { get; set; } = false;
 
@@ -79,7 +81,10 @@ namespace SalisburyChessEngine.Pieces
                         {
                             break;
                         }
-                        moveList.Add(move);
+                        if (move.MoveProperties.IsValid || move.MoveProperties.IsAbsolutePinned)
+                        {
+                            moveList.Add(move);
+                        }
                         if (move.MoveProperties.IsTerminatable)
                         {
                             break;
@@ -111,7 +116,10 @@ namespace SalisburyChessEngine.Pieces
                         {
                             break;
                         }
-                        moveList.Add(move);
+                        if (move.MoveProperties.IsValid || move.MoveProperties.IsAbsolutePinned)
+                        {
+                            moveList.Add(move);
+                        }
                         if (move.MoveProperties.IsTerminatable)
                         {
                             break;
@@ -140,7 +148,10 @@ namespace SalisburyChessEngine.Pieces
                     {
                         break;
                     }
-                    moveList.Add(move);
+                    if (move.MoveProperties.IsValid || move.MoveProperties.IsAbsolutePinned)
+                    {
+                        moveList.Add(move);
+                    }
                     if (move.MoveProperties.IsTerminatable)
                     {
                         break;
@@ -168,7 +179,10 @@ namespace SalisburyChessEngine.Pieces
                         break;
                     }
 
-                    moveList.Add(move);
+                    if (move.MoveProperties.IsValid || move.MoveProperties.IsAbsolutePinned)
+                    {
+                        moveList.Add(move);
+                    }
                     if (move.MoveProperties.IsTerminatable)
                     {
                         break;
@@ -201,7 +215,10 @@ namespace SalisburyChessEngine.Pieces
                             row--;
                             break;
                         }
-                        moveList.Add(move);
+                        if (move.MoveProperties.IsValid || move.MoveProperties.IsAbsolutePinned)
+                        {
+                            moveList.Add(move);
+                        }
                         if (move.MoveProperties.IsTerminatable)
                         {
                             break;
@@ -236,7 +253,10 @@ namespace SalisburyChessEngine.Pieces
                             row--;
                             break;
                         }
-                        moveList.Add(move);
+                        if (move.MoveProperties.IsValid || move.MoveProperties.IsAbsolutePinned)
+                        {
+                            moveList.Add(move);
+                        }
                         if (move.MoveProperties.IsTerminatable)
                         {
                             break;
@@ -271,7 +291,10 @@ namespace SalisburyChessEngine.Pieces
                             row++;
                             break;
                         }
-                        moveList.Add(move);
+                        if (move.MoveProperties.IsValid || move.MoveProperties.IsAbsolutePinned)
+                        {
+                            moveList.Add(move);
+                        }
                         if (move.MoveProperties.IsTerminatable)
                         {
                             break;
@@ -306,8 +329,11 @@ namespace SalisburyChessEngine.Pieces
                             row++;
                             continue;
                         }
-                        
-                        moveList.Add(move);
+
+                        if (move.MoveProperties.IsValid || move.MoveProperties.IsAbsolutePinned)
+                        {
+                            moveList.Add(move);
+                        }
                         if (move.MoveProperties.IsTerminatable)
                         {
                             break;
@@ -425,20 +451,21 @@ namespace SalisburyChessEngine.Pieces
 
                     // we are absolutely pinned hgere
                     var piece = Cell.GetPiece(this.PinnedCell);
+                    piece.PinnedMoves = test;
                     if (piece.TypeOfPiece == PieceType.Rook)
                     {
                         var rook = (Rook)piece;
-                        rook.DetermineValidMoves(rook.CurrentCoordinates, null, test);
+                        rook.DetermineValidMoves(rook.CurrentCoordinates, null);
                     }
                     else if (piece.TypeOfPiece == PieceType.Bishop)
                     {
                         var bishop = (Bishop)piece;
-                        bishop.DetermineValidMoves(bishop.CurrentCoordinates, null, test);
+                        bishop.DetermineValidMoves(bishop.CurrentCoordinates, null);
                     }
                     else if (piece.TypeOfPiece == PieceType.Pawn)
                     {
                         var pawn = (Pawn)piece;
-                        pawn.DetermineValidMoves(pawn.CurrentCoordinates, null, test);
+                        pawn.DetermineValidMoves(pawn.CurrentCoordinates, null);
                     }
                     else if (piece.TypeOfPiece == PieceType.King)
                     {
@@ -447,12 +474,12 @@ namespace SalisburyChessEngine.Pieces
                     else if (piece.TypeOfPiece == PieceType.Queen)
                     {
                         var queen = (Queen)piece;
-                        queen.DetermineValidMoves(queen.CurrentCoordinates, null, test);
+                        queen.DetermineValidMoves(queen.CurrentCoordinates, null);
                     }
                     else if (piece.TypeOfPiece == PieceType.Knight)
                     {
                         var knight = (Knight)piece;
-                        knight.DetermineValidMoves(knight.CurrentCoordinates, null, test);
+                        knight.DetermineValidMoves(knight.CurrentCoordinates, null);
                     }
                 }
             }
@@ -486,11 +513,7 @@ namespace SalisburyChessEngine.Pieces
             }
             else
             {
-                if (piece != null)
-                {
-                    return new ValidBoardMove(pinnedCell.Coordinates, potentialCell.Coordinates, path, piece.isWhite);
-                }
-                return null;
+                return new ValidBoardMove(pinnedCell.Coordinates, potentialCell.Coordinates, path);
             }
             
         }
@@ -543,6 +566,8 @@ namespace SalisburyChessEngine.Pieces
                 default:
                     break;
             }
+
+            moves.Add(move);
 
             return moves;
         }
@@ -632,14 +657,14 @@ namespace SalisburyChessEngine.Pieces
             }
         }
 
-        public void FilterMovesIfPinned(List<ValidBoardMove> pinnedMoves)
+        public void FilterMovesIfPinned()
         {
-            if (pinnedMoves == null)
+            if (this.PinnedMoves == null)
             {
                 return;
             }
             List<ValidBoardMove.MovePath> combinedMovePaths = new List<ValidBoardMove.MovePath>();
-            var movePaths = pinnedMoves.Select(move => move.Path).ToList();
+            var movePaths = this.PinnedMoves.Select(move => move.Path).ToList();
             foreach(var path in movePaths)
             {
                 if (PinnedAllowedMovePaths.TryGetValue(path, out List<ValidBoardMove.MovePath>  rangeToAdd))

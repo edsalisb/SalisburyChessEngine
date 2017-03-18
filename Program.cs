@@ -26,6 +26,7 @@ namespace SalisburyChessEngine
 
                 var white = command.IndexOf("-white");
                 var black = command.IndexOf("-black");
+                
                 if (white == -1)
                 {
                     Console.WriteLine("-white (human OR ai) required. /help for all commands");
@@ -62,13 +63,14 @@ namespace SalisburyChessEngine
                     const int FEN_FIELD_LENGTH = 6;
                     var fenContents = command.GetRange(fen + 1, FEN_FIELD_LENGTH); //important that we do not ToLower here. We need the exact string contents
                     FENNotationPosition fnp = new FENNotationPosition(fenContents);
-                    fnp.DeterminePositionInformation();
                     var game = new Game(whiteMode, blackMode, fnp);
-                    game.Begin();
+                    return;
                 }
-
-                var Game = new Game(whiteMode, blackMode);
-                Game.Begin();
+                else
+                {
+                    var game = new Game(whiteMode, blackMode);
+                }
+             
                 
                 command = Console.ReadLine().Split(' ').ToList();
 

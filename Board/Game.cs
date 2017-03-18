@@ -36,19 +36,36 @@ namespace SalisburyChessEngine.Board
             
             if (this.whiteMode == "ai" || this.blackMode == "ai")
             {
-                Console.WriteLine("Not Supported Yet");
-                return;
+                throw new NotImplementedException();
             }
+            this.InitializeGame();
         }
 
-        public Game(string whiteMode, string blackMode, FENNotationPosition fnp): this(whiteMode, blackMode)
+        public Game(string whiteMode, string blackMode, FENNotationPosition fnp):this()
         {
-            throw new NotImplementedException();
+            this.whiteMode = whiteMode;
+            this.blackMode = blackMode;
+            this.turnNumber = (byte)fnp.TurnNumber;
+            if (this.whiteMode == "ai" || this.blackMode == "ai")
+            {
+                throw new NotImplementedException();
+            }
+            this.InitializeGame(fnp);
         }
 
-        public void Begin()
+        private void InitializeGame()
         {
             this.cb = new ChessBoard(new BoardPosition());
+            this.Begin();
+        }
+        private void InitializeGame(FENNotationPosition fnp)
+        {
+            this.cb = new ChessBoard(fnp);
+            this.Begin();
+        }
+
+        private void Begin()
+        {
             this.cb.BlackKing.OnCheckCallbacks += UpdateMoveNotation;
             this.cb.WhiteKing.OnCheckCallbacks += UpdateMoveNotation;
 
