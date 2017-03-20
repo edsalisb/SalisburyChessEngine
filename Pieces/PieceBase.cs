@@ -521,7 +521,13 @@ namespace SalisburyChessEngine.Pieces
         public ValidNotationProperties CellIsValid(Cell fromCell, Cell toCell)
         {
             var validMoveProps = new ValidNotationProperties();
-            return validMoveProps.DetermineMoveProperties(fromCell, toCell);
+            if (this.TypeOfPiece != PieceType.Pawn) {
+                return validMoveProps.DetermineMovePropertiesForPiece(fromCell, toCell);
+            }
+            else
+            {
+                return validMoveProps.DetermineMovePropertiesForPawn(fromCell, toCell);
+            }
         }
 
         public char? GetColumnLetter(Cell currentCell, int spacesAway)

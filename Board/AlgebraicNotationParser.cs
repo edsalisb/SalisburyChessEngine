@@ -354,7 +354,7 @@ namespace SalisburyChessEngine.Board
                         potentialCellFrom = this.board.GetCell(columnFrom.ToString() + (rowTo + 1).ToString());
                     }
 
-                    this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(potentialCellFrom, this.potentialMove.CellTo);
+                    this.validMoveProperties = this.validMoveProperties.DetermineMovePropertiesForPawn(potentialCellFrom, this.potentialMove.CellTo);
                     if (this.validMoveProperties.IsValid)
                     {
                         var piece = Cell.GetPiece(potentialCellFrom);
@@ -381,7 +381,7 @@ namespace SalisburyChessEngine.Board
                     {
                         var whiteInitialCell = this.board.GetCell(lastTwoLetters[0] + '2'.ToString());
                         
-                        this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(whiteInitialCell, this.potentialMove.CellTo);
+                        this.validMoveProperties = this.validMoveProperties.DetermineMovePropertiesForPawn(whiteInitialCell, this.potentialMove.CellTo);
 
                         if (this.validMoveProperties.IsValid)
                         {
@@ -399,7 +399,7 @@ namespace SalisburyChessEngine.Board
                         }
 
                         var whiteOneRow = this.board.GetCell(lastTwoLetters[0] + '3'.ToString());
-                        this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(whiteOneRow, this.potentialMove.CellTo);
+                        this.validMoveProperties = this.validMoveProperties.DetermineMovePropertiesForPawn(whiteOneRow, this.potentialMove.CellTo);
                         if (this.validMoveProperties.IsValid)
                         {
                             var piece = Cell.GetPiece(whiteOneRow);
@@ -420,7 +420,7 @@ namespace SalisburyChessEngine.Board
                         if (int.TryParse(lastTwoLetters[1].ToString(), out int rowNum))
                         {
                             var potentialCellFrom = this.board.GetCell(lastTwoLetters[0] + (rowNum - 1).ToString());
-                            this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(potentialCellFrom, this.potentialMove.CellTo);
+                            this.validMoveProperties = this.validMoveProperties.DetermineMovePropertiesForPawn(potentialCellFrom, this.potentialMove.CellTo);
                             if (this.validMoveProperties.IsValid)
                             {
                                 var piece = Cell.GetPiece(potentialCellFrom);
@@ -447,7 +447,7 @@ namespace SalisburyChessEngine.Board
                     {
                         var blackInitialCell = this.board.GetCell(lastTwoLetters[0] + '7'.ToString());
                         
-                        this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(blackInitialCell, this.potentialMove.CellTo);
+                        this.validMoveProperties = this.validMoveProperties.DetermineMovePropertiesForPawn(blackInitialCell, this.potentialMove.CellTo);
                         if (this.validMoveProperties.IsValid)
                         {
                             var piece = Cell.GetPiece(blackInitialCell);
@@ -464,7 +464,7 @@ namespace SalisburyChessEngine.Board
                         }
 
                         var blackOneRow = this.board.GetCell(lastTwoLetters[0] + '6'.ToString());
-                        this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(blackOneRow, this.potentialMove.CellTo);
+                        this.validMoveProperties = this.validMoveProperties.DetermineMovePropertiesForPawn(blackOneRow, this.potentialMove.CellTo);
                         if (this.validMoveProperties.IsValid)
                         {
                             var piece = Cell.GetPiece(blackOneRow);
@@ -485,7 +485,7 @@ namespace SalisburyChessEngine.Board
                         if (int.TryParse(lastTwoLetters[1].ToString(), out int rowNum))
                         {
                             var potentialCellFrom = this.board.GetCell(lastTwoLetters[0] + (rowNum + 1).ToString());
-                            this.validMoveProperties = this.validMoveProperties.DetermineMoveProperties(potentialCellFrom, this.potentialMove.CellTo);
+                            this.validMoveProperties = this.validMoveProperties.DetermineMovePropertiesForPawn(potentialCellFrom, this.potentialMove.CellTo);
                             if (this.validMoveProperties.IsValid)
                             {
                                 var piece = Cell.GetPiece(potentialCellFrom);

@@ -22,6 +22,7 @@ namespace SalisburyChessEngine.Board
             UpRight = 6,
             DownLeft = 7,
             DownRight = 8,
+            KnightMove = 10,
             Invalid = 99
         }
 
@@ -49,6 +50,55 @@ namespace SalisburyChessEngine.Board
             //TODO : add to Valid
             this.IsPinningMove = pinningMove;
             this.MoveProperties = new ValidNotationProperties(true);
+        }
+
+        public static MovePath DetermineMovePath(Cell cellFrom, Cell cellTo)
+        {
+            if (cellFrom.Row < cellTo.Row)
+            {
+                if (cellFrom.ColumnLetter < cellTo.ColumnLetter)
+                {
+                    return MovePath.UpRight;
+                }
+                else if (cellFrom.ColumnLetter > cellTo.ColumnLetter)
+                {
+                    return MovePath.UpLeft;
+                }
+                else
+                {
+                    return MovePath.Up;
+                }
+            }
+            else if (cellFrom.Row > cellTo.Row)
+            {
+                if (cellFrom.ColumnLetter < cellTo.ColumnLetter)
+                {
+                    return MovePath.DownRight;
+                }
+                else if (cellFrom.ColumnLetter > cellTo.ColumnLetter)
+                {
+                    return MovePath.DownLeft;
+                }
+                else
+                {
+                    return MovePath.Down;
+                }
+            }
+            else
+            {
+                if (cellFrom.ColumnLetter < cellTo.ColumnLetter)
+                {
+                    return MovePath.Right;
+                }
+                else if (cellFrom.ColumnLetter > cellTo.ColumnLetter)
+                {
+                    return MovePath.Left;
+                }
+                else
+                {
+                    return MovePath.Invalid;
+                }
+            }
         }
 
         public override string ToString()

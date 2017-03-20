@@ -61,42 +61,42 @@ namespace SalisburyChessEngine.Pieces
 
             if (CellIsValid(currentCell, twoUpOneLeftCell).IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, twoUpOneLeftCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, twoUpOneLeftCell.Coordinates, ValidBoardMove.MovePath.KnightMove, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
             if (CellIsValid(currentCell, twoUpOneRightCell).IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, twoUpOneRightCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, twoUpOneRightCell.Coordinates, ValidBoardMove.MovePath.KnightMove, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
             if (CellIsValid(currentCell, oneUpTwoRightCell).IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, oneUpTwoRightCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, oneUpTwoRightCell.Coordinates, ValidBoardMove.MovePath.KnightMove, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
             if (CellIsValid(currentCell, oneDownTwoRightCell).IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, oneDownTwoRightCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, oneDownTwoRightCell.Coordinates, ValidBoardMove.MovePath.KnightMove, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
             if (CellIsValid(currentCell, twoDownOneRightCell).IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, twoDownOneRightCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, twoDownOneRightCell.Coordinates, ValidBoardMove.MovePath.KnightMove, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
             if (CellIsValid(currentCell, twoDownOneLeftCell).IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, twoDownOneLeftCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, twoDownOneLeftCell.Coordinates, ValidBoardMove.MovePath.KnightMove, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
             if (CellIsValid(currentCell, oneDownTwoLeftCell).IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, oneDownTwoLeftCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, oneDownTwoLeftCell.Coordinates, ValidBoardMove.MovePath.KnightMove, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
             if (CellIsValid(currentCell, oneUpTwoLeftCell).IsValid)
             {
-                var moveProperty = new ValidBoardMove(coords, oneUpTwoLeftCell.Coordinates, ValidBoardMove.MovePath.Invalid, this.isWhite);
+                var moveProperty = new ValidBoardMove(coords, oneUpTwoLeftCell.Coordinates, ValidBoardMove.MovePath.KnightMove, this.isWhite);
                 this.ValidMoves.Add(moveProperty);
             }
         }

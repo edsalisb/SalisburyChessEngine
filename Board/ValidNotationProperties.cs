@@ -31,7 +31,7 @@ namespace SalisburyChessEngine.Board
             this.IsAbsolutePinned = isAbsolutePinned;
         }
 
-        public ValidNotationProperties DetermineMoveProperties(Cell fromCell, Cell toCell)
+        public ValidNotationProperties DetermineMovePropertiesForPiece(Cell fromCell, Cell toCell)
         {
             if (!Cell.IsNotNull(fromCell) || !Cell.IsNotNull(toCell))
             {
@@ -71,7 +71,7 @@ namespace SalisburyChessEngine.Board
         
         public ValidNotationProperties DetermineMoveProperties(Cell cellFrom, Cell cellTo, List<ValidBoardMove> enemyPressure)
         {
-            var instance = DetermineMoveProperties(cellFrom, cellTo);
+            var instance = DetermineMovePropertiesForPiece(cellFrom, cellTo);
             if (instance.IsValid)
             {
                 var enemyCoordinatePressure = enemyPressure.Select(GeneralUtilities.SelectCoordinates).ToList();
@@ -82,6 +82,66 @@ namespace SalisburyChessEngine.Board
                 }
             }
             return instance;
+        }
+
+        public ValidNotationProperties DetermineMovePropertiesForPawn(Cell fromCell, Cell toCell)
+        {
+            if (!Cell.IsNotNull(fromCell) || !Cell.IsNotNull(toCell))
+            {
+                IsValid = false;
+                return this;
+            }
+            if (!Cell.HasPiece(fromCell))
+            {
+                IsValid = false;
+                return this;
+            }
+
+            var fromCellPiece = Cell.GetPiece(fromCell);
+            var movePath = ValidBoardMove.DetermineMovePath(fromCell, toCell);
+            if (movePath == ValidBoardMove.MovePath.DownLeft || movePath == ValidBoardMove.MovePath.DownRight ||
+                movePath == ValidBoardMove.MovePath.UpRight || movePath == ValidBoardMove.MovePath.UpLeft)
+            {
+                if (!Cell.HasPiece(toCell))
+                {
+                    IsValid = false;
+                    return this;
+                }
+                var toCellPiece = Cell.GetPiece(toCell);
+                if (fromCellPiece.isWhite != toCellPiece.isWhite)
+                {
+                    IsValid = true;
+                    IsPotentiallyPinned = true;
+                    IsTerminatable = true;
+                    return this;
+                }
+
+                else
+                {
+                    IsProtected = true;
+                    IsValid = false;
+                    IsTerminatable = true;
+                    return this;
+                }
+
+            }
+            else if (movePath == ValidBoardMove.MovePath.Up || movePath == ValidBoardMove.MovePath.Down)
+            {
+                if (!Cell.HasPiece(toCell))
+                {
+                    IsValid = true;
+                    return this;
+                }
+                IsValid = false;
+                return this;
+            }
+            else
+            {
+                IsValid = false;
+                return this;
+            }
+
+            return this;
         }
     }
 

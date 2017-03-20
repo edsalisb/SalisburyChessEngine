@@ -38,7 +38,7 @@ $RECYCLE.BIN/
 .TemporaryItems
 .Trashes
 .VolumeIcon.icns
-
+.vs
 # Directories potentially created on remote AFP share
 .AppleDB
 .AppleDesktop
@@ -47,6 +47,7 @@ Temporary Items
 .apdisk
 .user
 /obj
+/TestResults
 /bin
 /obj/Debug
 /bin/Debug
@@ -56,3 +57,4 @@ Temporary Items
 /bin/x64/Debug
 /bin/x64/Debug
 /SalisburyChessEngine.sln
+/.vs/SalisburyChessEngine/12144
