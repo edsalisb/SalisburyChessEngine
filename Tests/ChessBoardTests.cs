@@ -237,8 +237,298 @@ namespace SalisburyChessEngineTests.Board
                 new ValidBoardMove("e3", "e6", ValidBoardMove.MovePath.Up)
             }, whiteQueen.ValidMoves);
 
-        } 
+        }
+        
+        [TestMethod]
+        public void TestKnightValidMoves()
+        {
+            var fenList = new List<string>()
+            {
+                "4k3/8/8/4N3/8/8/8/4K3",
+                "w",
+                "KQkq",
+                "-"
+            };
+            var fenPosition = new FENNotationPosition(fenList);
+             
+            this.CB = new ChessBoard(fenPosition);
+            var coordinatesExpected = "e5";
+            var whiteKnight = this.CB[3][4].CurrentPiece;
+            Assert.IsNotNull(whiteKnight);
+            Assert.IsInstanceOfType(whiteKnight, typeof(Knight));
+            Assert.AreEqual(coordinatesExpected, whiteKnight.CurrentCoordinates);
+            Assert.AreEqual(true, whiteKnight.isWhite);
+            AssertValidMoves(new List<ValidBoardMove>()
+            {
+                new ValidBoardMove(coordinatesExpected, "g6", ValidBoardMove.MovePath.KnightMove),
+                new ValidBoardMove(coordinatesExpected, "f7", ValidBoardMove.MovePath.KnightMove),
+                new ValidBoardMove(coordinatesExpected, "d7", ValidBoardMove.MovePath.KnightMove),
+                new ValidBoardMove(coordinatesExpected, "c6", ValidBoardMove.MovePath.KnightMove),
+                new ValidBoardMove(coordinatesExpected, "c4", ValidBoardMove.MovePath.KnightMove),
+                new ValidBoardMove(coordinatesExpected, "d3", ValidBoardMove.MovePath.KnightMove),
+                new ValidBoardMove(coordinatesExpected, "f3", ValidBoardMove.MovePath.KnightMove),
+                new ValidBoardMove(coordinatesExpected, "g4", ValidBoardMove.MovePath.KnightMove)
+            }, whiteKnight.ValidMoves);
 
+        }
+        [TestMethod]
+        public void TestBishopValidMoves()
+        {
+            var fenList = new List<string>()
+            {
+                "4k3/8/8/4B3/8/8/8/4K3",
+                "w",
+                "KQkq",
+                "-"
+            };
+            var fenPosition = new FENNotationPosition(fenList);
+
+            this.CB = new ChessBoard(fenPosition);
+            var coordinatesExpected = "e5";
+            var whiteBishop = this.CB[3][4].CurrentPiece;
+            Assert.IsNotNull(whiteBishop);
+            Assert.IsInstanceOfType(whiteBishop, typeof(Bishop));
+            Assert.AreEqual(coordinatesExpected, whiteBishop.CurrentCoordinates);
+            Assert.AreEqual(true, whiteBishop.isWhite);
+            AssertValidMoves(new List<ValidBoardMove>()
+            {
+                new ValidBoardMove(coordinatesExpected, "f6", ValidBoardMove.MovePath.UpRight),
+                new ValidBoardMove(coordinatesExpected, "g7", ValidBoardMove.MovePath.UpRight),
+                new ValidBoardMove(coordinatesExpected, "h8", ValidBoardMove.MovePath.UpRight),
+                new ValidBoardMove(coordinatesExpected, "d6", ValidBoardMove.MovePath.UpLeft),
+                new ValidBoardMove(coordinatesExpected, "c7", ValidBoardMove.MovePath.UpLeft),
+                new ValidBoardMove(coordinatesExpected, "b8", ValidBoardMove.MovePath.UpLeft),
+                new ValidBoardMove(coordinatesExpected, "f4", ValidBoardMove.MovePath.DownRight),
+                new ValidBoardMove(coordinatesExpected, "g3", ValidBoardMove.MovePath.DownRight),
+                new ValidBoardMove(coordinatesExpected, "h2", ValidBoardMove.MovePath.DownRight),
+                new ValidBoardMove(coordinatesExpected, "d4", ValidBoardMove.MovePath.DownLeft),
+                new ValidBoardMove(coordinatesExpected, "c3", ValidBoardMove.MovePath.DownLeft),
+                new ValidBoardMove(coordinatesExpected, "b2", ValidBoardMove.MovePath.DownLeft),
+                new ValidBoardMove(coordinatesExpected, "a1", ValidBoardMove.MovePath.DownLeft),
+            }, whiteBishop.ValidMoves);
+
+        }
+        [TestMethod]
+        public void TestRookValidMoves()
+        {
+            var fenList = new List<string>()
+            {
+                "3k4/8/8/4R3/8/8/8/4K3",
+                "w",
+                "KQkq",
+                "-"
+            };
+            var fenPosition = new FENNotationPosition(fenList);
+
+            this.CB = new ChessBoard(fenPosition);
+            var coordinatesExpected = "e5";
+            var whiteRook = this.CB[3][4].CurrentPiece;
+            Assert.IsNotNull(whiteRook);
+            Assert.IsInstanceOfType(whiteRook, typeof(Rook));
+            Assert.AreEqual(coordinatesExpected, whiteRook.CurrentCoordinates);
+            Assert.AreEqual(true, whiteRook.isWhite);
+            AssertValidMoves(new List<ValidBoardMove>()
+            {
+                new ValidBoardMove(coordinatesExpected, "e6", ValidBoardMove.MovePath.Up),
+                new ValidBoardMove(coordinatesExpected, "e7", ValidBoardMove.MovePath.Up),
+                new ValidBoardMove(coordinatesExpected, "e8", ValidBoardMove.MovePath.Up),
+                new ValidBoardMove(coordinatesExpected, "e4", ValidBoardMove.MovePath.Down),
+                new ValidBoardMove(coordinatesExpected, "e3", ValidBoardMove.MovePath.Down),
+                new ValidBoardMove(coordinatesExpected, "e2", ValidBoardMove.MovePath.Down),
+                new ValidBoardMove(coordinatesExpected, "d5", ValidBoardMove.MovePath.Left),
+                new ValidBoardMove(coordinatesExpected, "c5", ValidBoardMove.MovePath.Left),
+                new ValidBoardMove(coordinatesExpected, "b5", ValidBoardMove.MovePath.Left),
+                new ValidBoardMove(coordinatesExpected, "a5", ValidBoardMove.MovePath.Left),
+                new ValidBoardMove(coordinatesExpected, "f5", ValidBoardMove.MovePath.Right),
+                new ValidBoardMove(coordinatesExpected, "g5", ValidBoardMove.MovePath.Right),
+                new ValidBoardMove(coordinatesExpected, "h5", ValidBoardMove.MovePath.Right),
+
+            }, whiteRook.ValidMoves);
+        }
+        [TestMethod]
+        public void TestQueenValidMoves()
+        {
+            var fenList = new List<string>()
+            {
+                "3k4/8/8/4Q3/8/8/8/4K3",
+                "w",
+                "KQkq",
+                "-"
+            };
+            var fenPosition = new FENNotationPosition(fenList);
+
+            this.CB = new ChessBoard(fenPosition);
+            var coordinatesExpected = "e5";
+            var whiteQueen = this.CB[3][4].CurrentPiece;
+            Assert.IsNotNull(whiteQueen);
+            Assert.IsInstanceOfType(whiteQueen, typeof(Queen));
+            Assert.AreEqual(coordinatesExpected, whiteQueen.CurrentCoordinates);
+            Assert.AreEqual(true, whiteQueen.isWhite);
+            AssertValidMoves(new List<ValidBoardMove>()
+            {
+                new ValidBoardMove(coordinatesExpected, "e6", ValidBoardMove.MovePath.Up),
+                new ValidBoardMove(coordinatesExpected, "e7", ValidBoardMove.MovePath.Up),
+                new ValidBoardMove(coordinatesExpected, "e8", ValidBoardMove.MovePath.Up),
+                new ValidBoardMove(coordinatesExpected, "e4", ValidBoardMove.MovePath.Down),
+                new ValidBoardMove(coordinatesExpected, "e3", ValidBoardMove.MovePath.Down),
+                new ValidBoardMove(coordinatesExpected, "e2", ValidBoardMove.MovePath.Down),
+                new ValidBoardMove(coordinatesExpected, "d5", ValidBoardMove.MovePath.Left),
+                new ValidBoardMove(coordinatesExpected, "c5", ValidBoardMove.MovePath.Left),
+                new ValidBoardMove(coordinatesExpected, "b5", ValidBoardMove.MovePath.Left),
+                new ValidBoardMove(coordinatesExpected, "a5", ValidBoardMove.MovePath.Left),
+                new ValidBoardMove(coordinatesExpected, "f5", ValidBoardMove.MovePath.Right),
+                new ValidBoardMove(coordinatesExpected, "g5", ValidBoardMove.MovePath.Right),
+                new ValidBoardMove(coordinatesExpected, "h5", ValidBoardMove.MovePath.Right),
+                new ValidBoardMove(coordinatesExpected, "f6", ValidBoardMove.MovePath.UpRight),
+                new ValidBoardMove(coordinatesExpected, "g7", ValidBoardMove.MovePath.UpRight),
+                new ValidBoardMove(coordinatesExpected, "h8", ValidBoardMove.MovePath.UpRight),
+                new ValidBoardMove(coordinatesExpected, "d6", ValidBoardMove.MovePath.UpLeft),
+                new ValidBoardMove(coordinatesExpected, "c7", ValidBoardMove.MovePath.UpLeft),
+                new ValidBoardMove(coordinatesExpected, "b8", ValidBoardMove.MovePath.UpLeft),
+                new ValidBoardMove(coordinatesExpected, "f4", ValidBoardMove.MovePath.DownRight),
+                new ValidBoardMove(coordinatesExpected, "g3", ValidBoardMove.MovePath.DownRight),
+                new ValidBoardMove(coordinatesExpected, "h2", ValidBoardMove.MovePath.DownRight),
+                new ValidBoardMove(coordinatesExpected, "d4", ValidBoardMove.MovePath.DownLeft),
+                new ValidBoardMove(coordinatesExpected, "c3", ValidBoardMove.MovePath.DownLeft),
+                new ValidBoardMove(coordinatesExpected, "b2", ValidBoardMove.MovePath.DownLeft),
+                new ValidBoardMove(coordinatesExpected, "a1", ValidBoardMove.MovePath.DownLeft),
+            }, whiteQueen.ValidMoves);
+        }
+
+        [TestMethod]
+        public void TestPinnedBishopsDLUR()
+        {
+            var fenList = new List<string>()
+            {
+                "7k/8/5b2/8/8/2B5/8/K7",
+                "w",
+                "-",
+                "-"
+            };
+            var fenPosition = new FENNotationPosition(fenList);
+
+            this.CB = new ChessBoard(fenPosition);
+            var whiteCoordinatesExpected = "c3";
+            var whiteBishop = this.CB[5][2].CurrentPiece;
+            Assert.IsNotNull(whiteBishop);
+            Assert.IsInstanceOfType(whiteBishop, typeof(Bishop));
+            Assert.AreEqual(whiteCoordinatesExpected, whiteBishop.CurrentCoordinates);
+            Assert.AreEqual(true, whiteBishop.isWhite);
+            AssertValidMoves(new List<ValidBoardMove>()
+            {
+                new ValidBoardMove(whiteCoordinatesExpected, "b2", ValidBoardMove.MovePath.DownLeft),
+                new ValidBoardMove(whiteCoordinatesExpected, "d4", ValidBoardMove.MovePath.UpRight),
+                new ValidBoardMove(whiteCoordinatesExpected, "e5", ValidBoardMove.MovePath.UpRight),
+                new ValidBoardMove(whiteCoordinatesExpected, "f6", ValidBoardMove.MovePath.UpRight)
+            }, whiteBishop.ValidMoves);
+
+            var blackCoordinatesExpected = "f6";
+            var blackBishop = this.CB[2][5].CurrentPiece;
+            Assert.IsNotNull(blackBishop);
+            Assert.IsInstanceOfType(blackBishop, typeof(Bishop));
+            Assert.AreEqual(blackCoordinatesExpected, blackBishop.CurrentCoordinates);
+            Assert.AreEqual(false, blackBishop.isWhite);
+            AssertValidMoves(new List<ValidBoardMove>()
+            {
+                new ValidBoardMove(blackCoordinatesExpected, "e5", ValidBoardMove.MovePath.DownLeft),
+                new ValidBoardMove(blackCoordinatesExpected, "d4", ValidBoardMove.MovePath.DownLeft),
+                new ValidBoardMove(blackCoordinatesExpected, "c3", ValidBoardMove.MovePath.DownLeft),
+                new ValidBoardMove(blackCoordinatesExpected, "g7", ValidBoardMove.MovePath.UpRight)
+            }, blackBishop.ValidMoves);
+
+        }
+
+        [TestMethod]
+        public void TestRookPinsLR()
+        {
+            var fenList = new List<string>()
+            {
+                "8/8/8/K1R2r1k/8/8/8/8",
+                "w",
+                "-",
+                "-"
+            };
+            var fenPosition = new FENNotationPosition(fenList);
+
+            this.CB = new ChessBoard(fenPosition);
+            var whiteCoordinatesExpected = "c5";
+            var whiteRook = this.CB[3][2].CurrentPiece;
+            Assert.IsNotNull(whiteRook);
+            Assert.IsInstanceOfType(whiteRook, typeof(Rook));
+            Assert.AreEqual(whiteCoordinatesExpected, whiteRook.CurrentCoordinates);
+            Assert.AreEqual(true, whiteRook.isWhite);
+            AssertValidMoves(new List<ValidBoardMove>()
+            {
+                new ValidBoardMove(whiteCoordinatesExpected, "b5", ValidBoardMove.MovePath.Left),
+                new ValidBoardMove(whiteCoordinatesExpected, "d5", ValidBoardMove.MovePath.Right),
+                new ValidBoardMove(whiteCoordinatesExpected, "e5", ValidBoardMove.MovePath.Right),
+                new ValidBoardMove(whiteCoordinatesExpected, "f5", ValidBoardMove.MovePath.Right)
+            }, whiteRook.ValidMoves);
+
+            var blackCoordinatesExpected = "f5";
+            var blackRook = this.CB[3][5].CurrentPiece;
+            Assert.IsNotNull(blackRook);
+            Assert.IsInstanceOfType(blackRook, typeof(Rook));
+            Assert.AreEqual(blackCoordinatesExpected, blackRook.CurrentCoordinates);
+            Assert.AreEqual(false, blackRook.isWhite);
+            AssertValidMoves(new List<ValidBoardMove>()
+            {
+                new ValidBoardMove(blackCoordinatesExpected, "e5", ValidBoardMove.MovePath.Left),
+                new ValidBoardMove(blackCoordinatesExpected, "d5", ValidBoardMove.MovePath.Left),
+                new ValidBoardMove(blackCoordinatesExpected, "c5", ValidBoardMove.MovePath.Left),
+                new ValidBoardMove(blackCoordinatesExpected, "g5", ValidBoardMove.MovePath.Right)
+            }, blackRook.ValidMoves);
+
+        }
+        [TestMethod]
+        public void TestOneRookPinned()
+        {
+            var fenList = new List<string>()
+            {
+                "8/8/8/KPR2r1k/8/8/8/8",
+                "w",
+                "-",
+                "-"
+            };
+            var fenPosition = new FENNotationPosition(fenList);
+
+            this.CB = new ChessBoard(fenPosition);
+            var whiteCoordinatesExpected = "c5";
+            var whiteRook = this.CB[3][2].CurrentPiece;
+            Assert.IsNotNull(whiteRook);
+            Assert.IsInstanceOfType(whiteRook, typeof(Rook));
+            Assert.AreEqual(whiteCoordinatesExpected, whiteRook.CurrentCoordinates);
+            Assert.AreEqual(true, whiteRook.isWhite);
+            AssertValidMoves(new List<ValidBoardMove>()
+            {
+                new ValidBoardMove(whiteCoordinatesExpected, "d5", ValidBoardMove.MovePath.Right),
+                new ValidBoardMove(whiteCoordinatesExpected, "e5", ValidBoardMove.MovePath.Right),
+                new ValidBoardMove(whiteCoordinatesExpected, "f5", ValidBoardMove.MovePath.Right),
+                new ValidBoardMove(whiteCoordinatesExpected, "c1", ValidBoardMove.MovePath.Down),
+                new ValidBoardMove(whiteCoordinatesExpected, "c2", ValidBoardMove.MovePath.Down),
+                new ValidBoardMove(whiteCoordinatesExpected, "c3", ValidBoardMove.MovePath.Down),
+                new ValidBoardMove(whiteCoordinatesExpected, "c4", ValidBoardMove.MovePath.Down),
+                new ValidBoardMove(whiteCoordinatesExpected, "c6", ValidBoardMove.MovePath.Up),
+                new ValidBoardMove(whiteCoordinatesExpected, "c7", ValidBoardMove.MovePath.Up),
+                new ValidBoardMove(whiteCoordinatesExpected, "c8", ValidBoardMove.MovePath.Up),
+
+            }, whiteRook.ValidMoves);
+
+            var blackCoordinatesExpected = "f5";
+            var blackRook = this.CB[3][5].CurrentPiece;
+            Assert.IsNotNull(blackRook);
+            Assert.IsInstanceOfType(blackRook, typeof(Rook));
+            Assert.AreEqual(blackCoordinatesExpected, blackRook.CurrentCoordinates);
+            Assert.AreEqual(false, blackRook.isWhite);
+            AssertValidMoves(new List<ValidBoardMove>()
+            {
+                new ValidBoardMove(blackCoordinatesExpected, "e5", ValidBoardMove.MovePath.Left),
+                new ValidBoardMove(blackCoordinatesExpected, "d5", ValidBoardMove.MovePath.Left),
+                new ValidBoardMove(blackCoordinatesExpected, "c5", ValidBoardMove.MovePath.Left),
+                new ValidBoardMove(blackCoordinatesExpected, "g5", ValidBoardMove.MovePath.Right)
+            }, blackRook.ValidMoves);
+
+        }
         private void AssertInitialPawnData(PieceBase pawn, string columnLetter, bool isWhite)
         {
             Assert.IsNotNull(pawn);

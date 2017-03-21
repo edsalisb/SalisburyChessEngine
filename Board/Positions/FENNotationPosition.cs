@@ -53,16 +53,29 @@ namespace SalisburyChessEngine.Board.Positions
         }
         public FENNotationPosition(List<string> fenContents) : this()
         {
+            //To Account for lichess FEN notation board editor not providing turn numbers (count = 4), I am going to default the halfMoveClock and 
+            //Full Move number to 1 if they are not found
+
             this.Clear();
             this.FENContents = fenContents;
+
+            if (this.FENContents.Count == 4)
+            {
+                this.FENContents.Add("1");
+                this.FENContents.Add("1");
+            }
+
             this.DeterminePositionInformation();
         }
 
         public void DeterminePositionInformation()
         {
             
+
             try
             {
+                
+
                 DeterminePiecePlacement(this.FENContents[(int)FenRecordFields.PiecePlacement]);
                 DetermineActiveColor(this.FENContents[(int)FenRecordFields.ActiveColor]);
                 DetermineCastlingAvailability(this.FENContents[(int)FenRecordFields.CastlingAvailability]);

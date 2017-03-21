@@ -24,8 +24,8 @@ namespace SalisburyChessEngine.Pieces
                 { ValidBoardMove.MovePath.Right, new List<ValidBoardMove.MovePath> {ValidBoardMove.MovePath.Left, ValidBoardMove.MovePath.Right } },
                 { ValidBoardMove.MovePath.UpLeft, new List<ValidBoardMove.MovePath> {ValidBoardMove.MovePath.UpLeft, ValidBoardMove.MovePath.DownRight } },
                 { ValidBoardMove.MovePath.UpRight, new List<ValidBoardMove.MovePath> {ValidBoardMove.MovePath.UpRight, ValidBoardMove.MovePath.DownLeft } },
-                { ValidBoardMove.MovePath.DownLeft, new List<ValidBoardMove.MovePath> {ValidBoardMove.MovePath.UpLeft, ValidBoardMove.MovePath.DownRight } },
-                { ValidBoardMove.MovePath.DownRight, new List<ValidBoardMove.MovePath> {ValidBoardMove.MovePath.UpRight, ValidBoardMove.MovePath.DownLeft } },
+                { ValidBoardMove.MovePath.DownLeft, new List<ValidBoardMove.MovePath> {ValidBoardMove.MovePath.DownLeft, ValidBoardMove.MovePath.UpRight } },
+                { ValidBoardMove.MovePath.DownRight, new List<ValidBoardMove.MovePath> {ValidBoardMove.MovePath.UpLeft, ValidBoardMove.MovePath.DownRight } },
             };
 
 
@@ -408,7 +408,7 @@ namespace SalisburyChessEngine.Pieces
             return move;
         }
 
-        private void DetermineIfAbsolutePinned(Cell pinnedCell,ValidBoardMove.MovePath path)
+        private void DetermineIfAbsolutePinned(Cell pinnedCell, ValidBoardMove.MovePath path)
         {
             List<ValidBoardMove> test = new List<ValidBoardMove>();
             switch (path)
@@ -444,7 +444,26 @@ namespace SalisburyChessEngine.Pieces
             if (arePinned.Count == 1)
             {
                 var movesOnPath = FindPiecesBetween(arePinned[0]);
-                var filteredMoves = movesOnPath.Where(IsPieceColorSameAsSelf).ToList();
+                var distinctCoords = new List<string>();
+
+                var filteredMoves = movesOnPath.Where(move =>
+                {
+                    var cell = this.getCell(move.CoordinatesTo);
+                    if (Cell.HasPiece(cell))
+                    {
+                        var piece = Cell.GetPiece(cell);
+                        if (piece.isWhite != isWhite)
+                        {
+                            int index = distinctCoords.IndexOf(move.CoordinatesTo);
+                            if (index == -1)
+                            {
+                                distinctCoords.Add(move.CoordinatesTo);
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }).ToList();
 
                 if (filteredMoves.Count == 1)
                 {
@@ -485,19 +504,7 @@ namespace SalisburyChessEngine.Pieces
             }
         }
 
-        private bool IsPieceColorSameAsSelf(ValidBoardMove move)
-        {
-            var cell = this.getCell(move.CoordinatesTo);
-            if (Cell.HasPiece(cell))
-            {
-                var piece = Cell.GetPiece(cell);
-                if (piece.isWhite != isWhite)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        
 
         private ValidBoardMove DetermineIfCellPinned(Cell pinnedCell, Cell potentialCell, ValidBoardMove.MovePath path)
         {
@@ -580,7 +587,9 @@ namespace SalisburyChessEngine.Pieces
 
         private ValidBoardMove DetermineAllCellsOnPath(Cell fromCell, Cell toCell, ValidBoardMove.MovePath path)
         {
-            return new ValidBoardMove(fromCell.Coordinates, toCell.Coordinates, path, isWhite);
+            var move =  new ValidBoardMove(fromCell.Coordinates, toCell.Coordinates, path, isWhite);
+            move.MoveProperties.IsValid = true;
+            return move;
         }
 
         public  List<ValidBoardMove> FindAttackPath(ValidBoardMove boardPath)

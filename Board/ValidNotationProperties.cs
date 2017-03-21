@@ -140,8 +140,6 @@ namespace SalisburyChessEngine.Board
                 IsValid = false;
                 return this;
             }
-
-            return this;
         }
     }
 
