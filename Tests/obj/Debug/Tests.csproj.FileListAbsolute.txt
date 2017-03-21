@@ -1,9 +1,0 @@
-C:\Repos\SalisburyChessEngine\Tests\bin\Debug\Tests.dll
-C:\Repos\SalisburyChessEngine\Tests\bin\Debug\Tests.pdb
-C:\Repos\SalisburyChessEngine\Tests\bin\Debug\ConsoleApplication.exe
-C:\Repos\SalisburyChessEngine\Tests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
-C:\Repos\SalisburyChessEngine\Tests\bin\Debug\ConsoleApplication.pdb
-C:\Repos\SalisburyChessEngine\Tests\bin\Debug\ConsoleApplication.exe.config
-C:\Repos\SalisburyChessEngine\Tests\obj\Debug\Tests.csprojResolveAssemblyReference.cache
-C:\Repos\SalisburyChessEngine\Tests\obj\Debug\Tests.dll
-C:\Repos\SalisburyChessEngine\Tests\obj\Debug\Tests.pdb

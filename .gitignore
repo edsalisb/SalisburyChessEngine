@@ -48,6 +48,8 @@ Temporary Items
 .user
 /obj
 /TestResults
+/Tests/bin
+/Tests/obj
 /bin
 /obj/Debug
 /bin/Debug
